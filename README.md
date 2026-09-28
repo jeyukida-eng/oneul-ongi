@@ -16,3 +16,8 @@ GitHub Pages 저장소 루트에 index.html, CSS·JS 파일, manifest, sw.js, ic
 ## v12 PLUS (preview only)
 
 Bottom 온기 navigation opens a four-screen premium preview: personalized mission, 7/30-day growth report, 7/21/30-day challenge and printable 7/30/100-day record booklet. All data is stored on-device. Monthly ₩2,900 is an intended price; billing, subscriptions and server sync are not connected.
+
+
+## v15 personalized preview
+
+Goal, minutes and self-selected energy are used with recent completion and difficulty feedback to recommend daily tasks. Six goals, rule-based adaptive difficulty, 7/30-day report, goal-aligned 7/21/30-day challenge and optional private print-to-PDF booklet are available. Mobile screens do not require scrolling at tested sizes. Records remain on this device. Monthly 2,900 KRW is only a planned price: billing, paid access control, server sync and a real AI advisor are not implemented.

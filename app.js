@@ -320,7 +320,7 @@
     if(action==='backup'){backup();return}
     if(action==='install'){installApp();return}
     if(action==='clear-confirm'){sheetShell('저장된 기록을 지울까요?',`<p>이 기기에 저장된 감정·일기·미션 기록이 모두 삭제됩니다. 되돌릴 수 없으니 먼저 백업해 주세요.</p><div class="manage-actions"><button class="soft-btn" type="button" data-action="sheet" data-sheet="records">돌아가기</button><button class="solid-btn" type="button" data-action="clear-data">모두 삭제</button></div>`,'records');return}
-    if(action==='clear-data'){try{localStorage.removeItem(STORE_KEY);localStorage.removeItem('oneul-ongi-clean-v3');localStorage.removeItem('oneul-ongi-simple-v2');localStorage.removeItem('oneul-ongi-premium-v1');state=emptyState();chosen=null;draft='';renderHome();closeSheet();say('이 기기의 기록을 삭제했어요.')}catch(_err){say('삭제하지 못했어요. 브라우저 설정을 확인해 주세요.')}return}
+    if(action==='clear-data'){try{localStorage.removeItem(STORE_KEY);localStorage.removeItem('oneul-ongi-clean-v3');localStorage.removeItem('oneul-ongi-simple-v2');localStorage.removeItem('oneul-ongi-premium-v1');localStorage.removeItem('oneul-ongi-personal-v1');state=emptyState();chosen=null;draft='';renderHome();closeSheet();say('이 기기의 기록을 삭제했어요.')}catch(_err){say('삭제하지 못했어요. 브라우저 설정을 확인해 주세요.')}return}
   });
   root.addEventListener('click',event=>{if(event.target===root)closeSheet()});
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&root.innerHTML)closeSheet()});
