@@ -1,0 +1,31 @@
+name: Deploy On-gi PLUS v12
+on:
+  push:
+    paths:
+      - 'releases/plus-v12/**'
+      - '.github/workflows/deploy-plus-v12.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install release decoder
+        run: python -m pip install --quiet brotli
+      - name: Apply verified premium release
+        run: |
+          python releases/plus-v12/deploy.py
+          node --check app.js
+          node --check premium-v12.js
+      - name: Commit live site changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html app.js sw.js README.md premium-v12.css premium-v12.js
+          if ! git diff --cached --quiet; then
+            git commit -m "Deploy one-screen On-gi PLUS premium preview"
+            git push origin HEAD:main
+          fi
