@@ -1,0 +1,55 @@
+name: Publish On-gi v7 achievement features
+on:
+  push:
+    paths:
+      - 'releases/v7assets.tar.br'
+      - '.github/workflows/publish-achievements-v7.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract tested v7 code and update app
+        run: |
+          python -m pip install --quiet brotli
+          python - <<'PY'
+          import io
+          import brotli
+          import tarfile
+          from pathlib import Path
+          archive_bytes=brotli.decompress(Path('releases/v7assets.tar.br').read_bytes())
+          with tarfile.open(fileobj=io.BytesIO(archive_bytes),mode='r:') as archive:
+              assert set(archive.getnames())=={'achievements-v7.js','achievements-v7.css'}
+              for entry in archive:
+                  Path(entry.name).write_bytes(archive.extractfile(entry).read())
+          p=Path('index.html')
+          html=p.read_text(encoding='utf-8')
+          if 'achievements-v7.css' not in html:
+              assert '<link rel="stylesheet" href="./styles.css">' in html
+              html=html.replace('<link rel="stylesheet" href="./styles.css">','<link rel="stylesheet" href="./styles.css">\n  <link rel="stylesheet" href="./achievements-v7.css">')
+          if 'achievements-v7.js' not in html:
+              assert '<script src="./app.js" defer></script>' in html
+              html=html.replace('<script src="./app.js" defer></script>','<script src="./app.js" defer></script>\n  <script src="./achievements-v7.js" defer></script>')
+          p.write_text(html,encoding='utf-8')
+          p=Path('sw.js')
+          sw=p.read_text(encoding='utf-8')
+          assert 'oneul-ongi-v6.0.1-new-icon' in sw or 'oneul-ongi-v7.0.0-achievement' in sw
+          sw=sw.replace('oneul-ongi-v6.0.1-new-icon','oneul-ongi-v7.0.0-achievement')
+          if "'./achievements-v7.css'" not in sw:
+              sw=sw.replace("'./styles.css'","'./styles.css','./achievements-v7.css','./achievements-v7.js'")
+          p.write_text(sw,encoding='utf-8')
+          print('v7 features:',len(Path('achievements-v7.js').read_bytes()),len(Path('achievements-v7.css').read_bytes()))
+          PY
+      - name: Commit site files
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sw.js achievements-v7.js achievements-v7.css
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish tested v7 achievements and Instagram cards"
+            git push origin HEAD:main
+          fi
