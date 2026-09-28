@@ -1,4 +1,4 @@
-const CACHE_NAME='oneul-ongi-v12.0.0-premium-preview';
+const CACHE_NAME='oneul-ongi-v12.0.1-premium-small-screen';
 const ASSETS=['./','./index.html','./styles.css','./achievements-v7.css','./premium-v12.css','./premium-v12.js','./achievements-v7.js','./app.js','./content-v6.js','./manifest.webmanifest','./icons/icon.svg','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-180.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('oneul-ongi-')&&k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
