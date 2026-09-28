@@ -11,6 +11,7 @@
   let shareFormat = 'story';
   let sharePhrase = 0;
   let includeTasks = true;
+  let activeSection = 'summary';
   let host, priorFocus, overlayOpen = false;
   const taskNames = () => {
     const result = {};
@@ -55,28 +56,8 @@
     {name:'온기 50개',needed:50,current:total,desc:'50개의 작은 성취'},
     {name:'함께한 30일',needed:30,current:days,desc:'30일의 온기'}
   ];
-  function ribbon() {
-    const main = document.getElementById('main-content');
-    if (!main) return;
-    const routine = main.querySelector('.routine');
-    if (!routine || routine.querySelector('.reward-ribbon')) return;
-    const {today} = stats();
-    const div = document.createElement('div');
-    div.className = 'reward-ribbon';
-    div.innerHTML = `<span class="reward-ribbon-symbol" aria-hidden="true">✳</span><span>오늘 모은 온기 <strong>${today}개</strong></span><button type="button" data-reward-action="open">${today?'성취 카드 보기':'나의 성취 보기'} <span aria-hidden="true">↗</span></button>`;
-    routine.appendChild(div);
-  }
-  function augmentGrowth() {
-    const root = document.getElementById('sheet-root');
-    const summary = root?.querySelector('.micro-summary');
-    if (!summary || summary.querySelector('[data-reward-action]')) return;
-    const {today} = stats();
-    const control = document.createElement('button');
-    control.type = 'button'; control.className = 'reward-growth-link';
-    control.dataset.rewardAction = 'open';
-    control.textContent = today ? '오늘도 잘했어요 · 성취 카드 보기 ↗' : '나의 성취 보기 ↗';
-    summary.appendChild(control);
-  }
+  function ribbon() { return; }
+  function augmentGrowth() { return; }
   function inject() { ribbon(); augmentGrowth(); }
   function ensureHost() {
     if (!host) {
@@ -94,28 +75,28 @@
     const d = new Date(); return `${d.getFullYear()}.${two(d.getMonth()+1)}.${two(d.getDate())}`;
   }
   function previewData(s) {
+    const st = read(),r = st.records?.[DATE()] || {};
     const items = [];
-    if (includeTasks) {
-      const st = read(),r = st.records?.[DATE()] || {};
-      if (r.smallDone) items.push('작은 실천 한 가지');
-      items.push(...s.growth.slice(0,3));
-    }
-    return items.slice(0,3);
+    if (moodIds.includes(r.mood)) items.push('오늘 마음 기록');
+    if (r.smallDone) items.push('작은 실천 완료');
+    if (typeof r.note === 'string' && r.note.trim()) items.push('한 줄 기록 저장');
+    if (includeTasks) items.push(...s.growth);
+    return items.slice(0,4);
   }
   function preview(s) {
     const list = previewData(s);
-    return `<div class="share-design share-design-${shareFormat}">
-        <div class="share-logo"><span class="share-logo-glyph" aria-hidden="true">◒</span> 오늘의 온기</div>
-        <div class="share-art" aria-hidden="true"><span class="share-art-glow"></span><span class="share-art-horizon"></span></div>
-        <div class="share-design-middle"><div class="share-day">${dateLabel()} · 오늘의 성취</div>
-        <div class="share-phrase">${esc(QUOTES[sharePhrase])}</div>
-        <div class="share-number">${s.today}<span>개의 온기</span></div>
-        ${list.length?`<div class="share-items">${list.map(v=>`<div><span aria-hidden="true">✓</span>${esc(v)}</div>`).join('')}</div>`:''}
-        </div><div class="share-design-footer">하루에 작은 온기 하나씩 <span>ONEUL ONGI</span></div>
+    const chips = list.length ? `<div class="share-card-list">${list.map(v=>`<div><span aria-hidden="true">+1</span>${esc(v)}</div>`).join('')}</div>` : '';
+    return `<div class="share-card share-card-${shareFormat}">
+        <div class="share-card-top"><div class="share-card-brand">오늘의 온기</div><div class="share-card-date">${dateLabel()}</div></div>
+        <div class="share-card-badge">SMALL STEPS, BIG WARMTH</div>
+        <div class="share-card-hero"><div class="share-card-dot"></div><div class="share-card-copy">${esc(QUOTES[sharePhrase])}</div></div>
+        <div class="share-card-count"><strong>${s.today}</strong><span>오늘 모은 온기</span></div>
+        ${chips}
+        <div class="share-card-foot"><span>ONEUL ONGI</span><span>share your tiny win</span></div>
       </div>`;
   }
   function badgeMarkup(s) {
-    return badges(s).map(({name,needed,current,desc}) => `<div class="achievement-badge ${current>=needed?'earned':'pending'}"><span class="badge-symbol" aria-hidden="true">${current>=needed?'✳':'·'}</span><strong>${esc(name)}</strong><small>${current>=needed?esc(desc):`${Math.min(current,needed)}/${needed}`}</small></div>`).join('');
+    return badges(s).map(({name,needed,current,desc}) => `<div class="achievement-badge ${current>=needed?'earned':'pending'}"><span class="badge-symbol" aria-hidden="true">${current>=needed?'✦':'○'}</span><strong>${esc(name)}</strong><small>${current>=needed?esc(desc):`${Math.min(current,needed)}/${needed}`}</small></div>`).join('');
   }
   function sevenDayCalendar() {
     const state=read(),week=Array.from({length:7},(_,i)=>{
@@ -130,26 +111,15 @@
   }
   function sheetContent(celebration=false) {
     const s = stats();
-    return `<div class="achievement-sheet" role="dialog" aria-modal="true" aria-labelledby="achievement-heading" tabindex="-1">
-      <header class="achievement-head"><div><span class="achievement-eyebrow">나의 온기</span><h2 id="achievement-heading">${celebration?'오늘도 잘했어요!':'오늘의 작은 성취'}</h2></div><button type="button" class="achievement-close" data-reward-action="close" aria-label="닫기">×</button></header>
-      <div class="achievement-body">
-        <p class="achievement-intro">${s.today?'아주 작은 한 걸음도 오늘의 성취예요.':'하나씩 나를 돌보다 보면 온기가 쌓일 거예요.'}</p>
-        <div class="achievement-stats"><div><strong>${s.today}</strong><span>오늘의 온기</span></div><div><strong>${s.days}</strong><span>함께한 날</span></div><div><strong>${s.total}</strong><span>모은 온기</span></div></div>
-        ${sevenDayCalendar()}
-        <div class="achievement-heading-row"><strong>인스타그램 공유 카드</strong><span>내 기록 내용은 공유되지 않아요</span></div>
-        <div class="reward-formats" role="group" aria-label="이미지 크기">${markRadio(shareFormat,'story','스토리 · 9:16','format','data-format="story"')}${markRadio(shareFormat,'feed','피드 · 4:5','format','data-format="feed"')}</div>
-        <div class="reward-phrases" role="group" aria-label="공유 문구">${QUOTES.map((q,i)=>markRadio(sharePhrase,i,esc(q),'phrase',`data-index="${i}"`)).join('')}</div>
-        <label class="reward-include"><input id="include-share-tasks" type="checkbox" ${includeTasks?'checked':''}/> 완료한 실천·미션도 카드에 표시</label>
-        <div class="share-preview" aria-label="공유 이미지 미리보기">${preview(s)}</div>
-        <div class="reward-share-actions"><button type="button" class="reward-primary" data-reward-action="download">이미지 저장</button><button type="button" class="reward-secondary" data-reward-action="share">휴대전화 공유 ↗</button></div>
-        <p class="reward-helper">스토리 또는 피드에 올릴 수 있는 PNG 이미지로 만들어요. 휴대전화 공유 메뉴에 인스타그램이 표시되는지는 기기에 따라 달라집니다.</p>
-        <h3 class="achievement-subtitle">쌓여 가는 나의 온기</h3><div class="achievement-badges">${badgeMarkup(s)}</div>
-        <p class="reward-helper">하루 쉬어도 지금까지 쌓인 성취는 없어지지 않아요. 기록은 이 기기에만 저장됩니다.</p>
-      </div>
-    </div>`;
+    const todayList = s.todayItems.slice(0,4).map(v=>`<div class="today-chip"><span>+1</span>${esc(v)}</div>`).join('') || '<div class="today-empty">아직 쌓인 온기가 없어요.</div>';
+    const tabs = `<div class="achievement-tabs" role="tablist" aria-label="성취 카드 메뉴"><button type="button" class="achievement-tab ${activeSection==='summary'?'selected':''}" data-reward-action="tab" data-tab="summary" aria-pressed="${activeSection==='summary'}">온기 요약</button><button type="button" class="achievement-tab ${activeSection==='share'?'selected':''}" data-reward-action="tab" data-tab="share" aria-pressed="${activeSection==='share'}">공유 카드</button></div>`;
+    const summary = `<div class="achievement-panel summary ${activeSection==='summary'?'active':''}"><p class="achievement-intro">${s.today?'아주 작은 한 걸음도 오늘의 성취예요.':'하나씩 나를 돌보다 보면 온기가 차곡차곡 쌓여요.'}</p><div class="achievement-stats"><div><strong>${s.today}</strong><span>오늘의 온기</span></div><div><strong>${s.days}</strong><span>함께한 날</span></div><div><strong>${s.total}</strong><span>모은 온기</span></div></div><div class="achievement-flow">기분 선택 +1 · 작은 실천 완료 +1 · 한 줄 기록 +1 · 미션 완료 1개마다 +1</div><div class="today-chip-grid">${todayList}</div>${sevenDayCalendar()}<h3 class="achievement-subtitle">쌓여 가는 MY ONGI</h3><div class="achievement-badges">${badgeMarkup(s)}</div><button type="button" class="reward-primary full" data-reward-action="tab" data-tab="share">예쁜 공유 카드 만들기</button></div>`;
+    const share = `<div class="achievement-panel share ${activeSection==='share'?'active':''}"><div class="achievement-heading-row"><strong>오늘의 작은 성취 카드</strong><span>인스타 스토리·피드 저장</span></div><div class="reward-formats" role="group" aria-label="이미지 크기">${markRadio(shareFormat,'story','스토리 · 9:16','format','data-format="story"')}${markRadio(shareFormat,'feed','피드 · 4:5','format','data-format="feed"')}</div><div class="reward-phrases" role="group" aria-label="공유 문구">${QUOTES.map((q,i)=>markRadio(sharePhrase,i,esc(q),'phrase',`data-index="${i}"`)).join('')}</div><label class="reward-include"><input id="include-share-tasks" type="checkbox" ${includeTasks?'checked':''}/> 오늘의 실천과 미션을 카드에 함께 담기</label><div class="share-preview" aria-label="공유 이미지 미리보기">${preview(s)}</div><div class="reward-share-actions"><button type="button" class="reward-primary" data-reward-action="download">이미지 저장</button><button type="button" class="reward-secondary" data-reward-action="share">휴대전화 공유 ↗</button></div><p class="reward-helper">기기에 저장한 뒤 인스타그램 스토리나 피드에 올리면 돼요. 일기 본문은 자동으로 공유되지 않아요.</p></div>`;
+    return `<div class="achievement-sheet" role="dialog" aria-modal="true" aria-labelledby="achievement-heading" tabindex="-1"><header class="achievement-head"><div><span class="achievement-eyebrow">MY ONGI</span><h2 id="achievement-heading">${celebration?'오늘도 잘했어요!':'오늘의 작은 성취'}</h2></div><button type="button" class="achievement-close" data-reward-action="close" aria-label="닫기">×</button></header><div class="achievement-body">${tabs}${summary}${share}</div></div>`;
   }
   function open(celebration=false) {
     ensureHost(); priorFocus=document.activeElement;
+    if(celebration) activeSection='summary';
     host.innerHTML=sheetContent(celebration);
     document.body.classList.add('achievement-open');
     overlayOpen=true;
@@ -157,9 +127,7 @@
   }
   function refresh(celebration=false) {
     if (!overlayOpen) return;
-    const pos=host.querySelector('.achievement-body')?.scrollTop||0;
     host.innerHTML=sheetContent(celebration);
-    host.querySelector('.achievement-body').scrollTop=pos;
   }
   function close() {
     if (!overlayOpen) return;
@@ -168,31 +136,69 @@
     priorFocus?.isConnected && priorFocus.focus();
   }
   function drawCard() {
-    const s = stats(),story=shareFormat==='story',W=1080,H=story?1920:1350;
-    const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
-    const c=canvas.getContext('2d');
-    c.fillStyle='#F8F2E8'; c.fillRect(0,0,W,H);
-    const glow=c.createRadialGradient(790,180,20,790,180,530);glow.addColorStop(0,'#FFEBD3');glow.addColorStop(1,'rgba(255,235,211,0)');c.fillStyle=glow;c.fillRect(0,0,W,630);
-    c.fillStyle='#445F4B';c.font='700 35px sans-serif';c.fillText('◒   오늘의 온기',82,125);
-    c.strokeStyle='#DBD9C9';c.lineWidth=2;c.beginPath();c.moveTo(82,164);c.lineTo(W-82,164);c.stroke();
-    const centerX=W/2, sunY=story?500:352;
-    const warm=c.createLinearGradient(centerX,sunY-175,centerX,sunY+170);warm.addColorStop(0,'#F5A978');warm.addColorStop(1,'#F8D4AA');
-    c.fillStyle=warm;c.beginPath();c.arc(centerX,sunY,190,Math.PI,0,false);c.closePath();c.fill();
-    c.strokeStyle='#8FA78F';c.lineWidth=7;c.beginPath();c.moveTo(255,sunY);c.quadraticCurveTo(centerX,sunY+170,825,sunY);c.stroke();
-    const base=story?860:665;
-    c.fillStyle='#7E8F78';c.textAlign='center';c.font='500 32px sans-serif';c.fillText(`${dateLabel()}  ·  오늘의 성취`,centerX,base);
-    c.fillStyle='#324637';let phraseSize=76;c.font=`700 ${phraseSize}px sans-serif`;while(c.measureText(QUOTES[sharePhrase]).width>W-125&&phraseSize>48){phraseSize-=2;c.font=`700 ${phraseSize}px sans-serif`;}c.fillText(QUOTES[sharePhrase],centerX,base+110);
-    c.fillStyle='#B47447';c.font='700 160px sans-serif';c.fillText(String(s.today),centerX,base+307);
-    c.fillStyle='#697A66';c.font='500 42px sans-serif';c.fillText('개의 온기',centerX,base+365);
-    const list=previewData(s);
-    c.textAlign='left';c.font='500 36px sans-serif';c.fillStyle='#506550';
-    const listY=base+458;
-    for(const [i,line] of list.entries()) {c.fillText(`✓   ${line.length>20?line.slice(0,19)+'…':line}`,145,listY+i*78);}
-    c.strokeStyle='#DDD7C8';c.beginPath();c.moveTo(85,H-145);c.lineTo(W-85,H-145);c.stroke();
-    c.fillStyle='#708372';c.font='400 30px sans-serif';c.textAlign='left';c.fillText('하루에 작은 온기 하나씩',85,H-93);
-    c.textAlign='right';c.font='600 27px sans-serif';c.fillText('ONEUL ONGI',W-85,H-93);
+    const s = stats(), story = shareFormat === 'story', W = 1080, H = story ? 1920 : 1350;
+    const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+    const c = canvas.getContext('2d');
+    const bg = c.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#F7F8FC'); bg.addColorStop(1, '#EEEFF7');
+    c.fillStyle = bg; c.fillRect(0, 0, W, H);
+
+    const panelX = 64, panelY = 64, panelW = W - 128, panelH = H - 128, r = 44;
+    c.fillStyle = '#FFFFFF'; roundRect(c, panelX, panelY, panelW, panelH, r, true, false);
+    c.strokeStyle = '#E7E9F2'; c.lineWidth = 2; roundRect(c, panelX, panelY, panelW, panelH, r, false, true);
+
+    // top bar
+    c.fillStyle = '#252A35'; c.font = '800 34px sans-serif'; c.textAlign = 'left'; c.fillText('오늘의 온기', panelX + 46, panelY + 62);
+    c.fillStyle = '#8A91A2'; c.font = '500 26px sans-serif'; c.textAlign = 'right'; c.fillText(dateLabel(), panelX + panelW - 46, panelY + 62);
+
+    // badge pill
+    c.fillStyle = '#F1ECFF'; roundRect(c, panelX + 46, panelY + 92, 310, 50, 25, true, false);
+    c.fillStyle = '#7D5BEE'; c.font = '700 22px sans-serif'; c.textAlign = 'center'; c.fillText('SMALL STEPS, BIG WARMTH', panelX + 201, panelY + 125);
+
+    // illustration area
+    const heroTop = panelY + 180;
+    c.fillStyle = '#F6F2FF'; roundRect(c, panelX + 46, heroTop, panelW - 92, story ? 270 : 200, 36, true, false);
+    const cx = W/2;
+    c.fillStyle = '#D9CCFF'; c.beginPath(); c.arc(cx + 160, heroTop + 72, 34, 0, Math.PI*2); c.fill();
+    c.fillStyle = '#8D67FF'; roundRect(c, cx - 290, heroTop + 130, 170, 78, 28, true, false);
+    c.fillStyle = '#FFFFFF'; c.font = '700 34px sans-serif'; c.textAlign = 'center'; c.fillText('+1', cx - 205, heroTop + 180);
+    c.fillStyle = '#242A36';
+    c.beginPath(); c.arc(cx + 40, heroTop + 116, 52, 0, Math.PI*2); c.fill();
+    c.fillStyle = '#FFDCCE'; c.beginPath(); c.arc(cx + 40, heroTop + 104, 44, 0, Math.PI*2); c.fill();
+    c.fillStyle = '#5F648B'; roundRect(c, cx - 10, heroTop + 144, 102, 86, 30, true, false);
+    c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(cx + 22, heroTop + 102, 4, 0, Math.PI*2); c.arc(cx + 56, heroTop + 102, 4, 0, Math.PI*2); c.fill();
+    c.strokeStyle = '#FFFFFF'; c.lineWidth = 4; c.beginPath(); c.moveTo(cx + 26, heroTop + 126); c.quadraticCurveTo(cx + 40, heroTop + 136, cx + 54, heroTop + 126); c.stroke();
+    c.fillStyle = '#EDE7FF'; roundRect(c, cx + 120, heroTop + 132, 118, 70, 26, true, false);
+    c.fillStyle = '#7D5BEE'; c.font = '700 32px sans-serif'; c.fillText('완료', cx + 179, heroTop + 177);
+
+    // phrase and count
+    const phraseY = heroTop + (story ? 360 : 280);
+    c.textAlign = 'center'; c.fillStyle = '#2A3140'; c.font = '800 72px sans-serif';
+    let phrase = QUOTES[sharePhrase], size = 72; while(c.measureText(phrase).width > panelW - 150 && size > 48){ size -= 2; c.font = `800 ${size}px sans-serif`; }
+    c.fillText(phrase, cx, phraseY);
+    c.fillStyle = '#7D5BEE'; c.font = '900 182px sans-serif'; c.fillText(String(s.today), cx, phraseY + 205);
+    c.fillStyle = '#7D8598'; c.font = '700 38px sans-serif'; c.fillText('오늘 모은 온기', cx, phraseY + 260);
+
+    const list = previewData(s);
+    if (list.length) {
+      const listTop = phraseY + 328, listH = Math.min(list.length, 4) * 72 + 28;
+      c.fillStyle = '#F7F8FC'; roundRect(c, panelX + 70, listTop, panelW - 140, listH, 30, true, false);
+      c.textAlign = 'left'; c.font = '600 30px sans-serif';
+      list.slice(0,4).forEach((line, i) => {
+        const y = listTop + 50 + i * 72;
+        c.fillStyle = '#8D67FF'; c.fillText('+1', panelX + 110, y);
+        c.fillStyle = '#505869'; c.fillText(line.length > 26 ? line.slice(0, 25) + '…' : line, panelX + 185, y);
+      });
+    }
+
+    c.strokeStyle = '#E9EBF3'; c.beginPath(); c.moveTo(panelX + 46, H - 150); c.lineTo(panelX + panelW - 46, H - 150); c.stroke();
+    c.fillStyle = '#9097A7'; c.font = '600 26px sans-serif'; c.textAlign = 'left'; c.fillText('share your tiny win', panelX + 46, H - 108);
+    c.textAlign = 'right'; c.font = '800 26px sans-serif'; c.fillText('ONEUL ONGI', panelX + panelW - 46, H - 108);
     return canvas;
   }
+  function roundRect(c,x,y,w,h,r,fill,stroke){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();if(fill)c.fill();if(stroke)c.stroke();}
+  function drawLeaf(c,x,y,dir){c.save();c.translate(x,y);c.rotate(dir);c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(42,-34,78,0);c.quadraticCurveTo(42,34,0,0);c.closePath();c.fill();c.restore();}
+
   const toPNG=canvas=>new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('PNG 생성 실패')),'image/png'));
   function download(blob) {
     const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;
@@ -225,6 +231,7 @@
       const type=action.dataset.rewardAction;
       if(type==='open'){open();return;}
       if(type==='close'){close();return;}
+      if(type==='tab'){activeSection=action.dataset.tab==='share'?'share':'summary';refresh();return;}
       if(type==='format'){shareFormat=action.dataset.format==='feed'?'feed':'story';refresh();return;}
       if(type==='phrase'){sharePhrase=Number(action.dataset.index)||0;refresh();return;}
       if(type==='download'){exportCard(false);return;}

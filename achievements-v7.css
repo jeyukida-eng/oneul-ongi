@@ -72,3 +72,114 @@
 .reward-weekday small{font-size:10px}
 .reward-weekday span{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:#eef0e9;color:#b9c2b5;font-size:15px}
 .reward-weekday span.active{background:#e5eddf;color:#5e815e}
+
+
+/* v8 prettier one-screen achievement card */
+.achievement-sheet{height:100dvh;max-height:100dvh;border-radius:0;background:#F8F5EE}
+.achievement-head{padding:14px 16px 12px}
+.achievement-head h2{font-size:18px}
+.achievement-body{overflow:hidden;padding:12px 14px calc(14px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
+.achievement-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.achievement-tab{border:1px solid #e2ded2;background:#fffdf8;border-radius:14px;padding:11px 8px;color:#72806f;font-size:12px;font-weight:800}
+.achievement-tab.selected{background:#eaf1e5;border-color:#aebfa3;color:#395740}
+.achievement-panel{display:none;flex:1;min-height:0}
+.achievement-panel.active{display:flex;flex-direction:column;gap:8px}
+.achievement-intro{font-size:11px;line-height:1.55;margin:0;color:#7f887a}
+.achievement-stats{margin-bottom:0}
+.achievement-stats>div{padding:9px 2px}
+.achievement-stats strong{font-size:23px}
+.achievement-flow{background:#eef3e9;border:1px solid #dde7d6;color:#577056;border-radius:12px;padding:10px 12px;font-size:11px;line-height:1.5}
+.today-chip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.today-chip,.today-empty{background:#fffefa;border:1px solid #e8e2d6;border-radius:12px;padding:9px 10px;font-size:11px;color:#5a6e58;display:flex;gap:6px;align-items:center}
+.today-chip span{display:inline-grid;place-items:center;min-width:25px;height:25px;border-radius:999px;background:#ecf1e8;color:#b5784d;font-weight:900;font-size:10px}
+.today-empty{grid-column:1/-1;justify-content:center;color:#95a094}
+.reward-week{margin:0;padding:10px}
+.reward-week-title{font-size:11px;margin-bottom:6px}
+.reward-week-title span{display:none}
+.reward-weekday small{font-size:9px}
+.reward-weekday span{width:23px;height:23px;font-size:13px}
+.achievement-subtitle{margin:0;font-size:13px}
+.achievement-badges{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.achievement-badge{padding:8px 4px}
+.achievement-badge strong{font-size:10px}
+.achievement-badge small{font-size:9px}
+.reward-primary.full{width:100%;margin-top:auto}
+.reward-formats,.reward-phrases{margin:0}
+.reward-include{padding:0;font-size:11px}
+.share-preview{padding:10px;border-radius:16px;background:#ebe6da;flex:1;min-height:0;align-items:center}
+.share-card{width:min(100%,250px);aspect-ratio:9/16;background:linear-gradient(180deg,#FFFDF7,#F7F1E7);border-radius:26px;padding:14px 14px 12px;display:flex;flex-direction:column;box-shadow:0 10px 28px rgba(60,72,56,.12);color:#3e5342}
+.share-card-feed{aspect-ratio:4/5}
+.share-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.share-card-brand{font-size:11px;font-weight:800;letter-spacing:-.03em}.share-card-seed{color:#b97b4b}.share-card-date{font-size:9px;color:#9aa497}
+.share-card-art{position:relative;height:88px;margin:10px 0 8px;flex:none}
+.share-card-glow{position:absolute;inset:auto 50% 8px auto;transform:translateX(50%);width:136px;height:136px;border-radius:50%;background:radial-gradient(circle,rgba(251,226,199,.9),rgba(251,226,199,0) 68%)}
+.share-card-sun{position:absolute;left:50%;top:16px;transform:translateX(-50%);width:58px;height:58px;border-radius:50%;background:linear-gradient(180deg,#F5B88A,#F3D09F)}
+.share-card-stem{position:absolute;left:50%;top:72px;transform:translateX(-50%);width:3px;height:38px;background:#7F987A;border-radius:999px}
+.share-card-leaf{position:absolute;width:36px;height:20px;background:#A8C19D;border-radius:100% 0 100% 0}
+.share-card-leaf.leaf-left{left:calc(50% - 34px);top:86px;transform:rotate(-28deg)}
+.share-card-leaf.leaf-right{left:50%;top:94px;transform:rotate(28deg) scaleX(-1)}
+.share-card-copy{text-align:center;font-size:18px;line-height:1.42;font-weight:800;letter-spacing:-.04em;margin-top:4px}
+.share-card-count{text-align:center;margin-top:10px}.share-card-count strong{display:block;font-size:54px;line-height:1;color:#B6794F}.share-card-count span{display:block;margin-top:5px;font-size:11px;color:#71816f;font-weight:700}
+.share-card-list{margin-top:10px;background:#ffffffa8;border-radius:14px;padding:10px;display:grid;gap:6px;min-height:0}
+.share-card-list div{display:flex;gap:6px;align-items:center;font-size:10px;color:#627260;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.share-card-list span{color:#BD7E52;font-weight:900}
+.share-card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:9px;border-top:1px solid #e4dbcf;color:#8c9888;font-size:8px}.share-card-foot span{font-size:8px;font-weight:700;letter-spacing:.08em}
+.share-card-feed .share-card-art{height:70px}.share-card-feed .share-card-copy{font-size:16px}.share-card-feed .share-card-count strong{font-size:42px}
+.reward-share-actions{margin-top:0}
+.reward-helper{margin:0;font-size:10.5px;line-height:1.55}
+@media(max-height:760px){.achievement-body{padding:10px 12px calc(10px + env(safe-area-inset-bottom));gap:7px}.today-chip,.today-empty,.achievement-flow{padding:8px 9px;font-size:10.5px}.share-card{width:min(100%,220px)}.share-card-copy{font-size:16px}.share-card-count strong{font-size:48px}}
+
+/* v10 achievement redesign */
+.achievement-root{background:rgba(28,32,44,.42)!important}
+.achievement-sheet{background:linear-gradient(180deg,#fbfbfe 0%,#f4f5fb 100%)!important;color:#2a3140!important;box-shadow:0 -16px 46px rgba(33,39,56,.24)!important}
+.achievement-head{padding:16px 18px 14px!important;border-bottom:1px solid #ebeef5!important;background:rgba(255,255,255,.78)}
+.achievement-eyebrow{color:#9387bf!important;letter-spacing:.08em;font-weight:800!important}
+.achievement-head h2{color:#252b37!important;font-size:22px!important}
+.achievement-close{width:40px!important;height:40px!important;border-radius:16px!important;background:#f2f4fa!important;color:#6d7586!important}
+.achievement-body{padding:14px 16px calc(18px + env(safe-area-inset-bottom))!important;gap:10px!important;overflow:auto!important}
+.achievement-tabs{gap:8px!important}
+.achievement-tab{background:#fff!important;border:1px solid #e8ebf4!important;border-radius:18px!important;color:#727a8b!important;padding:13px 8px!important;font-size:13px!important}
+.achievement-tab.selected{background:#f1ecff!important;border-color:#c7b8ff!important;color:#714cf0!important}
+.achievement-intro{font-size:13px!important;color:#7a8293!important}
+.achievement-stats>div{background:#fff!important;border:1px solid #ebeef5!important;border-radius:20px!important;padding:14px 4px!important;box-shadow:0 8px 20px rgba(41,46,63,.04)}
+.achievement-stats strong{font-size:30px!important;color:#2d3441!important}
+.achievement-stats span{font-size:12px!important;color:#8c93a2!important}
+.achievement-flow{background:linear-gradient(180deg,#faf6ff 0%,#f3eeff 100%)!important;border:1px solid #e1d6ff!important;border-radius:18px!important;color:#6e48ef!important;font-size:12px!important;padding:12px 14px!important}
+.today-chip-grid{gap:8px!important}.today-chip,.today-empty{background:#fff!important;border:1px solid #ebeef5!important;border-radius:18px!important;padding:12px 12px!important;font-size:12px!important;color:#546072!important}
+.today-chip span{background:#f2ecff!important;color:#7f57ff!important;min-width:30px;height:30px;border-radius:12px!important}
+.reward-week{background:#fff!important;border:1px solid #ebeef5!important;border-radius:22px!important;padding:12px!important}
+.reward-week-title{font-size:14px!important;color:#353c49!important}.reward-week-title span{display:block!important;color:#9aa0ad!important;font-size:10px!important}
+.reward-weekday{color:#8f96a4!important}.reward-weekday span{background:#f4f6fb!important;color:#c2c7d2!important}.reward-weekday span.active{background:#f1ecff!important;color:#7f57ff!important}
+.achievement-subtitle{font-size:14px!important;color:#2c3341!important;margin-top:2px!important}
+.achievement-badges{gap:8px!important}
+.achievement-badge{background:#fff!important;border:1px solid #ebeef5!important;border-radius:20px!important;padding:12px 6px!important}
+.achievement-badge .badge-symbol{font-size:20px!important;color:#8c67ff!important}.achievement-badge.pending .badge-symbol{color:#c1c6d1!important}
+.achievement-badge strong{color:#353c49!important;font-size:11px!important}.achievement-badge small{color:#8f96a4!important;font-size:10px!important}
+.reward-primary.full,.reward-primary{background:linear-gradient(180deg,#9b7cff,#7f57ff)!important;border:0!important;color:#fff!important;border-radius:18px!important;padding:14px 12px!important;box-shadow:0 10px 24px rgba(127,87,255,.18)}
+.reward-secondary{background:#f4f6fb!important;border:1px solid #e8ebf4!important;color:#5f6778!important;border-radius:18px!important}
+.reward-formats,.reward-phrases{gap:8px!important}
+.reward-chip{background:#fff!important;border:1px solid #e8ebf4!important;color:#697183!important;border-radius:16px!important;padding:10px 12px!important}
+.reward-chip.selected{background:#f1ecff!important;border-color:#c7b8ff!important;color:#714cf0!important}
+.reward-include{color:#798192!important;padding:2px 0 0!important}.reward-include input{accent-color:#7f57ff!important}
+.share-preview{background:linear-gradient(180deg,#f2f4fb 0%,#edf0f8 100%)!important;border:1px solid #e7ebf4!important;border-radius:24px!important;padding:14px!important}
+.share-card{width:min(100%,255px);background:linear-gradient(180deg,#fff 0%,#f8f9fd 100%)!important;border-radius:28px!important;padding:14px!important;box-shadow:0 12px 30px rgba(41,46,63,.08)!important;display:flex;flex-direction:column;gap:10px;color:#2a3140}
+.share-card-feed{aspect-ratio:4/5!important}.share-card-story{aspect-ratio:9/16!important}
+.share-card-top{display:flex;align-items:center;justify-content:space-between;gap:6px}.share-card-brand{font-size:11px;font-weight:800;color:#2a3140}.share-card-date{font-size:10px;color:#98a0af}
+.share-card-badge{align-self:flex-start;background:#f1ecff;color:#7d5bee;font-weight:800;font-size:9px;padding:7px 10px;border-radius:999px;letter-spacing:.04em}
+.share-card-hero{background:#f6f2ff;border-radius:22px;min-height:110px;padding:16px 14px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;position:relative}
+.share-card-dot{width:22px;height:22px;border-radius:50%;background:#d6c8ff;box-shadow:26px 16px 0 -6px #8d67ff,-28px -6px 0 -8px #e5deff}
+.share-card-copy{text-align:center;font-size:16px;font-weight:800;line-height:1.45;letter-spacing:-.04em;color:#2b3140}
+.share-card-count{text-align:center;padding:4px 0 2px}.share-card-count strong{display:block;font-size:48px;line-height:1;color:#7d5bee}.share-card-count span{display:block;margin-top:4px;font-size:12px;color:#7f8798;font-weight:700}
+.share-card-list{background:#f7f8fc;border-radius:18px;padding:10px 12px;display:grid;gap:7px}.share-card-list div{display:flex;gap:8px;align-items:center;font-size:11px;color:#525b6b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.share-card-list span{color:#7d5bee;font-weight:900}
+.share-card-foot{margin-top:auto;padding-top:8px;border-top:1px solid #edf0f6;display:flex;justify-content:space-between;gap:6px;font-size:9px;color:#98a0af;text-transform:uppercase;letter-spacing:.08em}
+.reward-helper{font-size:11px!important;color:#8a92a2!important}
+.achievement-feedback{background:#2f3644!important;color:#fff!important;border-radius:14px!important}
+@media(max-height:760px){.achievement-head h2{font-size:20px!important}.achievement-body{padding:12px 14px calc(14px + env(safe-area-inset-bottom))!important}.share-card{width:min(100%,230px)}.share-card-copy{font-size:15px}.share-card-count strong{font-size:42px}}
+@media(max-height:760px){
+  .achievement-body{gap:7px!important;padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important}
+  .achievement-intro{font-size:12px!important}
+  .achievement-stats>div{padding:10px 4px!important}
+  .achievement-flow{padding:10px 12px!important;font-size:11px!important}
+  .today-chip,.today-empty{padding:8px 10px!important}
+  .reward-week{padding:9px!important}
+  .achievement-badge{padding:8px 6px!important}
+}
