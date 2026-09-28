@@ -226,7 +226,7 @@
 
         <nav class="dock-nav" aria-label="주요 메뉴">
           <button type="button" class="dock-item" data-action="sheet" data-sheet="growth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21v-9m0 3c-5 0-8-3-8-8 5 0 8 3 8 8Zm0-4c0-5 3-8 8-8 0 5-3 8-8 8Z"/></svg><span>실천</span></button>
-          <button type="button" class="dock-item" data-reward-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5M5 8H3a2 2 0 0 0 2 2M19 8h2a2 2 0 0 1-2 2"/></svg><span>온기</span></button>
+          <button type="button" class="dock-item" data-premium-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5M5 8H3a2 2 0 0 0 2 2M19 8h2a2 2 0 0 1-2 2"/></svg><span>온기</span></button>
           <button type="button" class="dock-item center current" data-action="home"><span class="home-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span><span>홈</span></button>
           <button type="button" class="dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5c3-1 5-.8 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-1.8 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
           <button type="button" class="dock-item" data-action="sheet" data-sheet="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 4h9l3 3v13H6z"/><path d="M9 12h6M9 16h6"/></svg><span>기록</span></button>
@@ -319,7 +319,7 @@
     if(action==='backup'){backup();return}
     if(action==='install'){installApp();return}
     if(action==='clear-confirm'){sheetShell('저장된 기록을 지울까요?',`<p>이 기기에 저장된 감정·일기·미션 기록이 모두 삭제됩니다. 되돌릴 수 없으니 먼저 백업해 주세요.</p><div class="manage-actions"><button class="soft-btn" type="button" data-action="sheet" data-sheet="records">돌아가기</button><button class="solid-btn" type="button" data-action="clear-data">모두 삭제</button></div>`,'records');return}
-    if(action==='clear-data'){try{localStorage.removeItem(STORE_KEY);localStorage.removeItem('oneul-ongi-clean-v3');localStorage.removeItem('oneul-ongi-simple-v2');state=emptyState();chosen=null;draft='';renderHome();closeSheet();say('이 기기의 기록을 삭제했어요.')}catch(_err){say('삭제하지 못했어요. 브라우저 설정을 확인해 주세요.')}return}
+    if(action==='clear-data'){try{localStorage.removeItem(STORE_KEY);localStorage.removeItem('oneul-ongi-clean-v3');localStorage.removeItem('oneul-ongi-simple-v2');localStorage.removeItem('oneul-ongi-premium-v1');state=emptyState();chosen=null;draft='';renderHome();closeSheet();say('이 기기의 기록을 삭제했어요.')}catch(_err){say('삭제하지 못했어요. 브라우저 설정을 확인해 주세요.')}return}
   });
   root.addEventListener('click',event=>{if(event.target===root)closeSheet()});
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&root.innerHTML)closeSheet()});
@@ -327,5 +327,6 @@
   window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event});
   if('serviceWorker' in navigator && /^https?:$/.test(location.protocol))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
   renderHome();
+  window.__ongiPremiumRefresh=()=>{state=readState();const r=entry();chosen=validMoods.includes(r?.mood)?r.mood:null;draft=r?.note||'';renderHome();};
   window.__ongiV6Checks={todayKey,daySerial,dailyQuoteEntry,dailyStory,dailyTasks,validMoods,stories:stories.length,quotes:content.quotes.length,growthTasks:Object.values(growthCategories).reduce((a,c)=>a+c.tasks.length,0),emotionMessages:Object.fromEntries(Object.entries(moods).map(([k,v])=>[k,v.messages.length])),emotionRoutines:Object.fromEntries(Object.entries(moods).map(([k,v])=>[k,v.routines.length]))};
 })();

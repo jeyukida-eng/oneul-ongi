@@ -11,3 +11,8 @@
 
 앱의 일기·감정·실천 기록은 사용자의 기기에만 저장됩니다. 기기 교체 전에 백업하세요.
 GitHub Pages 저장소 루트에 index.html, CSS·JS 파일, manifest, sw.js, icons/ 폴더를 배포합니다.
+
+
+## v12 PLUS (preview only)
+
+Bottom 온기 navigation opens a four-screen premium preview: personalized mission, 7/30-day growth report, 7/21/30-day challenge and printable 7/30/100-day record booklet. All data is stored on-device. Monthly ₩2,900 is an intended price; billing, subscriptions and server sync are not connected.
