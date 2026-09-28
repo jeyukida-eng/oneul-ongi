@@ -226,10 +226,11 @@
 
         <nav class="dock-nav" aria-label="주요 메뉴">
           <button type="button" class="dock-item" data-action="sheet" data-sheet="growth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21v-9m0 3c-5 0-8-3-8-8 5 0 8 3 8 8Zm0-4c0-5 3-8 8-8 0 5-3 8-8 8Z"/></svg><span>실천</span></button>
-          <button type="button" class="dock-item" data-premium-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5M5 8H3a2 2 0 0 0 2 2M19 8h2a2 2 0 0 1-2 2"/></svg><span>온기</span></button>
+          <button type="button" class="dock-item" data-reward-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5M5 8H3a2 2 0 0 0 2 2M19 8h2a2 2 0 0 1-2 2"/></svg><span>온기</span></button>
           <button type="button" class="dock-item center current" data-action="home"><span class="home-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span><span>홈</span></button>
           <button type="button" class="dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5c3-1 5-.8 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-1.8 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
           <button type="button" class="dock-item" data-action="sheet" data-sheet="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 4h9l3 3v13H6z"/><path d="M9 12h6M9 16h6"/></svg><span>기록</span></button>
+          <button type="button" class="dock-item dock-premium" data-premium-action="open" aria-label="프리미엄 PLUS 열기"><span class="dock-premium-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.9 6.1 6.7.9-4.9 4.8 1.2 6.8-5.9-3.2-5.9 3.2 1.2-6.8-4.9-4.8 6.7-.9z"/></svg></span><span class="dock-premium-name">프리미엄</span></button>
         </nav>
       </div>`;
   }

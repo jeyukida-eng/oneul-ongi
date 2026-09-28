@@ -128,4 +128,9 @@ document.addEventListener('keydown',event=>{if(!active)return;if(event.key==='Es
 // Premium missions and challenge completions count as regular 온기 in the existing free achievement card.
 window.ONGI_CONTENT.tasks.premium=Object.values(taskIndex).map(({id,title})=>({id,title})).concat(challenges.map(c=>({id:'plus_challenge_'+c.id,title:c.title})));
 window.__ongiPremium={show,close,readPlus,readMain,reportData,dayTasks,bookRows,topics,challenges};
+// Direct preview link for users whose installed app is still displaying old cached navigation.
+if(new URLSearchParams(location.search).get('premium')==='1') {
+  window.addEventListener('load',()=>show('home'),{once:true});
+}
+
 })();
