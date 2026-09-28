@@ -178,59 +178,41 @@
     return `<svg viewBox="0 0 92 92" aria-hidden="true"><rect width="92" height="92" rx="24" fill="#fff2f0"/><rect x="20" y="19" width="50" height="54" rx="10" fill="#fff" stroke="#2f3344" stroke-width="2.5"/><path d="M29 34h26M29 44h21M29 54h24" stroke="#ddb2ab" stroke-width="4" stroke-linecap="round"/><path d="M61 61l11-11 8 8-11 11-10 2z" fill="#8f6bff" opacity=".7"/><path d="M58 64l11-11 8 8" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linejoin="round"/><path d="M59 65l-1 6 6-1" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
   }
   function renderHome(){
-    const r=entry(),m=r&&moods[r.mood],routine=routineFor(r),todayStory=dailyStory(),todayQuoteText=dailyQuote(),todayOngi=ongiCount(),days=countDays(),growthDone=completeGrowthCount();
-    const phrase=m?m.messages[daySerial()%m.messages.length]:'기분을 먼저 고르면 오늘의 문장과 작은 실천이 더 잘 맞춰져요.';
-    const title=m?m.title:'오늘 마음을 먼저 살펴보는 시간';
+    const r=entry(),m=r&&moods[r.mood],routine=routineFor(r),todayStory=dailyStory(),todayQuoteText=dailyQuote(),todayOngi=ongiCount();
+    const completed=(m?1:0)+(r?.smallDone?1:0)+(r?.note?.trim()?1:0);
     const flagged=worryPattern.test(r?.note||'');
     main.innerHTML=`
-      <div class="app-home-v9">
-        <header class="hero-bar">
-          <div class="hero-brand hero-brand-textonly"><strong>오늘의 온기</strong><small>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</small></div>
-          <div class="hero-tools"><button class="circle-tool" type="button" data-action="sheet" data-sheet="install" aria-label="설치"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m8 10 4 4 4-4"/><path d="M5 17v3h14v-3"/></svg></button><button class="circle-tool" type="button" data-action="sheet" data-sheet="records" aria-label="기록"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 4h9l3 3v13H6z"/><path d="M15 4v4h4M9 12h6M9 16h6"/></svg></button></div>
+      <div class="app-home-v9 free-home-v18">
+        <header class="free-header">
+          <div class="free-brand"><strong>오늘의 온기</strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
+          <button type="button" class="free-plus-cta premium-hero-entry" data-premium-action="open" aria-label="프리미엄 PLUS 맞춤 성장 체험하기"><span class="free-plus-star" aria-hidden="true">✦</span><span><strong>프리미엄 PLUS</strong><small>맞춤 성장 알아보기</small></span><span aria-hidden="true">›</span></button>
         </header>
-
-        <section class="service-card home-hero" aria-labelledby="hero-title">
-          <div class="card-topline"><span class="tiny-label">TODAY</span><button class="premium-hero-entry" type="button" data-premium-action="open" aria-label="프리미엄 PLUS 월 2,900원 맞춤 성장 화면 열기"><span class="premium-hero-glyph" aria-hidden="true">✦</span><span class="premium-hero-copy"><strong>프리미엄 <em>PLUS</em></strong><small>월 2,900원 · 맞춤 성장</small></span><span class="premium-hero-arrow" aria-hidden="true">›</span></button></div>
-          <div class="hero-body"><div class="hero-copy"><h1 id="hero-title">${esc(title)}</h1><p>${esc(phrase)}</p></div><div class="hero-art">${heroArt()}</div></div>
-          <div class="quote-strip"><span>오늘의 문장</span><strong>“${esc(todayQuoteText)}”</strong></div>
-          <div class="mood-pills" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="mood-pill" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${esc(v.label)}</button>`).join('')}</div>
+        <section class="free-welcome" aria-label="오늘의 가벼운 기록">
+          <div class="free-section-head"><span class="free-eyebrow">TODAY</span><button class="free-today-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
+          <h1 id="free-today-title">${m?esc(m.title):'오늘 마음은 어떤가요?'}</h1>
+          <button type="button" class="free-quote" data-action="sheet" data-sheet="stories" aria-label="오늘의 문장 더 읽기">“${esc(todayQuoteText)}”</button>
+          <div class="free-mood-title"><span>오늘의 기분</span><small>${m?'기록했어요 ✓':'하나만 골라주세요'}</small></div>
+          <div class="free-mood-row" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="free-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${esc(v.label)}</button>`).join('')}</div>
         </section>
-
-        <div class="home-row">
-          <section class="service-card home-mini routine" aria-label="오늘의 작은 실천">
-            <div class="mini-head"><div><span class="card-kicker">작은 실천</span><h2>${esc(routine?routine.title:'기분을 먼저 골라주세요')}</h2></div><div class="mini-art">${routineArt()}</div></div>
-            <p class="mini-copy">${esc(routine?routine.detail:'부담 없는 실천 하나를 추천해 드릴게요.')}</p>
-            <div class="mini-foot">${r?.smallDone?'<span class="state-badge done">완료됨</span>':`<span class="state-badge">${routine?esc(routine.minute):'1~5분'}</span><div class="mini-buttons"><button class="ghost-btn" type="button" data-action="swap" ${!routine?'disabled':''}>바꾸기</button><button class="primary-btn" type="button" data-action="done" ${!routine?'disabled':''}>완료</button></div>`}</div>
-          </section>
-
-          <section class="service-card home-mini note-card" aria-label="오늘 한 줄 기록">
-            <div class="mini-head"><div><span class="card-kicker">한 줄 기록</span><h2>오늘의 마음 남기기</h2></div><div class="mini-art">${recordArt()}</div></div>
-            <div class="note-stack"><textarea id="note" class="note-input note-input-v9" rows="2" maxlength="240" placeholder="오늘 있었던 일이나 마음을 한 줄로 적어보세요.">${esc(draft)}</textarea><button class="primary-btn block" type="button" data-action="save-note">저장</button></div>
-            ${flagged?`<div class="safety-inline compact">혼자 감당하기 어렵다면 <a href="tel:109">109</a> 또는 <a href="tel:119">119</a></div>`:''}
-          </section>
-        </div>
-
-        <div class="home-row bottom-row">
-          <section class="service-card home-mini story-card" aria-label="오늘의 이야기">
-            <div class="mini-head"><div><span class="card-kicker">오늘의 이야기</span><h2>${esc(todayStory.title)}</h2></div><div class="mini-art mini-art-story">${storyArt()}</div></div>
-            <p class="mini-copy">${esc(todayStory.summary)}</p>
-            <div class="mini-foot"><span class="state-badge light">${esc(todayStory.category)}</span><button class="link-btn" type="button" data-action="article" data-id="${esc(todayStory.id)}">읽기 ↗</button></div>
-          </section>
-
-          <section class="service-card home-mini ongi-card" aria-label="나의 온기">
-            <div class="mini-head"><div><span class="card-kicker">나의 온기</span><h2>차곡차곡 쌓이는 성취</h2></div><div class="today-bubble"><strong>${todayOngi}</strong><span>today</span></div></div>
-            <div class="stat-line"><div><b>${days}</b><span>함께한 날</span></div><div><b>${growthDone}</b><span>오늘 미션</span></div><div><b>${Object.keys(state.records).filter(validDate).length}</b><span>기록 수</span></div></div>
-            <div class="mini-foot"><button class="ghost-btn" type="button" data-action="sheet" data-sheet="growth">미션 보기</button><button class="primary-btn" type="button" data-reward-action="open">성취 카드</button></div>
-          </section>
-        </div>
-
-        <nav class="dock-nav" aria-label="주요 메뉴">
-          <button type="button" class="dock-item" data-action="sheet" data-sheet="growth"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21v-9m0 3c-5 0-8-3-8-8 5 0 8 3 8 8Zm0-4c0-5 3-8 8-8 0 5-3 8-8 8Z"/></svg><span>실천</span></button>
-          <button type="button" class="dock-item" data-reward-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5M5 8H3a2 2 0 0 0 2 2M19 8h2a2 2 0 0 1-2 2"/></svg><span>온기</span></button>
-          <button type="button" class="dock-item center current" data-action="home"><span class="home-fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span><span>홈</span></button>
-          <button type="button" class="dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5c3-1 5-.8 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-1.8 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
-          <button type="button" class="dock-item" data-action="sheet" data-sheet="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 4h9l3 3v13H6z"/><path d="M9 12h6M9 16h6"/></svg><span>기록</span></button>
-          <button type="button" class="dock-item dock-premium" data-premium-action="open" aria-label="프리미엄 PLUS 열기"><span class="dock-premium-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.9 6.1 6.7.9-4.9 4.8 1.2 6.8-5.9-3.2-5.9 3.2 1.2-6.8-4.9-4.8 6.7-.9z"/></svg></span><span class="dock-premium-name">프리미엄</span></button>
+        <section class="free-action-card" aria-label="오늘의 작은 실천">
+          <div class="free-card-top"><span class="free-eyebrow">01 · 작은 실천</span><button class="free-quiet-link" type="button" data-action="sheet" data-sheet="growth">다른 미션 ›</button></div>
+          <h2>${esc(routine?routine.title:'기분을 고르면 미션이 나와요')}</h2>
+          <p>${esc(routine?routine.detail:'1~5분이면 할 수 있는 작은 일을 추천해 드릴게요.')}</p>
+          <div class="free-action-footer">${r?.smallDone?`<span class="free-complete">✓ 오늘의 실천 완료</span>`:`<span class="free-minute">${esc(routine?routine.minute:'1~5분')}</span><div class="free-action-buttons"><button class="free-text-button" type="button" data-action="swap" ${!routine?'disabled':''}>바꾸기</button><button class="free-main-button" type="button" data-action="done" ${!routine?'disabled':''}>완료 ✓</button></div>`}</div>
+        </section>
+        <section class="free-note-card" aria-label="오늘 한 줄 기록">
+          <div class="free-card-top"><span class="free-eyebrow">02 · 한 줄 기록</span><span class="free-note-count" aria-label="오늘 기록 ${r?.note?.trim()?'완료':'미완료'}">${r?.note?.trim()?'완료 ✓':'가볍게 한 줄'}</span></div>
+          <div class="free-note-control"><textarea id="note" class="free-note-input" rows="2" maxlength="240" placeholder="오늘 마음에 남은 일을 적어보세요.">${esc(draft)}</textarea><button class="free-main-button free-save-button" type="button" data-action="save-note">저장</button></div>
+          ${flagged?`<div class="free-safety">지금 안전이 걱정된다면 <a href="tel:109">109</a> · <a href="tel:119">119</a></div>`:''}
+        </section>
+        <button class="free-story-row" type="button" data-action="article" data-id="${esc(todayStory.id)}" aria-label="오늘의 이야기 ${esc(todayStory.title)} 읽기"><span class="free-story-symbol" aria-hidden="true">▤</span><span class="free-story-copy"><small>오늘의 이야기</small><strong>${esc(todayStory.title)}</strong></span><span aria-hidden="true" class="free-story-arrow">읽기 ↗</span></button>
+        <div class="free-progress"><span>오늘 나를 위해 한 일</span><strong>${completed} / 3</strong><span class="free-progress-track" role="progressbar" aria-label="무료 세 가지 일과" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${completed}"><i style="width:${Math.round(100*completed/3)}%"></i></span></div>
+        <nav class="free-dock dock-nav" aria-label="주요 메뉴">
+          <button type="button" class="free-dock-item current" data-action="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-7 9 7M5 10v10h14V10"/></svg><span>홈</span></button>
+          <button type="button" class="free-dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c3-1 5-1 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-2 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
+          <button type="button" class="free-dock-item" data-reward-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5"/></svg><span>온기</span></button>
+          <button type="button" class="free-dock-item" data-action="sheet" data-sheet="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h9l3 3v13H6zM9 12h6M9 16h6"/></svg><span>기록</span></button>
+          <button type="button" class="free-dock-item free-dock-plus" data-premium-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3 6 6.5 1-4.8 4.7 1.2 6.8-5.9-3-5.9 3 1.2-6.8L2.5 9 9 8Z"/></svg><span>프리미엄</span></button>
         </nav>
       </div>`;
   }

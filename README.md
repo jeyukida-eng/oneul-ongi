@@ -31,3 +31,7 @@ The daily premium mission now provides goal-specific guidance (six selectable go
 ## v17: Four-question PLUS daily plan
 
 The PLUS mission screen now displays four tappable cards: why this goal-based mission was recommended (only chosen settings and real 7-day completion data); how to execute it using a two-/three-step on-device workbook; yesterday versus today's accumulated On-gi from actual local records (honestly indicating missing prior records and partial current-day data); and an optional suggested practice for tomorrow, explicitly subject to tomorrow's energy, time and feedback. The previous optional bonus and seven-day routine are accessible via a dedicated plan screen. Difficulty recommendations use prior days so today's incomplete tasks do not shift its level while in progress. On-device completion/reflection/feedback remain private. ₩2,900 remains a preview price; billing and server sync are not connected.
+
+## v18 — 가벼운 무료 홈
+
+무료 홈은 기분 선택, 1~5분의 작은 실천, 한 줄 기록의 세 가지 일과만 우선 배치합니다. 매일 바뀌는 문장, 짧은 이야기, 기존 성장 미션, 성취 카드와 인스타 공유, 기록/백업은 그대로 유지합니다. 프리미엄 PLUS 진입은 상단의 넓은 버튼과 하단 메뉴에서 제공합니다. 무료 세 가지 일과를 모두 마쳤을 때 하루 한 번 성취 축하 화면을 보여주며, 첫 두 행동에는 방해하는 팝업이 열리지 않습니다. 기존 사용자의 기록 저장 형식과 키는 변경하지 않았습니다. 월 2,900원 구독 결제는 아직 연결되지 않은 체험판입니다.

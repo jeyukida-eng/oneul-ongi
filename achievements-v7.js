@@ -14,6 +14,12 @@
   let activeSection = 'summary';
   let host, priorFocus, overlayOpen = false;
   let previewUrl = null, previewSerial = 0;
+  let lastCelebrationDate = null;
+  function celebrateOnlyAfterThree(){
+    const key=DATE(), r=read().records?.[key];
+    if(!r?.smallDone||!moodIds.includes(r.mood)||!r.note?.trim()||lastCelebrationDate===key)return;
+    lastCelebrationDate=key;open(true);
+  }
   const taskNames = () => {
     const result = {};
     for (const bank of Object.values(window.ONGI_CONTENT?.tasks || {})) {
@@ -272,8 +278,8 @@
     }
     // These actions were already handled by v6. Read updated state after its handler.
     const mainAction=e.target.closest('[data-action]')?.dataset.action;
-    if(mainAction==='done'){
-      setTimeout(()=>{if(read().records?.[DATE()]?.smallDone)open(true);},0);
+    if(mainAction==='done'||mainAction==='save-note'){
+      setTimeout(celebrateOnlyAfterThree,0);
     }else if(mainAction==='toggle-task'){
       const id=e.target.closest('[data-action]')?.dataset.task;
       setTimeout(()=>{
