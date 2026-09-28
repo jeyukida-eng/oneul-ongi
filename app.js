@@ -189,20 +189,20 @@
         </header>
         <section class="free-welcome" aria-label="오늘의 가벼운 기록">
           <div class="free-section-head"><span class="free-eyebrow">TODAY</span><button class="free-today-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
-          <h1 id="free-today-title">${m?esc(m.title):'오늘 마음은 어떤가요?'}</h1>
+          <h1 id="free-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1>
           <button type="button" class="free-quote" data-action="sheet" data-sheet="stories" aria-label="오늘의 문장 더 읽기">“${esc(todayQuoteText)}”</button>
           <div class="free-mood-title"><span>오늘의 기분</span><small>${m?'기록했어요 ✓':'하나만 골라주세요'}</small></div>
           <div class="free-mood-row" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="free-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${esc(v.label)}</button>`).join('')}</div>
         </section>
         <section class="free-action-card" aria-label="오늘의 작은 실천">
           <div class="free-card-top"><span class="free-eyebrow">01 · 작은 실천</span><button class="free-quiet-link" type="button" data-action="sheet" data-sheet="growth">다른 미션 ›</button></div>
-          <h2>${esc(routine?routine.title:'기분을 고르면 미션이 나와요')}</h2>
-          <p>${esc(routine?routine.detail:'1~5분이면 할 수 있는 작은 일을 추천해 드릴게요.')}</p>
+          <h2>${esc(routine?routine.title:'기분을 고르면 미션을 추천해 드려요')}</h2>
+          <p>${esc(routine?routine.detail:'1~5분이면 할 수 있는 작은 실천을 추천해 드릴게요.')}</p>
           <div class="free-action-footer">${r?.smallDone?`<span class="free-complete">✓ 오늘의 실천 완료</span>`:`<span class="free-minute">${esc(routine?routine.minute:'1~5분')}</span><div class="free-action-buttons"><button class="free-text-button" type="button" data-action="swap" ${!routine?'disabled':''}>바꾸기</button><button class="free-main-button" type="button" data-action="done" ${!routine?'disabled':''}>완료 ✓</button></div>`}</div>
         </section>
         <section class="free-note-card" aria-label="오늘 한 줄 기록">
           <div class="free-card-top"><span class="free-eyebrow">02 · 한 줄 기록</span><span class="free-note-count" aria-label="오늘 기록 ${r?.note?.trim()?'완료':'미완료'}">${r?.note?.trim()?'완료 ✓':'가볍게 한 줄'}</span></div>
-          <div class="free-note-control"><textarea id="note" class="free-note-input" rows="2" maxlength="240" placeholder="오늘 마음에 남은 일을 적어보세요.">${esc(draft)}</textarea><button class="free-main-button free-save-button" type="button" data-action="save-note">저장</button></div>
+          <div class="free-note-control"><textarea id="note" class="free-note-input" rows="2" maxlength="240" placeholder="오늘 마음에 남은 일을 한 줄로 적어보세요.">${esc(draft)}</textarea><button class="free-main-button free-save-button" type="button" data-action="save-note">저장</button></div>
           ${flagged?`<div class="free-safety">지금 안전이 걱정된다면 <a href="tel:109">109</a> · <a href="tel:119">119</a></div>`:''}
         </section>
         <button class="free-story-row" type="button" data-action="article" data-id="${esc(todayStory.id)}" aria-label="오늘의 이야기 ${esc(todayStory.title)} 읽기"><span class="free-story-symbol" aria-hidden="true">▤</span><span class="free-story-copy"><small>오늘의 이야기</small><strong>${esc(todayStory.title)}</strong></span><span aria-hidden="true" class="free-story-arrow">읽기 ↗</span></button>

@@ -82,8 +82,8 @@ function progressInsight(){
  let message='어제 기록이 없어 아직 비교할 수 없어요.';
  if(previous.hasRecord){
   const delta=current.count-previous.count;
-  message=delta>0?`어제보다 현재 온기 ${delta}개 더 모았어요.`:
-   delta<0?'오늘은 아직 진행 중이에요. 내 속도로 이어가요.':'어제와 현재 모은 온기가 같아요.';
+  message=delta>0?`어제보다 지금까지 온기를 ${delta}개 더 모았어요.`:
+   delta<0?'오늘은 아직 진행 중이에요. 나만의 속도로 이어가요.':'현재까지 모은 온기가 어제와 같아요.';
  }
  return {current,previous,message};
 }

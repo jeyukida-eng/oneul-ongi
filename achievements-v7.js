@@ -91,9 +91,9 @@
   function previewData(s) {
     const st = read(),r = st.records?.[DATE()] || {};
     const items = [];
-    if (moodIds.includes(r.mood)) items.push('오늘 마음 기록');
+    if (moodIds.includes(r.mood)) items.push('오늘의 마음 살펴보기');
     if (r.smallDone) items.push('작은 실천 완료');
-    if (typeof r.note === 'string' && r.note.trim()) items.push('한 줄 기록 저장');
+    if (typeof r.note === 'string' && r.note.trim()) items.push('한 줄 기록 남기기');
     if (includeTasks) items.push(...s.growth);
     return items.slice(0,4);
   }
@@ -128,7 +128,7 @@
     const todayList = s.todayItems.slice(0,4).map(v=>`<div class="today-chip"><span>+1</span>${esc(v)}</div>`).join('') || '<div class="today-empty">아직 쌓인 온기가 없어요.</div>';
     const tabs = `<div class="achievement-tabs" role="tablist" aria-label="성취 카드 메뉴"><button type="button" class="achievement-tab ${activeSection==='summary'?'selected':''}" data-reward-action="tab" data-tab="summary" aria-pressed="${activeSection==='summary'}">온기 요약</button><button type="button" class="achievement-tab ${activeSection==='share'?'selected':''}" data-reward-action="tab" data-tab="share" aria-pressed="${activeSection==='share'}">공유 카드</button></div>`;
     const summary = `<div class="achievement-panel summary ${activeSection==='summary'?'active':''}"><p class="achievement-intro">${s.today?'아주 작은 한 걸음도 오늘의 성취예요.':'하나씩 나를 돌보다 보면 온기가 차곡차곡 쌓여요.'}</p><div class="achievement-stats"><div><strong>${s.today}</strong><span>오늘의 온기</span></div><div><strong>${s.days}</strong><span>함께한 날</span></div><div><strong>${s.total}</strong><span>모은 온기</span></div></div><div class="achievement-flow">기분 선택 +1 · 작은 실천 완료 +1 · 한 줄 기록 +1 · 미션 완료 1개마다 +1</div><div class="today-chip-grid">${todayList}</div>${sevenDayCalendar()}<h3 class="achievement-subtitle">쌓여 가는 MY ONGI</h3><div class="achievement-badges">${badgeMarkup(s)}</div><button type="button" class="reward-primary full" data-reward-action="tab" data-tab="share">예쁜 공유 카드 만들기</button></div>`;
-    const share = `<div class="achievement-panel share ${activeSection==='share'?'active':''}"><div class="achievement-heading-row"><strong>오늘의 작은 성취 카드</strong><span>인스타 스토리·피드 저장</span></div><div class="reward-formats" role="group" aria-label="이미지 크기">${markRadio(shareFormat,'story','스토리 · 9:16','format','data-format="story"')}${markRadio(shareFormat,'feed','피드 · 4:5','format','data-format="feed"')}</div><div class="reward-phrases" role="group" aria-label="공유 문구">${QUOTES.map((q,i)=>markRadio(sharePhrase,i,esc(q),'phrase',`data-index="${i}"`)).join('')}</div><label class="reward-include"><input id="include-share-tasks" type="checkbox" ${includeTasks?'checked':''}/> 오늘의 실천과 미션을 카드에 함께 담기</label><div class="share-preview" aria-label="저장될 이미지와 동일한 공유 카드 미리보기"><span class="share-preview-loading">미리보기 준비 중…</span></div><div class="reward-share-actions"><button type="button" class="reward-primary" data-reward-action="download">이미지 저장</button><button type="button" class="reward-secondary" data-reward-action="share">휴대전화 공유 ↗</button></div><p class="reward-helper">기기에 저장한 뒤 인스타그램 스토리나 피드에 올리면 돼요. 일기 본문은 자동으로 공유되지 않아요.</p></div>`;
+    const share = `<div class="achievement-panel share ${activeSection==='share'?'active':''}"><div class="achievement-heading-row"><strong>오늘의 성취 공유 카드</strong><span>인스타그램 피드 · 스토리</span></div><div class="reward-formats" role="group" aria-label="이미지 크기">${markRadio(shareFormat,'story','스토리 · 9:16','format','data-format="story"')}${markRadio(shareFormat,'feed','피드 · 4:5','format','data-format="feed"')}</div><div class="reward-phrases" role="group" aria-label="공유 문구">${QUOTES.map((q,i)=>markRadio(sharePhrase,i,esc(q),'phrase',`data-index="${i}"`)).join('')}</div><label class="reward-include"><input id="include-share-tasks" type="checkbox" ${includeTasks?'checked':''}/> 오늘의 실천과 미션을 카드에 함께 담기</label><div class="share-preview" aria-label="저장될 이미지와 동일한 공유 카드 미리보기"><span class="share-preview-loading">미리보기 준비 중…</span></div><div class="reward-share-actions"><button type="button" class="reward-primary" data-reward-action="download">이미지 저장</button><button type="button" class="reward-secondary" data-reward-action="share">휴대전화 공유 ↗</button></div><p class="reward-helper">기기에 저장한 뒤 인스타그램 스토리나 피드에 올리면 돼요. 일기 본문은 자동으로 공유되지 않아요.</p></div>`;
     return `<div class="achievement-sheet ${activeSection==='share'?'is-sharing':''}" role="dialog" aria-modal="true" aria-labelledby="achievement-heading" tabindex="-1"><header class="achievement-head"><div><span class="achievement-eyebrow">MY ONGI</span><h2 id="achievement-heading">${celebration?'오늘도 잘했어요!':'오늘의 작은 성취'}</h2></div><button type="button" class="achievement-close" data-reward-action="close" aria-label="닫기">×</button></header><div class="achievement-body">${tabs}${summary}${share}</div></div>`;
   }
   function releasePreview() {
@@ -217,7 +217,7 @@
     center(`${d.getMonth()+1}월 ${d.getDate()}일 (${'일월화수목금토'[d.getDay()]})`,
       story?249:201,S(600,30),quiet);
     const headlines=[
-      ['오늘도','나를 잘 돌봤어요'],
+      ['오늘도 나를','잘 돌봤어요'],
       ['작은 걸음도','충분히 소중해요'],
       ['나를 돌본 오늘을','기억해요']
     ];
@@ -235,16 +235,23 @@
     c.font=S(800,s.today>99?123:150);c.fillText(String(s.today),570,bubbleY+154,167);
     const base = read().records?.[DATE()]||{};
     const label=[];
-    if(moodIds.includes(base.mood))label.push('기분 선택');
-    if(base.smallDone)label.push('작은 실천');
-    if(typeof base.note==='string'&&base.note.trim())label.push('한 줄 기록 완료');
-    if(includeTasks&&s.growth.length)label.push(`성장 미션 ${s.growth.length}개`);
-    const subtitle=label.join(' · ')||'지금부터 시작해도 충분해요';
-    center(subtitle,story?931:708,S(600,34),quiet,932);
-    // The approved girl's, puppy's and flowers' artwork is reused unchanged.
-    const artY=story?1020:718;
+    if(moodIds.includes(base.mood))label.push('오늘의 기분 선택');
+    if(base.smallDone)label.push('작은 실천 완료');
+    if(typeof base.note==='string'&&base.note.trim())label.push('한 줄 기록 남기기');
+    if(includeTasks&&s.growth.length)label.push(`성장 미션 ${s.growth.length}개 완료`);
+    // Keep each Korean phrase together rather than squeezing a long sentence.
+    const sublines=[];c.font=S(600,story?36:32);
+    if(!label.length)sublines.push('지금부터 시작해도 충분해요');
+    for(const phrase of label){
+      const i=sublines.length-1,joined=i>=0?sublines[i]+' · '+phrase:phrase;
+      if(i>=0&&c.measureText(joined).width<=875)sublines[i]=joined;
+      else sublines.push(phrase);
+    }
+    const y=story?904:688;
+    sublines.slice(0,2).forEach((line,i)=>center(line,y+43*i,S(600,story?36:32),quiet));
+    const artY=story?1020:752,artH=story?243:188;
     if(shareArtwork.complete&&shareArtwork.naturalWidth>0){
-      c.drawImage(shareArtwork,70,artY,940,243);
+      c.drawImage(shareArtwork,70,artY,940,artH);
     }else{
       c.fillStyle='#EFE5F3';c.beginPath();c.ellipse(mid,artY+142,320,92,0,0,2*Math.PI);c.fill();
       center('♡',artY+152,S(800,102),violet);
@@ -261,7 +268,11 @@
         rrect(213,y-33,89,44,22,'#F1EAFB');
         c.fillStyle=violet;c.textAlign='center';c.font=S(800,28);c.fillText('+1',258,y-2);
         c.fillStyle='#766D71';c.textAlign='left';c.font=S(600,story?31:30);
-        c.fillText(item,329,y,537);
+        const words=String(item).split(/\s+/),out=[];
+        for(const word of words){const candidate=[...out,word].join(' ');if(c.measureText(candidate+'…').width>525)break;out.push(word);}
+        let display=out.length?out.join(' ')+(out.length<words.length?'…':''):String(item);
+        if(c.measureText(display).width>525)display=Array.from(String(item)).reduce((a,ch)=>c.measureText(a+ch+'…').width<=525?a+ch:a,'')+'…';
+        c.fillText(display,329,y);
         if(i<list.length-1){c.strokeStyle='#F1E9E3';c.lineWidth=1;c.beginPath();c.moveTo(326,y+17);c.lineTo(856,y+17);c.stroke();}
       });
     }else{
@@ -271,7 +282,7 @@
     c.strokeStyle='#D5C7BC';c.lineWidth=1.5;c.beginPath();
     c.moveTo(192,mottoY-12);c.lineTo(284,mottoY-12);
     c.moveTo(796,mottoY-12);c.lineTo(888,mottoY-12);c.stroke();
-    center('작은 하루가 쌓여 나를 만듭니다',mottoY,S(600,29),quiet,520);
+    center('작은 하루가 쌓여 나를 만듭니다',mottoY,S(600,29),quiet);
     center('오늘의 온기',story?1850:1296,S(800,31),violet);
     c.restore();
     return canvas;

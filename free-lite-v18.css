@@ -39,3 +39,6 @@
 /* While the phone keyboard is open, allow deliberate access to Save without affecting normal one-screen home. */
 body:has(.free-note-card:focus-within) .home-scroll:has(.free-home-v18){overflow:auto!important;overscroll-behavior:contain}
 body:has(.free-note-card:focus-within) .app-home-v9.free-home-v18{height:auto!important;min-height:100%;overflow:visible!important;justify-content:flex-start!important}
+
+/* v20: natural Korean word and phrase boundaries */
+.free-home-v18 h1,.free-home-v18 h2,.free-home-v18 p,.free-home-v18 button,.free-home-v18 .free-quote,.free-home-v18 .free-story-copy strong,.free-home-v18 .free-note-input{word-break:keep-all;overflow-wrap:break-word;line-height:1.45}
