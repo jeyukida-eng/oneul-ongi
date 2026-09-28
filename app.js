@@ -190,7 +190,7 @@
         </header>
 
         <section class="service-card home-hero" aria-labelledby="hero-title">
-          <div class="card-topline"><span class="tiny-label">TODAY</span><span class="today-counter">온기 ${todayOngi}</span></div>
+          <div class="card-topline"><span class="tiny-label">TODAY</span><button class="premium-hero-entry" type="button" data-premium-action="open" aria-label="프리미엄 PLUS 월 2,900원 맞춤 성장 화면 열기"><span class="premium-hero-glyph" aria-hidden="true">✦</span><span class="premium-hero-copy"><strong>프리미엄 <em>PLUS</em></strong><small>월 2,900원 · 맞춤 성장</small></span><span class="premium-hero-arrow" aria-hidden="true">›</span></button></div>
           <div class="hero-body"><div class="hero-copy"><h1 id="hero-title">${esc(title)}</h1><p>${esc(phrase)}</p></div><div class="hero-art">${heroArt()}</div></div>
           <div class="quote-strip"><span>오늘의 문장</span><strong>“${esc(todayQuoteText)}”</strong></div>
           <div class="mood-pills" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="mood-pill" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${esc(v.label)}</button>`).join('')}</div>

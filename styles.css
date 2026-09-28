@@ -310,3 +310,18 @@ body{background:#ececf2;color:var(--text)}
 .dock-premium-icon svg{width:20px;height:20px}
 .dock-premium-name{color:#7445ef;font-size:10px;letter-spacing:-.055em}
 @media(max-width:380px){.dock-nav{gap:0!important;padding-left:5px!important;padding-right:5px!important}.dock-item{font-size:9px!important;gap:4px!important}.dock-premium-name{font-size:9px}.dock-premium-icon{width:28px;height:28px;border-radius:10px}.dock-premium-icon svg{width:17px;height:17px}.dock-item .home-fab{width:44px;height:44px}}
+
+/* v14: premium CTA replaces the tiny ongi pill on today's main card. */
+.card-topline{min-height:54px;gap:8px}
+.premium-hero-entry{box-sizing:border-box;flex:1 1 auto;min-width:0;max-width:265px;min-height:54px;border:0;border-radius:18px;background:linear-gradient(112deg,#8f69fa 0%,#6e45df 100%);color:#fff;box-shadow:0 7px 18px rgba(112,72,222,.23);padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:9px;cursor:pointer;text-align:left;white-space:nowrap}
+.premium-hero-entry:focus-visible{outline:3px solid #4028b8;outline-offset:3px}
+.premium-hero-glyph{font-size:22px;line-height:1;flex:none;color:#fff1a5}
+.premium-hero-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px;line-height:1.14}
+.premium-hero-copy strong{font-size:13px;letter-spacing:-.045em;color:#fff;font-weight:900}
+.premium-hero-copy em{font-size:9px;font-style:normal;background:#fff3;border:1px solid #fff5;padding:2px 4px;margin-left:3px;border-radius:5px;letter-spacing:.015em;vertical-align:2px}
+.premium-hero-copy small{color:#f5efff;font-size:10px;letter-spacing:-.03em}
+.premium-hero-arrow{font-size:24px;line-height:1;font-weight:500;color:#fff;flex:none}
+.home-hero{gap:7px!important}
+@media(max-width:380px){.premium-hero-entry{max-width:245px;gap:6px;padding:8px 10px;min-height:52px}.premium-hero-glyph{font-size:18px}.premium-hero-copy strong{font-size:12px}.premium-hero-copy small{font-size:9px}.premium-hero-arrow{font-size:20px}}
+@media(max-height:760px){.card-topline{min-height:48px}.premium-hero-entry{min-height:48px;padding-top:6px;padding-bottom:6px;border-radius:15px}.home-hero{gap:5px!important}.quote-strip{padding-top:7px!important;padding-bottom:7px!important}.mood-pill{padding-top:6px!important;padding-bottom:6px!important}}
+@media(min-height:761px) and (max-height:900px){.app-home-v9{gap:5px!important}.home-hero{padding-top:12px!important;padding-bottom:10px!important;gap:5px!important}.home-row{gap:8px!important}.home-mini{padding:10px!important;gap:6px!important}.dock-nav{padding-top:8px!important;padding-bottom:calc(8px + env(safe-area-inset-bottom))!important}}

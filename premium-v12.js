@@ -106,7 +106,7 @@ function exportBook(){const rows=bookRows();if(!rows.length){notice('아직 담�
  const popup=window.open('','_blank');if(!popup){notice('팝업 허용 후 다시 시도해 주세요.');return;}popup.document.open();popup.document.write(html);popup.document.close();popup.focus();popup.onload=()=>{popup.print();};}
 function goFree(){close();window.__ongiAchievements?.open?.();}
 document.addEventListener('click',event=>{
- const trigger=event.target.closest('.dock-nav [data-premium-action="open"]');if(trigger){event.preventDefault();show('home');return;}
+ const trigger=event.target.closest('.dock-nav [data-premium-action="open"], .premium-hero-entry[data-premium-action="open"]');if(trigger){event.preventDefault();show('home');return;}
  if(!active)return;const a=event.target.closest('[data-premium-action]');if(!a||!root.contains(a))return;
  const kind=a.dataset.premiumAction;
  if(kind==='close'){close();return;}
