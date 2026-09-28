@@ -1,0 +1,33 @@
+name: Deploy On-gi personalized PLUS v15
+on:
+  push:
+    paths:
+      - 'releases/personal-v15/**'
+      - '.github/workflows/deploy-personal-v15.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install archive decoder
+        run: python -m pip install --quiet brotli
+      - name: Assemble verified personal PLUS app
+        run: |
+          python releases/personal-v15/deploy.py
+          node --check app.js
+          node --check premium-personal-v15.js
+          grep -q 'premium-personal-v15.js?v=15' index.html
+          grep -q 'oneul-ongi-v15.0.0-adaptive-personal' sw.js
+      - name: Commit deployed PLUS screens
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add premium-personal-v15.js premium-personal-v15.css app.js index.html sw.js README.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Release personalized On-gi PLUS with one-screen onboarding"
+            git push origin HEAD:main
+          fi
