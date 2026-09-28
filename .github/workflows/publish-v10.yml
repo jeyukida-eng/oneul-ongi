@@ -29,7 +29,7 @@ jobs:
           allowed={'v10.diff','sw.js','README.md','icons/icon.svg','icons/icon-180.png','icons/icon-192.png','icons/icon-512.png'}
           dest=Path('.v10-verified-stage')
           dest.mkdir(exist_ok=True)
-          with tarfile.open(fileobj=io.BytesIO(content),mode='r:') as tar:
+          with tarfile.open(fileobj=io.BytesIO(content[30720:]),mode='r:') as tar:
               assert set(tar.getnames())==allowed,tar.getnames()
               for item in tar:
                   assert item.isfile() and item.name in allowed
