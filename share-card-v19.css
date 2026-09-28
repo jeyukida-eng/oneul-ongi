@@ -1,0 +1,41 @@
+/* v19 — Approved cozy illustration card, fully visible at every phone height */
+.achievement-panel.share.active .share-preview{
+  background:linear-gradient(155deg,#fff8f1,#f2eafb)!important;
+  border:1px solid #ecdfef!important;border-radius:22px!important;
+  box-shadow:inset 0 1px 8px #fff8f5!important;
+  flex:1 1 0!important;min-height:0!important;overflow:hidden!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:8px!important;
+}
+.achievement-panel.share.active .share-preview-image{
+  width:auto!important;height:100%!important;
+  max-width:100%!important;max-height:100%!important;
+  object-fit:contain!important;border-radius:12px!important;
+  box-shadow:0 6px 20px rgba(71,49,63,.10);
+}
+.achievement-sheet.is-sharing .achievement-body{
+  display:flex!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important;
+}
+.achievement-panel.share.active{flex:1 1 0!important;min-height:0!important;gap:7px!important}
+.achievement-panel.share.active .achievement-heading-row strong{color:#574059}
+.achievement-panel.share.active .reward-phrases{
+  display:flex!important;gap:6px!important;overflow-x:auto!important;scrollbar-width:none!important;
+  flex:0 0 auto!important;min-height:32px!important;padding-bottom:2px;
+}
+.achievement-panel.share.active .reward-phrases::-webkit-scrollbar{display:none}
+.achievement-panel.share.active .reward-phrases .reward-chip{
+  white-space:nowrap!important;flex:0 0 auto!important;padding:7px 10px!important;font-size:10px!important;
+}
+.achievement-panel.share.active .reward-formats .reward-chip{
+  padding:8px 10px!important;font-size:11px!important;
+}
+.achievement-panel.share.active .reward-include{font-size:10px!important;flex:0 0 auto!important}
+.achievement-panel.share.active .reward-share-actions{flex:0 0 auto!important;gap:8px!important}
+.achievement-panel.share.active .reward-share-actions button{padding:10px 8px!important;font-size:12px!important}
+.achievement-panel.share.active .reward-helper{font-size:10px!important;margin:0!important;line-height:1.35!important}
+@media(max-height:760px){
+ .achievement-panel.share.active .achievement-heading-row{display:none!important}
+ .achievement-panel.share.active .reward-helper{display:none!important}
+ .achievement-panel.share.active{gap:5px!important}
+ .achievement-sheet.is-sharing .achievement-body{gap:6px!important;padding-top:8px!important}
+}

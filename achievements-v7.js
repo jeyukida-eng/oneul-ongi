@@ -6,14 +6,21 @@
   const HOST_ID = 'achievement-host';
   const DATE = (d=new Date()) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-  const QUOTES = ['오늘도 잘했어요.', '오늘의 작은 한 걸음을 기억해요.', '나를 돌본 오늘이 소중해요.'];
+  const QUOTES = ['오늘도 나를 잘 돌봤어요', '작은 걸음도 충분히 소중해요', '나를 돌본 오늘을 기억해요'];
   const moodIds = ['happy','okay','tired','anxious','mixed'];
-  let shareFormat = 'story';
+  let shareFormat = 'feed';
   let sharePhrase = 0;
   let includeTasks = true;
   let activeSection = 'summary';
   let host, priorFocus, overlayOpen = false;
   let previewUrl = null, previewSerial = 0;
+  const shareArtwork = new Image();
+  const illustrationReady = new Promise(resolve=>{
+    shareArtwork.onload=()=>resolve(true);
+    shareArtwork.onerror=()=>resolve(false);
+    shareArtwork.src=new URL('./share-illustration-v19.webp?v=19',document.baseURI).href;
+    if(shareArtwork.complete&&shareArtwork.naturalWidth)resolve(true);
+  });
   let lastCelebrationDate = null;
   function celebrateOnlyAfterThree(){
     const key=DATE(), r=read().records?.[key];
@@ -128,28 +135,28 @@
     ++previewSerial;
     if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=null;}
   }
-  function renderPreview() {
+  async function renderPreview() {
     const box=host.querySelector('.achievement-panel.share.active .share-preview');
     if(!box)return;
     const generation=++previewSerial;
     try {
-      // Show the actual exported image instead of a separately styled HTML card.
-      drawCard().toBlob(blob=>{
-        if(generation!==previewSerial||!box.isConnected)return;
-        if(!blob){box.textContent='미리보기를 만들지 못했어요.';return;}
-        const url=URL.createObjectURL(blob),img=document.createElement('img');
-        img.className='share-preview-image';
-        img.alt=`오늘 모은 온기 ${stats().today}개, ${shareFormat==='story'?'스토리':'피드'} 공유 카드 전체 이미지`;
-        img.onload=()=>{
-          if(generation!==previewSerial||!box.isConnected){URL.revokeObjectURL(url);return;}
-          if(previewUrl)URL.revokeObjectURL(previewUrl);
-          previewUrl=url;
-          box.replaceChildren(img);
-        };
-        img.onerror=()=>{URL.revokeObjectURL(url);if(box.isConnected)box.textContent='미리보기를 불러오지 못했어요.';};
-        img.src=url;
-      },'image/png');
-    } catch(_) {box.textContent='미리보기를 만들지 못했어요.';}
+      await illustrationReady;
+      if(document.fonts?.ready)await document.fonts.ready;
+      if(generation!==previewSerial||!box.isConnected)return;
+      const blob=await toPNG(drawCard());
+      if(generation!==previewSerial||!box.isConnected)return;
+      const url=URL.createObjectURL(blob),img=document.createElement('img');
+      img.className='share-preview-image';
+      img.alt=`오늘 모은 온기 ${stats().today}개, ${shareFormat==='story'?'스토리':'피드'} 공유 카드 전체 이미지`;
+      img.onload=()=>{
+        if(generation!==previewSerial||!box.isConnected){URL.revokeObjectURL(url);return;}
+        if(previewUrl)URL.revokeObjectURL(previewUrl);
+        previewUrl=url;
+        box.replaceChildren(img);
+      };
+      img.onerror=()=>{URL.revokeObjectURL(url);if(box.isConnected)box.textContent='미리보기를 불러오지 못했어요.';};
+      img.src=url;
+    }catch(_){if(box.isConnected)box.textContent='미리보기를 만들지 못했어요.';}
   }
   function open(celebration=false) {
     ensureHost(); priorFocus=document.activeElement;
@@ -175,64 +182,98 @@
     priorFocus?.isConnected && priorFocus.focus();
   }
   function drawCard() {
-    const s = stats(), story = shareFormat === 'story', W = 1080, H = story ? 1920 : 1350;
-    const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+    const s = stats();
+    const story = shareFormat === 'story';
+    const W = 1080, H = story ? 1920 : 1350;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
     const c = canvas.getContext('2d');
-    const bg = c.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0, '#F7F8FC'); bg.addColorStop(1, '#EEEFF7');
-    c.fillStyle = bg; c.fillRect(0, 0, W, H);
-
-    const panelX = 64, panelY = 64, panelW = W - 128, panelH = H - 128, r = 44;
-    c.fillStyle = '#FFFFFF'; roundRect(c, panelX, panelY, panelW, panelH, r, true, false);
-    c.strokeStyle = '#E7E9F2'; c.lineWidth = 2; roundRect(c, panelX, panelY, panelW, panelH, r, false, true);
-
-    // top bar
-    c.fillStyle = '#252A35'; c.font = '800 34px sans-serif'; c.textAlign = 'left'; c.fillText('오늘의 온기', panelX + 46, panelY + 62);
-    c.fillStyle = '#8A91A2'; c.font = '500 26px sans-serif'; c.textAlign = 'right'; c.fillText(dateLabel(), panelX + panelW - 46, panelY + 62);
-
-    // badge pill
-    c.fillStyle = '#F1ECFF'; roundRect(c, panelX + 46, panelY + 92, 310, 50, 25, true, false);
-    c.fillStyle = '#7D5BEE'; c.font = '700 22px sans-serif'; c.textAlign = 'center'; c.fillText('SMALL STEPS, BIG WARMTH', panelX + 201, panelY + 125);
-
-    // illustration area
-    const heroTop = panelY + 180;
-    c.fillStyle = '#F6F2FF'; roundRect(c, panelX + 46, heroTop, panelW - 92, story ? 270 : 200, 36, true, false);
-    const cx = W/2;
-    c.fillStyle = '#D9CCFF'; c.beginPath(); c.arc(cx + 160, heroTop + 72, 34, 0, Math.PI*2); c.fill();
-    c.fillStyle = '#8D67FF'; roundRect(c, cx - 290, heroTop + 130, 170, 78, 28, true, false);
-    c.fillStyle = '#FFFFFF'; c.font = '700 34px sans-serif'; c.textAlign = 'center'; c.fillText('+1', cx - 205, heroTop + 180);
-    c.fillStyle = '#242A36';
-    c.beginPath(); c.arc(cx + 40, heroTop + 116, 52, 0, Math.PI*2); c.fill();
-    c.fillStyle = '#FFDCCE'; c.beginPath(); c.arc(cx + 40, heroTop + 104, 44, 0, Math.PI*2); c.fill();
-    c.fillStyle = '#5F648B'; roundRect(c, cx - 10, heroTop + 144, 102, 86, 30, true, false);
-    c.fillStyle = '#FFFFFF'; c.beginPath(); c.arc(cx + 22, heroTop + 102, 4, 0, Math.PI*2); c.arc(cx + 56, heroTop + 102, 4, 0, Math.PI*2); c.fill();
-    c.strokeStyle = '#FFFFFF'; c.lineWidth = 4; c.beginPath(); c.moveTo(cx + 26, heroTop + 126); c.quadraticCurveTo(cx + 40, heroTop + 136, cx + 54, heroTop + 126); c.stroke();
-    c.fillStyle = '#EDE7FF'; roundRect(c, cx + 120, heroTop + 132, 118, 70, 26, true, false);
-    c.fillStyle = '#7D5BEE'; c.font = '700 32px sans-serif'; c.fillText('완료', cx + 179, heroTop + 177);
-
-    // phrase and count
-    const phraseY = heroTop + (story ? 360 : 280);
-    c.textAlign = 'center'; c.fillStyle = '#2A3140'; c.font = '800 72px sans-serif';
-    let phrase = QUOTES[sharePhrase], size = 72; while(c.measureText(phrase).width > panelW - 150 && size > 48){ size -= 2; c.font = `800 ${size}px sans-serif`; }
-    c.fillText(phrase, cx, phraseY);
-    c.fillStyle = '#7D5BEE'; c.font = '900 182px sans-serif'; c.fillText(String(s.today), cx, phraseY + 205);
-    c.fillStyle = '#7D8598'; c.font = '700 38px sans-serif'; c.fillText('오늘 모은 온기', cx, phraseY + 260);
-
-    const list = previewData(s);
-    if (list.length) {
-      const listTop = phraseY + 328, listH = Math.min(list.length, 4) * 72 + 28;
-      c.fillStyle = '#F7F8FC'; roundRect(c, panelX + 70, listTop, panelW - 140, listH, 30, true, false);
-      c.textAlign = 'left'; c.font = '600 30px sans-serif';
-      list.slice(0,4).forEach((line, i) => {
-        const y = listTop + 50 + i * 72;
-        c.fillStyle = '#8D67FF'; c.fillText('+1', panelX + 110, y);
-        c.fillStyle = '#505869'; c.fillText(line.length > 26 ? line.slice(0, 25) + '…' : line, panelX + 185, y);
-      });
+    const mid = W / 2;
+    const korean = '"Apple SD Gothic Neo", "Noto Sans KR", "NanumSquare", sans-serif';
+    const S = (weight, px) => `${weight} ${px}px ${korean}`;
+    const ink = '#383038', violet = '#7755AE', warm = '#A9744F', quiet = '#837774';
+    const rrect = (x,y,w,h,r,fill,stroke) => {
+      c.beginPath(); c.roundRect(x,y,w,h,r);
+      if(fill){c.fillStyle=fill;c.fill();}
+      if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke();}
+    };
+    const center = (str, y, font, fill, maxW=930) => {
+      c.font=font; c.textAlign='center'; c.textBaseline='alphabetic'; c.fillStyle=fill;
+      c.fillText(str,mid,y,maxW);
+    };
+    c.fillStyle='#F9F2EA'; c.fillRect(0,0,W,H);
+    c.save();c.shadowColor='rgba(91,70,65,.12)';c.shadowBlur=42;c.shadowOffsetY=12;
+    rrect(36,34,W-72,H-68,64,'#FCF6EF');c.restore();
+    c.save();c.beginPath();c.roundRect(36,34,W-72,H-68,64);c.clip();
+    c.fillStyle='#FAF0F8';
+    [[-25,story?600:470,175,103],[1036,story?990:712,130,125],[-8,H-68,180,130],[1080,H-60,178,130]].forEach(([x,y,rx,ry])=>{
+      c.beginPath();c.ellipse(x,y,rx,ry,0,0,2*Math.PI);c.fill();
+    });
+    // A light violet signature pill and a live date rather than baked-in image text.
+    const badgeY=story?112:70;
+    rrect(mid-126,badgeY,252,68,34,'#F0E7F7');
+    center('오늘의 온기',badgeY+47,S(800,34),violet,225);
+    const d=new Date();
+    center(`${d.getMonth()+1}월 ${d.getDate()}일 (${'일월화수목금토'[d.getDay()]})`,
+      story?249:201,S(600,30),quiet);
+    const headlines=[
+      ['오늘도','나를 잘 돌봤어요'],
+      ['작은 걸음도','충분히 소중해요'],
+      ['나를 돌본 오늘을','기억해요']
+    ];
+    const chosen=headlines[sharePhrase]||headlines[0];
+    const headlineY=story?365:309, headingSize=story?83:78;
+    center(chosen[0],headlineY,S(800,headingSize),ink);
+    center(chosen[1],headlineY+89,S(800,headingSize),ink);
+    // Single warm number and tiny lavender accent marks carry the hierarchy.
+    const bubbleY=story?620:446;
+    rrect(304,bubbleY,472,204,102,'#F1E7F5');
+    c.fillStyle=violet;
+    c.save();c.translate(279,bubbleY+65);c.rotate(-.55);rrect(-6,-23,12,45,6,violet);c.restore();
+    c.save();c.translate(810,bubbleY+65);c.rotate(.55);rrect(-6,-23,12,45,6,violet);c.restore();
+    c.textAlign='left';c.fillStyle=warm;c.font=S(800,61);c.fillText('온기',392,bubbleY+137);
+    c.font=S(800,s.today>99?123:150);c.fillText(String(s.today),570,bubbleY+154,167);
+    const base = read().records?.[DATE()]||{};
+    const label=[];
+    if(moodIds.includes(base.mood))label.push('기분 선택');
+    if(base.smallDone)label.push('작은 실천');
+    if(typeof base.note==='string'&&base.note.trim())label.push('한 줄 기록 완료');
+    if(includeTasks&&s.growth.length)label.push(`성장 미션 ${s.growth.length}개`);
+    const subtitle=label.join(' · ')||'지금부터 시작해도 충분해요';
+    center(subtitle,story?931:708,S(600,34),quiet,932);
+    // The approved girl's, puppy's and flowers' artwork is reused unchanged.
+    const artY=story?1020:718;
+    if(shareArtwork.complete&&shareArtwork.naturalWidth>0){
+      c.drawImage(shareArtwork,70,artY,940,243);
+    }else{
+      c.fillStyle='#EFE5F3';c.beginPath();c.ellipse(mid,artY+142,320,92,0,0,2*Math.PI);c.fill();
+      center('♡',artY+152,S(800,102),violet);
     }
-
-    c.strokeStyle = '#E9EBF3'; c.beginPath(); c.moveTo(panelX + 46, H - 150); c.lineTo(panelX + panelW - 46, H - 150); c.stroke();
-    c.fillStyle = '#9097A7'; c.font = '600 26px sans-serif'; c.textAlign = 'left'; c.fillText('share your tiny win', panelX + 46, H - 108);
-    c.textAlign = 'right'; c.font = '800 26px sans-serif'; c.fillText('ONEUL ONGI', panelX + panelW - 46, H - 108);
+    const list=previewData(s);
+    const listY=story?1340:947, rowH=story?65:53;
+    const listH=list.length?Math.max(184,49+list.length*rowH):158;
+    c.save();c.shadowColor='rgba(78,57,63,.07)';c.shadowBlur=20;c.shadowOffsetY=5;
+    rrect(166,listY,748,listH,44,'#FFFDFB');c.restore();
+    if(list.length){
+      c.textAlign='left';c.textBaseline='alphabetic';
+      list.forEach((item,i)=>{
+        const y=listY+53+i*rowH;
+        rrect(213,y-33,89,44,22,'#F1EAFB');
+        c.fillStyle=violet;c.textAlign='center';c.font=S(800,28);c.fillText('+1',258,y-2);
+        c.fillStyle='#766D71';c.textAlign='left';c.font=S(600,story?31:30);
+        c.fillText(item,329,y,537);
+        if(i<list.length-1){c.strokeStyle='#F1E9E3';c.lineWidth=1;c.beginPath();c.moveTo(326,y+17);c.lineTo(856,y+17);c.stroke();}
+      });
+    }else{
+      center('아직 오늘의 기록이 없어요',listY+93,S(600,32),quiet,650);
+    }
+    const mottoY=story?1768:1242;
+    c.strokeStyle='#D5C7BC';c.lineWidth=1.5;c.beginPath();
+    c.moveTo(192,mottoY-12);c.lineTo(284,mottoY-12);
+    c.moveTo(796,mottoY-12);c.lineTo(888,mottoY-12);c.stroke();
+    center('작은 하루가 쌓여 나를 만듭니다',mottoY,S(600,29),quiet,520);
+    center('오늘의 온기',story?1850:1296,S(800,31),violet);
+    c.restore();
     return canvas;
   }
   function roundRect(c,x,y,w,h,r,fill,stroke){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();if(fill)c.fill();if(stroke)c.stroke();}
@@ -252,6 +293,8 @@
   async function exportCard(native=false) {
     const btn=host.querySelector(native?'[data-reward-action="share"]':'[data-reward-action="download"]');if(btn)btn.disabled=true;
     try {
+      await illustrationReady;
+      if(document.fonts?.ready) await document.fonts.ready;
       const blob=await toPNG(drawCard());
       if(native && navigator.share && typeof File==='function') {
         const file=new File([blob],`oneul-ongi-${DATE()}.png`,{type:'image/png'});
