@@ -1,0 +1,62 @@
+name: Publish On-gi v10
+on:
+  push:
+    paths:
+      - 'releases/v10-parts/**'
+      - '.github/workflows/publish-v10.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Assemble and verify v10 release
+        run: |
+          python -m pip install --quiet brotli
+          python - <<'PY'
+          from pathlib import Path
+          import base64,brotli,hashlib,io,tarfile
+          parts=[Path(f'releases/v10-parts/part-{i}.b64').read_text().strip() for i in range(6)]
+          payload=base64.b64decode(''.join(parts),validate=True)
+          digest=hashlib.sha256(payload).hexdigest()
+          assert digest=='44d407b1f45db7fc339cee285508af9c0be9619790dbee8b89d1b4670daec2a5',digest
+          content=brotli.decompress(payload)
+          allowed={'v10.diff','sw.js','README.md','icons/icon.svg','icons/icon-180.png','icons/icon-192.png','icons/icon-512.png'}
+          dest=Path('.v10-verified-stage')
+          dest.mkdir(exist_ok=True)
+          with tarfile.open(fileobj=io.BytesIO(content),mode='r:') as tar:
+              assert set(tar.getnames())==allowed,tar.getnames()
+              for item in tar:
+                  assert item.isfile() and item.name in allowed
+                  path=dest/item.name
+                  path.parent.mkdir(parents=True,exist_ok=True)
+                  path.write_bytes(tar.extractfile(item).read())
+          print('v10 payload verified, sha256:',digest)
+          PY
+      - name: Apply changes and validate
+        run: |
+          patch --dry-run --batch -p1 < .v10-verified-stage/v10.diff
+          patch --batch -p1 < .v10-verified-stage/v10.diff
+          cp .v10-verified-stage/sw.js sw.js
+          cp .v10-verified-stage/README.md README.md
+          mkdir -p icons
+          cp .v10-verified-stage/icons/* icons/
+          node --check app.js
+          node --check achievements-v7.js
+          grep -q 'oneul-ongi-v10.0.0-redesign' sw.js
+          grep -q 'hero-brand-textonly' app.js
+          echo "Validated v10 scripts and service-worker cache."
+      - name: Commit v10 app and icons to main
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html styles.css app.js achievements-v7.js achievements-v7.css manifest.webmanifest sw.js README.md icons/
+          if ! git diff --cached --quiet; then
+            git commit -m "Deploy On-gi v10 full mobile redesign and new icon"
+            git push origin HEAD:main
+          fi
