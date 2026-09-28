@@ -15,11 +15,11 @@
   <link rel="stylesheet" href="./styles.css?v=14">
   <link rel="stylesheet" href="./achievements-v7.css?v=14">
   <link rel="stylesheet" href="./premium-v12.css?v=14">
-  <link rel="stylesheet" href="./premium-personal-v15.css?v=15">
+  <link rel="stylesheet" href="./premium-personal-v15.css?v=16">
   <script src="./content-v6.js?v=14" defer></script>
   <script src="./app.js?v=15" defer></script>
   <script src="./premium-v12.js?v=14" defer></script>
-  <script src="./premium-personal-v15.js?v=15" defer></script>
+  <script src="./premium-personal-v15.js?v=16" defer></script>
   <script src="./achievements-v7.js?v=14" defer></script>
   <title>오늘의 온기 — 매일 새로운 온기</title>
 </head>
@@ -37,7 +37,7 @@
 if('serviceWorker' in navigator){
   let changed=false;
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(changed||sessionStorage.getItem('ongi-v15-reloaded'))return;
+    if(changed||sessionStorage.getItem('ongi-v16-reloaded'))return;
     changed=true;
     sessionStorage.setItem('ongi-v15-reloaded','1');
     location.reload();

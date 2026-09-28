@@ -21,3 +21,8 @@ Bottom 온기 navigation opens a four-screen premium preview: personalized missi
 ## v15 personalized preview
 
 Goal, minutes and self-selected energy are used with recent completion and difficulty feedback to recommend daily tasks. Six goals, rule-based adaptive difficulty, 7/30-day report, goal-aligned 7/21/30-day challenge and optional private print-to-PDF booklet are available. Mobile screens do not require scrolling at tested sizes. Records remain on this device. Monthly 2,900 KRW is only a planned price: billing, paid access control, server sync and a real AI advisor are not implemented.
+
+
+## v16 PLUS — guided personal workbook (preview; no payment)
+
+The daily premium mission now provides goal-specific guidance (six selectable goals), reasons for the recommendation, a two-step workbook for a two-minute preference or a three-step workbook for longer sessions, an optional extra task, and a seven-day activity map. A user writes about their actual actions before receiving the core on-device 온기 credit; the same task cannot be credited again that day. Their own saved reflections appear in the weekly/monthly report's private growth notebook. Explicit difficulty feedback affects subsequent local rule-based recommendations. Records stay on the current device. Subscription billing, account sync, professional coaching, and AI-generated personalization have not been implemented; the displayed ₩2,900 is a planned price only.
