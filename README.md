@@ -26,3 +26,8 @@ Goal, minutes and self-selected energy are used with recent completion and diffi
 ## v16 PLUS — guided personal workbook (preview; no payment)
 
 The daily premium mission now provides goal-specific guidance (six selectable goals), reasons for the recommendation, a two-step workbook for a two-minute preference or a three-step workbook for longer sessions, an optional extra task, and a seven-day activity map. A user writes about their actual actions before receiving the core on-device 온기 credit; the same task cannot be credited again that day. Their own saved reflections appear in the weekly/monthly report's private growth notebook. Explicit difficulty feedback affects subsequent local rule-based recommendations. Records stay on the current device. Subscription billing, account sync, professional coaching, and AI-generated personalization have not been implemented; the displayed ₩2,900 is a planned price only.
+
+
+## v17: Four-question PLUS daily plan
+
+The PLUS mission screen now displays four tappable cards: why this goal-based mission was recommended (only chosen settings and real 7-day completion data); how to execute it using a two-/three-step on-device workbook; yesterday versus today's accumulated On-gi from actual local records (honestly indicating missing prior records and partial current-day data); and an optional suggested practice for tomorrow, explicitly subject to tomorrow's energy, time and feedback. The previous optional bonus and seven-day routine are accessible via a dedicated plan screen. Difficulty recommendations use prior days so today's incomplete tasks do not shift its level while in progress. On-device completion/reflection/feedback remain private. ₩2,900 remains a preview price; billing and server sync are not connected.
