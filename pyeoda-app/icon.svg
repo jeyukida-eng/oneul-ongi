@@ -1,1 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#f8f3e8"/><circle cx="256" cy="256" r="174" fill="#697158"/><path d="M145 173c44 0 81 10 111 31v151c-30-20-67-30-111-30V173Z" fill="#fffdf8"/><path d="M367 173c-44 0-81 10-111 31v151c30-20 67-30 111-30V173Z" fill="#fffdf8"/><path d="M256 204v151" stroke="#697158" stroke-width="13" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="PYEODA open book icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#66704f"/>
+      <stop offset="1" stop-color="#3f4934"/>
+    </linearGradient>
+    <linearGradient id="pageL" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffdf8"/>
+      <stop offset="1" stop-color="#f1eadb"/>
+    </linearGradient>
+    <linearGradient id="pageR" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffdf8"/>
+      <stop offset="1" stop-color="#f1eadb"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#202519" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#f8f3e8"/>
+  <rect x="34" y="34" width="444" height="444" rx="96" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <path d="M95 185c53-9 103-2 161 31v180c-49-29-101-38-161-25V185Z" fill="#d8d0bd" opacity=".62"/>
+    <path d="M417 185c-53-9-103-2-161 31v180c49-29 101-38 161-25V185Z" fill="#d8d0bd" opacity=".62"/>
+    <path d="M111 165c51-5 98 5 145 39v168c-45-27-94-36-145-27V165Z" fill="url(#pageL)"/>
+    <path d="M401 165c-51-5-98 5-145 39v168c45-27 94-36 145-27V165Z" fill="url(#pageR)"/>
+  </g>
+  <path d="M256 204v168" stroke="#c8bea8" stroke-width="4"/>
+  <text x="256" y="282" text-anchor="middle" fill="#263022" font-family="Georgia, 'Times New Roman', serif" font-size="52" font-weight="700" letter-spacing="5">PYEODA</text>
+  <path d="M169 316h58M285 316h58" stroke="#727b59" stroke-width="3" stroke-linecap="round"/>
+  <path d="M256 316c-10-18-22-25-34-23 2 14 13 24 34 29 21-5 32-15 34-29-12-2-24 5-34 23Z" fill="#707a55"/>
+</svg>
