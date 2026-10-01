@@ -462,9 +462,9 @@ body{background:#fbf8f1;color:var(--ink);}
 .register-actions .primary{box-shadow:none}
 @media(max-width:760px){
   .register-layout{grid-template-columns:1fr}
-  .register-cover-card{position:static;display:flex;gap:16px}
+  .register-cover-card{position:static;display:flex;flex-direction:column;gap:16px}
   .register-cover-preview{max-width:220px}
-  .cover-tool-buttons{grid-template-columns:1fr 1fr}
+  .cover-tool-buttons{grid-template-columns:1fr}
   .register-actions{grid-template-columns:1fr}
 }
 
@@ -2341,6 +2341,11 @@ html,body{max-width:100%;overflow-x:clip}
   font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;
   font-size:11.5px;line-height:1.55
 }
+
+@media(max-width:760px){
+  .cover-tool-buttons{grid-template-columns:1fr!important;width:100%!important}
+  .cover-tool-btn{width:100%!important;max-width:100%!important;min-width:0!important;white-space:normal!important;overflow:visible!important;font-size:14px!important;line-height:1.35!important}
+}
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2545,7 +2550,7 @@ html,body{max-width:100%;overflow-x:clip}
   <div class='cover-tools'>
     <div class='cover-tool-buttons'>
       <label class='cover-tool-btn' for='newCoverFile'>표지 이미지 선택</label>
-      <button type='button' class='cover-tool-btn accent' id='generateCoverBtn'>AI 표지 생성 · 책당 1회 무료</button>
+      <button type='button' class='cover-tool-btn accent' id='generateCoverBtn'>AI 표지 생성 · 1회 무료</button>
     </div>
     <p class='cover-prompt-help'><b>책마다 첫 AI 표지 1회는 무료</b> · 같은 책의 2회째 생성부터 비용이 발생합니다. 직접 표지 이미지를 올리는 방식은 계속 무료입니다.</p>
     <input id='newCoverFile' type='file' accept='image/*'>
@@ -7337,7 +7342,7 @@ let aiCoverFreeUsed=false;
 function syncAICoverButtonLabel(){
   const btn=document.getElementById('generateCoverBtn');
   if(!btn)return;
-  btn.textContent=aiCoverFreeUsed?'AI 표지 다시 생성 · 유료':'AI 표지 생성 · 책당 1회 무료';
+  btn.textContent=aiCoverFreeUsed?'AI 표지 다시 생성 · 유료':'AI 표지 생성 · 1회 무료';
 }
 
 function createCoverGenerationKey(){
