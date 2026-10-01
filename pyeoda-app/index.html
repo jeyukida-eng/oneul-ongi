@@ -436,8 +436,8 @@ body{background:#fbf8f1;color:var(--ink);}
 }
 .register-cover-preview img{width:100%;height:100%;object-fit:contain;display:block;background:#f8f3e9;padding:10px;box-sizing:border-box}
 .cover-tools{display:flex;flex-direction:column;gap:14px;width:100%}
-.cover-tool-buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
-.cover-tool-btn{height:54px;min-width:0;border-radius:999px;border:1px solid rgba(108,99,84,.35);background:rgba(255,253,248,.92);display:inline-flex;align-items:center;justify-content:center;padding:0 14px;cursor:pointer;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:14px;font-weight:800;line-height:1;letter-spacing:-.03em;color:var(--ink);text-decoration:none;white-space:nowrap;text-align:center}
+.cover-tool-buttons{display:grid;grid-template-columns:1fr;gap:10px;width:100%}
+.cover-tool-btn{min-height:52px;height:auto;min-width:0;border-radius:999px;border:1px solid rgba(108,99,84,.35);background:rgba(255,253,248,.92);display:flex;align-items:center;justify-content:center;padding:13px 16px;cursor:pointer;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:14px;font-weight:800;line-height:1.35;letter-spacing:-.03em;color:var(--ink);text-decoration:none;white-space:normal;word-break:keep-all;text-align:center}
 .cover-tool-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(65,52,34,.08)}
 .cover-tool-btn.accent{background:var(--accent-deep);border-color:var(--accent-deep);color:#fff}
 .cover-prompt-label{display:block;margin:0 0 8px;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:13px;font-weight:800;letter-spacing:-.02em;color:#4d4a43}
@@ -2599,7 +2599,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
   <div class='cover-tools'>
     <div class='cover-tool-buttons'>
       <label class='cover-tool-btn' for='newCoverFile'>표지 이미지 선택</label>
-      <button type='button' class='cover-tool-btn accent' id='generateCoverBtn'>AI 표지 생성 · 책당 첫 1회 무료</button>
+      <button type='button' class='cover-tool-btn accent' id='generateCoverBtn'>AI 표지 생성 · 책당 1회 무료</button>
     </div>
     <p class='cover-prompt-help'><b>책마다 첫 AI 표지 1회는 무료</b> · 같은 책의 2회째 생성부터 비용이 발생합니다. 직접 표지 이미지를 올리는 방식은 계속 무료입니다.</p>
     <input id='newCoverFile' type='file' accept='image/*'>
@@ -7391,7 +7391,7 @@ let aiCoverFreeUsed=false;
 function syncAICoverButtonLabel(){
   const btn=document.getElementById('generateCoverBtn');
   if(!btn)return;
-  btn.textContent=aiCoverFreeUsed?'AI 표지 다시 생성 · 유료':'AI 표지 생성 · 책당 첫 1회 무료';
+  btn.textContent=aiCoverFreeUsed?'AI 표지 다시 생성 · 유료':'AI 표지 생성 · 책당 1회 무료';
 }
 
 function createCoverGenerationKey(){
