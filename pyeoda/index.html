@@ -4775,18 +4775,26 @@ const episodeNoInput=document.getElementById('episodeNo');
 const episodeTitleInput=document.getElementById('title');
 const editorStatus=document.getElementById('editorStatus');
 const EPISODE_STORAGE_KEY='pyeoda-demo-episodes';
-let currentEpisodeNo=32;
+let currentEpisodeNo=1;
 
 function getInitialEpisodes(){
-  return [
-    {no:1,title:'',body:'',published:false},
-    {no:2,title:'',body:'',published:false},
-    {no:3,title:'',body:'',published:false},
-    {no:31,title:'',body:'',published:false},
-    {no:32,title:episodeTitleInput.value||'젖은 짚신',body:(body.innerText||'').replace(/\u00a0/g,' '),published:false}
-  ];
+  // 새 계정/새 브라우저에는 예시 회차를 만들지 않습니다.
+  // 책을 등록한 뒤 resetEpisodesForNewBook()에서 1화를 시작합니다.
+  return [];
+}
+function hasCurrentRegisteredBook(){
+  try{
+    const book=JSON.parse(localStorage.getItem('pyeoda-current-book')||'{}')||{};
+    return !!String(book.title||'').trim();
+  }catch(e){return false}
 }
 function loadEpisodes(){
+  // 책이 등록되지 않은 상태의 회차 데이터는 옛 프로토타입 데모 잔여물입니다.
+  // 첫 로그인에서 '제목 없는 책 · 5화'가 보이지 않도록 정리합니다.
+  if(!hasCurrentRegisteredBook()){
+    try{localStorage.removeItem(EPISODE_STORAGE_KEY)}catch(e){}
+    return [];
+  }
   try{
     const saved=JSON.parse(localStorage.getItem(EPISODE_STORAGE_KEY)||'null');
     if(Array.isArray(saved)&&saved.length) return saved;
@@ -5303,14 +5311,39 @@ function activeCoverSource(data=currentBookData()){
 
 function publishingBookSummary(){
   const data=currentBookData();
-  const count=totalEpisodeCount();
-  const chars=totalEpisodeChars();
+  const hasBook=!!String(data?.title||'').trim();
+  const count=hasBook?totalEpisodeCount():0;
+  const chars=hasBook?totalEpisodeChars():0;
   const title=document.getElementById('publishCenterTitle');
   const pen=document.getElementById('publishCenterPen');
   const stats=document.getElementById('publishCenterStats');
   const status=document.getElementById('publishCenterStatus');
   const cover=document.getElementById('publishCenterCover');
-  if(title) title.textContent=data.title||'제목 없는 책';
+
+  if(!hasBook){
+    if(title) title.textContent='등록된 작품이 없습니다';
+    if(pen) pen.textContent='';
+    if(stats) stats.textContent='0화 · 0자';
+    if(status){
+      status.textContent='작품 없음';
+      status.classList.add('draft');
+    }
+    if(cover) cover.innerHTML='표지';
+
+    const note=document.getElementById('publishingGateNote');
+    if(note) note.textContent='먼저 새 책을 등록하고 원고를 작성해 주세요. 완결한 뒤 출판 제작을 시작할 수 있습니다.';
+    document.querySelectorAll('.publish-gated').forEach(btn=>{
+      btn.disabled=true;
+      btn.textContent='작품 등록 후 이용';
+    });
+    const next=document.getElementById('completionNext');
+    if(next) next.classList.remove('show');
+    const studioGuide=document.getElementById('studioBookGuide');
+    if(studioGuide) studioGuide.innerHTML='<b>등록된 작품이 없습니다.</b> 새 책 등록부터 시작해 주세요.';
+    return;
+  }
+
+  if(title) title.textContent=data.title;
   if(pen) pen.textContent=data.pen||'작가';
   if(stats) stats.textContent=`${count}화 · ${chars.toLocaleString()}자`;
   if(status){
@@ -6247,6 +6280,8 @@ function parseEpisodeNumber(value){
 }
 function saveCurrentEpisode(){
   if(!currentEpisodeNo) return true;
+  // 책 등록 전에는 빈 회차를 자동 생성하지 않습니다.
+  if(!String(currentBookData()?.title||'').trim()) return true;
   let ep=findEpisode(currentEpisodeNo);
   if(!ep){
     ep={no:currentEpisodeNo,title:'',body:'',published:false};
@@ -6290,7 +6325,12 @@ function renderEpisodeTabs(){
   const add=document.createElement('button');
   add.type='button';
   add.id='addEpisode';
-  if(isBookCompleted()){
+  const hasBook=!!String(currentBookData()?.title||'').trim();
+  if(!hasBook){
+    add.textContent='책 등록 후 회차 작성';
+    add.disabled=true;
+    add.title='먼저 새 책을 등록해 주세요.';
+  }else if(isBookCompleted()){
     add.textContent='✓ 완결된 작품';
     add.disabled=true;
     add.title='완결 취소 후 새 회차를 추가할 수 있습니다.';
@@ -6317,6 +6357,11 @@ function openEpisode(no,saveFirst=true){
   wc();
 }
 function createNextEpisode(){
+  if(!String(currentBookData()?.title||'').trim()){
+    toast('먼저 책을 등록해 주세요.');
+    openNewBookRegistration();
+    return;
+  }
   if(isBookCompleted()){
     toast('완결된 작품입니다. 새 회차를 추가하려면 먼저 완결을 취소해 주세요.');
     return;
@@ -6770,7 +6815,16 @@ if(epubDownloadBtn) epubDownloadBtn.onclick=downloadCurrentEpub;
 // 회차 탭을 실제 데이터와 연결하고 현재 회차를 엽니다.
 if(!findEpisode(currentEpisodeNo) && episodes.length) currentEpisodeNo=Math.max(...episodes.map(ep=>ep.no));
 renderEpisodeTabs();
-openEpisode(currentEpisodeNo,false);
+if(episodes.length){
+  openEpisode(currentEpisodeNo,false);
+}else{
+  currentEpisodeNo=1;
+  episodeNoInput.value='';
+  episodeTitleInput.value='';
+  body.textContent='';
+  editorStatus.textContent='책을 등록하면 1화부터 시작됩니다.';
+  try{wc()}catch(e){}
+}
 syncBookCompletionUI();
 
 const coverFile=document.getElementById('coverFile');
