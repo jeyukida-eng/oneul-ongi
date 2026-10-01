@@ -3178,6 +3178,8 @@ function publicDiscoverBooks(){
 const AUTHOR_SCREENS=new Set(['studio','books','register','editor','publishing','publish','paper','global','revenue']);
 let AUTHOR_AUTH_MODE='login';
 let AUTHOR_AUTH_AFTER_LOGIN='';
+const PYEODA_AUTH_REDIRECT_URL='https://jeyukida-eng.github.io/oneul-ongi/pyeoda/';
+function authorAuthRedirectUrl(){return PYEODA_AUTH_REDIRECT_URL;}
 
 function isPermanentAuthor(user){
   return !!(user && !user.is_anonymous && user.email);
@@ -3272,7 +3274,7 @@ async function submitAuthorAuth(){
   try{
     if(btn){btn.disabled=true;btn.textContent=AUTHOR_AUTH_MODE==='signup'?'가입 중…':'로그인 중…'}
     if(AUTHOR_AUTH_MODE==='signup'){
-      const {data,error}=await PYEODA_SERVER.client.auth.signUp({email,password});
+      const {data,error}=await PYEODA_SERVER.client.auth.signUp({email,password,options:{emailRedirectTo:authorAuthRedirectUrl()}});
       if(error)throw error;
       if(data?.session){
         await applyAuthorSession(data.session);
@@ -3355,7 +3357,7 @@ async function resendSignupConfirmation(){
     const {error}=await PYEODA_SERVER.client.auth.resend({
       type:'signup',
       email,
-      options:{emailRedirectTo:window.location.origin+window.location.pathname}
+      options:{emailRedirectTo:authorAuthRedirectUrl()}
     });
     if(error)throw error;
     setAuthorAuthMessage('인증 메일을 다시 보냈습니다. 받은편지함과 스팸함을 확인해 주세요.','ok');
@@ -3379,7 +3381,7 @@ async function requestAuthorPasswordReset(){
   if(!email||!email.includes('@')){setAuthorAuthMessage('비밀번호를 재설정할 가입 이메일을 입력해 주세요.','error');return}
   try{
     setAuthorAuthMessage('비밀번호 재설정 메일을 보내고 있습니다…');
-    const redirectTo=window.location.origin+window.location.pathname;
+    const redirectTo=authorAuthRedirectUrl();
     const {error}=await PYEODA_SERVER.client.auth.resetPasswordForEmail(email,{redirectTo});
     if(error)throw error;
     setAuthorAuthMessage('비밀번호 재설정 메일을 보냈습니다. 메일의 링크를 눌러 새 비밀번호를 설정해 주세요.','ok');
@@ -3398,6 +3400,19 @@ async function handlePasswordRecoverySession(){
   if(error){alert(error.message||'비밀번호를 변경하지 못했습니다.');return}
   alert('비밀번호가 변경되었습니다. 다음부터 새 비밀번호로 로그인해 주세요.');
 }
+function handleAuthRedirectError(){
+  const hash=new URLSearchParams(String(location.hash||'').replace(/^#/,''));
+  const code=hash.get('error_code')||'';
+  const desc=(hash.get('error_description')||'').replace(/\+/g,' ');
+  if(!code&&!desc)return;
+  openAuthorAuthModal('login');
+  if(code==='otp_expired'||/expired|invalid/i.test(desc)){
+    setAuthorAuthMessage('인증 링크가 만료되었거나 이미 사용된 링크입니다. 이메일을 입력한 뒤 ‘인증 메일 다시 보내기’를 눌러 새 인증 메일을 받아 주세요.','confirm');
+  }else{
+    setAuthorAuthMessage(desc||'인증 링크를 처리하지 못했습니다. 새 인증 메일을 받아 다시 시도해 주세요.','error');
+  }
+  try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+}
 function bindAuthorAuthUI(){
   document.getElementById('authorAuthBtn')?.addEventListener('click',()=>openAuthorAuthModal('login'));
   document.getElementById('authorAuthClose')?.addEventListener('click',closeAuthorAuthModal);
@@ -3412,6 +3427,7 @@ function bindAuthorAuthUI(){
   document.getElementById('authorLogoutBtn')?.addEventListener('click',logoutAuthor);
   document.getElementById('authorAuthPassword')?.addEventListener('keydown',e=>{if(e.key==='Enter')submitAuthorAuth()});
   syncAuthorAuthUI();
+  handleAuthRedirectError();
 }
 document.addEventListener('DOMContentLoaded',bindAuthorAuthUI,{once:true});
 
