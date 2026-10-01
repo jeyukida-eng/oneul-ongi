@@ -4385,43 +4385,7 @@ function epubPreviewCss(){
   `;
 }
 function makePreviewDocument(title,body){
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${epubPreviewCss()}</style></head><body>${body}<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(console.error));
-}
-</script>
-<script>
-(()=>{
-  const btn=document.getElementById('pyeodaMobileInstall');
-  if(!btn)return;
-  let deferredPrompt=null;
-  const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-  if(standalone){btn.style.display='none';return;}
-  const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  window.addEventListener('beforeinstallprompt',e=>{
-    e.preventDefault();
-    deferredPrompt=e;
-    btn.style.display='inline-flex';
-  });
-  if(isiOS) btn.style.display='inline-flex';
-  btn.addEventListener('click',async()=>{
-    if(deferredPrompt){
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice.catch(()=>{});
-      deferredPrompt=null;
-      btn.style.display='none';
-      return;
-    }
-    if(isiOS){
-      alert('Safari 하단의 공유 버튼을 누른 뒤 “홈 화면에 추가”를 선택해 주세요.');
-    }else{
-      alert('브라우저 메뉴에서 “앱 설치” 또는 “홈 화면에 추가”를 선택해 주세요.');
-    }
-  });
-  window.addEventListener('appinstalled',()=>{btn.style.display='none';});
-})();
-</script>
-</body></html>`;
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${epubPreviewCss()}</style></head><body>${body}</body></html>`;
 }
 function buildEpubPreviewSections(){
   const book=currentBookData();
@@ -7798,4 +7762,40 @@ priceInput.addEventListener('keydown',e=>{
 
 syncRevenueBookUI();
 
-</script></body></html>
+</script><script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?v=2').catch(console.error));
+}
+</script>
+<script>
+(()=>{
+  const btn=document.getElementById('pyeodaMobileInstall');
+  if(!btn)return;
+  let deferredPrompt=null;
+  const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+  if(standalone){btn.style.display='none';return;}
+  const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    deferredPrompt=e;
+    btn.style.display='inline-flex';
+  });
+  if(isiOS) btn.style.display='inline-flex';
+  btn.addEventListener('click',async()=>{
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice.catch(()=>{});
+      deferredPrompt=null;
+      btn.style.display='none';
+      return;
+    }
+    if(isiOS){
+      alert('Safari 하단의 공유 버튼을 누른 뒤 “홈 화면에 추가”를 선택해 주세요.');
+    }else{
+      alert('브라우저 메뉴에서 “앱 설치” 또는 “홈 화면에 추가”를 선택해 주세요.');
+    }
+  });
+  window.addEventListener('appinstalled',()=>{btn.style.display='none';});
+})();
+</script>
+</body></html>
