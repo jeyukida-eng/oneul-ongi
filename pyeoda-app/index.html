@@ -2364,8 +2364,8 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 .author-auth-field{display:block;margin:0 0 12px;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:12px;font-weight:800;color:#59534a}
 .author-auth-field input{width:100%;height:48px;margin-top:7px;padding:0 14px;border:1px solid #d8d0c2;border-radius:13px;background:#fff;color:#2f2b24;outline:none;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:16px}
 .author-auth-field input:focus{border-color:#697158;box-shadow:0 0 0 3px rgba(105,113,88,.10)}
-.author-auth-submit,.author-auth-logout{width:100%;height:50px;border:0;border-radius:999px;background:#697158;color:#fff;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:14px;font-weight:850;cursor:pointer}
-.author-auth-logout{margin-top:14px;background:#fff;border:1px solid rgba(151,82,69,.30);color:#8d5b51}
+.author-auth-submit,.author-auth-signup-direct,.author-auth-logout{width:100%;height:50px;border:0;border-radius:999px;background:#697158;color:#fff;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:14px;font-weight:850;cursor:pointer}
+.author-auth-signup-direct{margin-top:9px;background:#fffdf8!important;border:1px solid rgba(105,113,88,.34)!important;color:#596148!important}.author-auth-logout{margin-top:14px;background:#fff;border:1px solid rgba(151,82,69,.30);color:#8d5b51}
 .author-auth-auto{margin:11px 2px 0;color:#7f776b;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:11.5px;line-height:1.55}
 .author-auth-message{min-height:20px;margin:10px 2px 0;color:#697158;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:12px;line-height:1.55}
 .author-auth-account{padding:17px;border:1px solid rgba(108,99,84,.14);border-radius:16px;background:#f8f4ec}
@@ -2402,7 +2402,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
       <label class='author-auth-field'>비밀번호
         <input type='password' id='authorAuthPassword' autocomplete='current-password' placeholder='8자 이상'>
       </label>
-      <button type='button' class='author-auth-submit' id='authorAuthSubmit'>로그인</button>
+      <button type='button' class='author-auth-submit' id='authorAuthSubmit'>로그인</button><button type='button' class='author-auth-signup-direct' id='authorSignupDirect'>새 계정 만들기</button>
       <p class='author-auth-auto'>로그아웃하지 않으면 이 기기에서는 자동 로그인됩니다. 독자는 로그인 없이 공개 작품을 읽을 수 있습니다.</p>
       <p class='author-auth-message' id='authorAuthMessage'></p>
     </div>
@@ -3322,7 +3322,7 @@ async function submitAuthorAuth(){
     else if(/already registered|already been registered/i.test(msg))setAuthorAuthMessage('이미 가입된 이메일입니다. 로그인 탭을 이용해 주세요.','error');
     else setAuthorAuthMessage(msg||'로그인 처리 중 오류가 발생했습니다.','error');
   }finally{
-    if(btn){btn.disabled=false;btn.textContent=AUTHOR_AUTH_MODE==='signup'?'무료로 가입하기':'로그인'}
+    if(btn){btn.disabled=false;btn.textContent='로그인'}
   }
 }
 async function logoutAuthor(){
@@ -3356,7 +3356,8 @@ function bindAuthorAuthUI(){
   document.getElementById('authorAuthClose')?.addEventListener('click',closeAuthorAuthModal);
   document.getElementById('authorAuthModal')?.addEventListener('click',e=>{if(e.target?.id==='authorAuthModal')closeAuthorAuthModal()});
   document.querySelectorAll('[data-auth-mode]').forEach(btn=>btn.addEventListener('click',()=>setAuthorAuthMode(btn.dataset.authMode)));
-  document.getElementById('authorAuthSubmit')?.addEventListener('click',submitAuthorAuth);
+  document.getElementById('authorAuthSubmit')?.addEventListener('click',()=>{setAuthorAuthMode('login');submitAuthorAuth()});
+  document.getElementById('authorSignupDirect')?.addEventListener('click',()=>{setAuthorAuthMode('signup');submitAuthorAuth()});
   document.getElementById('authorLogoutBtn')?.addEventListener('click',logoutAuthor);
   document.getElementById('authorAuthPassword')?.addEventListener('keydown',e=>{if(e.key==='Enter')submitAuthorAuth()});
   syncAuthorAuthUI();
