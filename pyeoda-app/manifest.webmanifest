@@ -1,0 +1,25 @@
+{
+  "name": "펴다 모바일",
+  "short_name": "펴다",
+  "description": "쓰고, 연재하고, 책으로 만드는 모바일 창작 출판 플랫폼",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f3e8",
+  "theme_color": "#697158",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
