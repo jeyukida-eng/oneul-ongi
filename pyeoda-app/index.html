@@ -2404,7 +2404,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
       </label>
       <button type='button' class='author-auth-submit' id='authorAuthSubmit'>로그인</button><button type='button' class='author-auth-signup-direct' id='authorSignupDirect'>새 계정 만들기</button>
       <p class='author-auth-auto'>로그아웃하지 않으면 이 기기에서는 자동 로그인됩니다. 독자는 로그인 없이 공개 작품을 읽을 수 있습니다.</p>
-      <p class='author-auth-message' id='authorAuthMessage'></p>
+      <p class='author-auth-message' id='authorAuthMessage'></p><button type='button' class='author-auth-resend' id='authorAuthResend' hidden>인증 메일 다시 보내기</button>
     </div>
     <div id='authorAuthAccount' hidden>
       <div class='author-auth-account'><small>로그인한 작가 계정</small><b id='authorAuthAccountEmail'></b></div>
@@ -3214,6 +3214,8 @@ function isPermanentAuthor(user){
 function setAuthorAuthMessage(message='',kind=''){
   const el=document.getElementById('authorAuthMessage');
   if(el){el.textContent=message;el.dataset.kind=kind||''}
+  const resend=document.getElementById('authorAuthResend');
+  if(resend)resend.hidden=kind!=='confirm';
 }
 function setAuthorAuthMode(mode='login'){
   AUTHOR_AUTH_MODE=mode==='signup'?'signup':'login';
@@ -3303,7 +3305,7 @@ async function submitAuthorAuth(){
         closeAuthorAuthModal();
         const target=AUTHOR_AUTH_AFTER_LOGIN||'studio';AUTHOR_AUTH_AFTER_LOGIN='';go(target);
       }else{
-        setAuthorAuthMessage('가입 신청이 완료되었습니다. 확인 이메일이 오면 인증한 뒤 이 화면에서 로그인해 주세요.','ok');
+        setAuthorAuthMessage('회원가입은 완료되었습니다. 받은 이메일의 인증 버튼을 누른 뒤 여기서 로그인해 주세요.','confirm');
         setAuthorAuthMode('login');
         const emailInput=document.getElementById('authorAuthEmail');if(emailInput)emailInput.value=email;
       }
@@ -3318,13 +3320,31 @@ async function submitAuthorAuth(){
     console.error(err);
     const msg=String(err?.message||'');
     if(/invalid login credentials/i.test(msg))setAuthorAuthMessage('이메일 또는 비밀번호가 맞지 않습니다.','error');
-    else if(/email not confirmed/i.test(msg))setAuthorAuthMessage('이메일 인증을 먼저 완료해 주세요.','error');
+    else if(err?.code==='email_not_confirmed'||/email not confirmed/i.test(msg))setAuthorAuthMessage('회원가입은 완료됐습니다. 이메일 인증이 아직 안 됐어요. 받은 메일의 인증 버튼을 누른 뒤 다시 로그인해 주세요.','confirm');
     else if(/already registered|already been registered/i.test(msg))setAuthorAuthMessage('이미 가입된 이메일입니다. 로그인 탭을 이용해 주세요.','error');
     else setAuthorAuthMessage(msg||'로그인 처리 중 오류가 발생했습니다.','error');
   }finally{
     if(btn){btn.disabled=false;btn.textContent='로그인'}
   }
 }
+async function resendAuthorConfirmation(){
+  if(!PYEODA_SERVER.client)return;
+  const email=String(document.getElementById('authorAuthEmail')?.value||'').trim();
+  const btn=document.getElementById('authorAuthResend');
+  if(!email||!email.includes('@')){setAuthorAuthMessage('회원가입할 때 사용한 이메일을 입력해 주세요.','confirm');return}
+  try{
+    if(btn){btn.disabled=true;btn.textContent='보내는 중…'}
+    const {error}=await PYEODA_SERVER.client.auth.resend({type:'signup',email});
+    if(error)throw error;
+    setAuthorAuthMessage('인증 메일을 다시 보냈습니다. 받은 편지함과 스팸함을 확인해 주세요.','confirm');
+  }catch(err){
+    console.error(err);
+    setAuthorAuthMessage(err?.message||'인증 메일을 다시 보내지 못했습니다. 잠시 후 다시 시도해 주세요.','confirm');
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='인증 메일 다시 보내기'}
+  }
+}
+
 async function logoutAuthor(){
   if(!PYEODA_SERVER.client)return;
   const btn=document.getElementById('authorLogoutBtn');
