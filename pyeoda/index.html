@@ -3279,9 +3279,10 @@ async function submitAuthorAuth(){
         closeAuthorAuthModal();
         const target=AUTHOR_AUTH_AFTER_LOGIN||'studio';AUTHOR_AUTH_AFTER_LOGIN='';go(target);
       }else{
-        setAuthorAuthMessage('회원가입은 완료되었습니다. 받은 이메일의 인증 버튼을 누른 뒤 여기서 로그인해 주세요.','confirm');
         setAuthorAuthMode('login');
         const emailInput=document.getElementById('authorAuthEmail');if(emailInput)emailInput.value=email;
+        const passwordInput=document.getElementById('authorAuthPassword');if(passwordInput)passwordInput.value='';
+        setAuthorAuthMessage('회원가입이 완료되었습니다. 받은 이메일의 인증 버튼을 누른 뒤 로그인해 주세요. 인증 메일이 보이지 않으면 아래 ‘인증 메일 다시 보내기’를 눌러 주세요.','confirm');
       }
     }else{
       const {data,error}=await PYEODA_SERVER.client.auth.signInWithPassword({email,password});
@@ -3294,11 +3295,11 @@ async function submitAuthorAuth(){
     console.error(err);
     const msg=String(err?.message||'');
     if(/invalid login credentials/i.test(msg))setAuthorAuthMessage('이메일 또는 비밀번호가 맞지 않습니다.','error');
-    else if(err?.code==='email_not_confirmed'||/email not confirmed/i.test(msg))setAuthorAuthMessage('회원가입은 완료됐습니다. 이메일 인증이 아직 안 됐어요. 받은 메일의 인증 버튼을 누른 뒤 다시 로그인해 주세요.','confirm');
+    else if(err?.code==='email_not_confirmed'||/email not confirmed/i.test(msg))setAuthorAuthMessage('이메일 인증이 아직 완료되지 않았습니다. 아래 ‘인증 메일 다시 보내기’를 눌러 인증해 주세요.','confirm');
     else if(/already registered|already been registered/i.test(msg))setAuthorAuthMessage('이미 가입된 이메일입니다. 로그인 탭을 이용해 주세요.','error');
     else setAuthorAuthMessage(msg||'로그인 처리 중 오류가 발생했습니다.','error');
   }finally{
-    if(btn){btn.disabled=false;btn.textContent='로그인'}
+    if(btn){btn.disabled=false;btn.textContent=AUTHOR_AUTH_MODE==='signup'?'무료로 가입하기':'로그인'}
   }
 }
 async function resendAuthorConfirmation(){
@@ -3402,8 +3403,12 @@ function bindAuthorAuthUI(){
   document.getElementById('authorAuthClose')?.addEventListener('click',closeAuthorAuthModal);
   document.getElementById('authorAuthModal')?.addEventListener('click',e=>{if(e.target?.id==='authorAuthModal')closeAuthorAuthModal()});
   document.querySelectorAll('[data-auth-mode]').forEach(btn=>btn.addEventListener('click',()=>setAuthorAuthMode(btn.dataset.authMode)));
-  document.getElementById('authorAuthSubmit')?.addEventListener('click',()=>{setAuthorAuthMode('login');submitAuthorAuth()});
+  document.getElementById('authorAuthSubmit')?.addEventListener('click',submitAuthorAuth);
   document.getElementById('authorSignupDirect')?.addEventListener('click',()=>{setAuthorAuthMode('signup');submitAuthorAuth()});
+  document.getElementById('authorFindIdBtn')?.addEventListener('click',explainAuthorId);
+  document.getElementById('authorResetPasswordBtn')?.addEventListener('click',requestAuthorPasswordReset);
+  document.getElementById('authorResendConfirmBtn')?.addEventListener('click',resendSignupConfirmation);
+  document.getElementById('authorAuthResend')?.addEventListener('click',resendSignupConfirmation);
   document.getElementById('authorLogoutBtn')?.addEventListener('click',logoutAuthor);
   document.getElementById('authorAuthPassword')?.addEventListener('keydown',e=>{if(e.key==='Enter')submitAuthorAuth()});
   syncAuthorAuthUI();
