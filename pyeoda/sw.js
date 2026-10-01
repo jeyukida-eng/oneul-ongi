@@ -1,4 +1,4 @@
-const CACHE='pyeoda-pwa-v749';
+const CACHE='pyeoda-pwa-v750';
 const CORE=['./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
