@@ -1,4 +1,4 @@
-const CACHE='pyeoda-mobile-v1';
+const CACHE='pyeoda-mobile-v2';
 const CORE=['./','./index.html','./server-config.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));
