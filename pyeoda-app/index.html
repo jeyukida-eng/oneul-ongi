@@ -2649,6 +2649,24 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 /* A free episode has a visibly disabled zero-price field. */
 .episode-pricing-main input:disabled{background:#eeeee7!important;color:#8b9082!important;border-color:#d8dbd0!important;cursor:not-allowed}
 .episode-pricing[hidden]{display:none!important}
+
+/* Manuscript formatting toolbar */
+.manuscript-toolbar{margin:12px 0 16px;padding:12px;background:#f4f4ec;border:1px solid #d9ddcf;border-radius:12px;font-family:system-ui,-apple-system,'Noto Sans KR',sans-serif}
+.manuscript-format-selects,.manuscript-format-buttons{display:flex;align-items:center;flex-wrap:wrap;gap:7px}.manuscript-format-selects{margin-bottom:9px}
+.manuscript-toolbar label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;margin:0}
+.manuscript-toolbar select,.manuscript-toolbar button{min-height:40px;height:40px;padding:0 10px;border:1px solid #cbd1bf;border-radius:7px;background:#fffdf8;color:#414938;font:inherit;font-size:13px;line-height:1.3;box-sizing:border-box;cursor:pointer}
+.manuscript-toolbar select{min-width:82px}.manuscript-toolbar button{min-width:40px}.manuscript-toolbar button[aria-pressed=true]{background:#697158;color:#fff;border-color:#697158}
+.manuscript-toolbar button:focus-visible,.manuscript-toolbar select:focus-visible{outline:2px solid #697158;outline-offset:2px}
+.manuscript-toolbar p{margin:9px 0 0;font-size:11.5px;line-height:1.6;color:#767d6a;word-break:keep-all;overflow-wrap:break-word}
+.body-editor p{margin:0 0 1em}.body-editor ul,.body-editor ol{padding-left:1.5em}.body-editor li{margin:0 0 .3em}
+.body-editor font[size='1'],#readerBody font[size='1']{font-size:12px}
+.body-editor font[size='2'],#readerBody font[size='2']{font-size:14px}
+.body-editor font[size='3'],#readerBody font[size='3']{font-size:16px}
+.body-editor font[size='4'],#readerBody font[size='4']{font-size:18px}
+.body-editor font[size='5'],#readerBody font[size='5']{font-size:24px}
+.body-editor font[size='6'],#readerBody font[size='6']{font-size:32px}
+.body-editor font[size='7'],#readerBody font[size='7']{font-size:48px}
+@media(max-width:600px){.manuscript-toolbar{padding:10px}.manuscript-format-selects{gap:10px}.manuscript-toolbar label{flex:1;justify-content:space-between}.manuscript-toolbar select{flex:1;min-width:70px}.manuscript-format-buttons{gap:6px}.manuscript-toolbar button{min-height:42px;height:42px;padding:0 9px}}
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2956,7 +2974,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
     <div class='editor-guide-external'><b>적용 순서</b><span id='editorGuideExternal'>공통 원칙 → 장르별 규칙 → 작품별 설정 → 출판처 기준</span></div>
   </div>
 </details>
-<div class='editor-episode-tools'><nav class='editor-episode-navigation' aria-label='집필 회차 이동'><button type='button' id='editorPrevEpisode' aria-label='이전 회차' title='이전 회차' disabled>←</button><span id='editorEpisodePosition' aria-live='polite'>회차 선택</span><button type='button' id='editorNextEpisode' aria-label='다음 회차' title='다음 회차' disabled>→</button></nav><div class='editor-book-tools'><button type='button' class='editor-action editor-action-delete editor-top-action' id='deleteEpisode'>회차 삭제</button><button type='button' class='editor-action editor-action-complete editor-top-action' id='completeBook'>책 완결</button></div></div><div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><section class='episode-pricing' aria-label='회차 가격 설정'><div class='episode-pricing-main'><strong>회차 가격</strong><select id='episodeSaleMode' aria-label='회차 무료 또는 유료'><option value='free'>무료</option><option value='paid'>유료</option></select><label id='episodePriceAmount'><input id='episodeSalePrice' type='number' min='1' max='2147483647' step='1' inputmode='numeric' value='0' disabled placeholder='가격 입력' aria-label='이 회차 가격'><span>원</span></label></div><p id='episodePriceNotice'>1~5화는 무료로 고정됩니다.</p></section><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
+<div class='editor-episode-tools'><nav class='editor-episode-navigation' aria-label='집필 회차 이동'><button type='button' id='editorPrevEpisode' aria-label='이전 회차' title='이전 회차' disabled>←</button><span id='editorEpisodePosition' aria-live='polite'>회차 선택</span><button type='button' id='editorNextEpisode' aria-label='다음 회차' title='다음 회차' disabled>→</button></nav><div class='editor-book-tools'><button type='button' class='editor-action editor-action-delete editor-top-action' id='deleteEpisode'>회차 삭제</button><button type='button' class='editor-action editor-action-complete editor-top-action' id='completeBook'>책 완결</button></div></div><div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='manuscriptToolbar' class='manuscript-toolbar' role='toolbar' aria-label='원고 글자와 문단 서식'><div class='manuscript-format-selects'><label>글꼴<select id='manuscriptFont' aria-label='원고 글꼴'><option value='Noto Serif KR'>명조체</option><option value='Noto Sans KR'>고딕체</option><option value='Batang'>바탕체</option><option value='Gungsuh'>궁서체</option><option value='Arial'>Arial</option></select></label><label>글자 크기<select id='manuscriptSize' aria-label='원고 글자 크기'><option value='1'>12</option><option value='2'>14</option><option value='3' selected>16</option><option value='4'>18</option><option value='5'>24</option><option value='6'>32</option><option value='7'>48</option></select></label></div><div class='manuscript-format-buttons'><button type='button' data-rich-command='bold' aria-label='굵게' title='굵게' aria-pressed='false'><b>가</b></button><button type='button' data-rich-command='italic' aria-label='기울임' title='기울임' aria-pressed='false'><i>가</i></button><button type='button' data-rich-command='underline' aria-label='밑줄' title='밑줄' aria-pressed='false'><u>가</u></button><button type='button' data-rich-command='strikeThrough' aria-label='취소선' title='취소선' aria-pressed='false'><s>가</s></button><button type='button' data-rich-command='justifyLeft' aria-label='왼쪽 정렬' title='왼쪽 정렬' aria-pressed='false'>왼쪽</button><button type='button' data-rich-command='justifyCenter' aria-label='가운데 정렬' title='가운데 정렬' aria-pressed='false'>가운데</button><button type='button' data-rich-command='justifyRight' aria-label='오른쪽 정렬' title='오른쪽 정렬' aria-pressed='false'>오른쪽</button><button type='button' data-rich-command='justifyFull' aria-label='양쪽 정렬' title='양쪽 정렬' aria-pressed='false'>양쪽</button><button type='button' data-rich-command='insertUnorderedList' aria-label='글머리 기호' title='글머리 기호' aria-pressed='false'>• 목록</button><button type='button' data-rich-command='undo' aria-label='실행 취소' title='실행 취소' aria-pressed='false'>↶</button><button type='button' data-rich-command='redo' aria-label='다시 실행' title='다시 실행' aria-pressed='false'>↷</button><button type='button' data-rich-command='removeFormat' aria-label='선택한 글자 서식 지우기' title='선택한 글자 서식 지우기' aria-pressed='false'>서식 지우기</button></div><p>글자를 선택해 서식을 적용하세요. 선택 없이 누르면 이어 쓰는 글자에 적용됩니다.</p></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><section class='episode-pricing' aria-label='회차 가격 설정'><div class='episode-pricing-main'><strong>회차 가격</strong><select id='episodeSaleMode' aria-label='회차 무료 또는 유료'><option value='free'>무료</option><option value='paid'>유료</option></select><label id='episodePriceAmount'><input id='episodeSalePrice' type='number' min='1' max='2147483647' step='1' inputmode='numeric' value='0' disabled placeholder='가격 입력' aria-label='이 회차 가격'><span>원</span></label></div><p id='episodePriceNotice'>1~5화는 무료로 고정됩니다.</p></section><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
 
 <section id='publishing' class='screen'>
   <div class='publish-center-shell'>
@@ -4021,6 +4039,7 @@ async function syncDraftEpisodeToServer(ep){
     episode_no:Number(ep.no),
     title:ep.title||'',
     body:ep.body||'',
+    body_html:sanitizeManuscriptHTML(ep.bodyHtml||''),
     published:!!ep.published,
     price:effectiveEpisodePrice(ep)
   };
@@ -4055,6 +4074,7 @@ async function syncPublishedEpisodeToServer(ep){
     episode_no:Number(ep.no),
     title:ep.title||'',
     body:ep.body||'',
+    body_html:sanitizeManuscriptHTML(ep.bodyHtml||''),
     published:true,
     price:effectiveEpisodePrice(ep)
   };
@@ -4095,7 +4115,7 @@ async function syncBookCompletionToServer(){
 async function fetchServerEpisodes(bookId,{owner=false}={}){
   if(!PYEODA_SERVER.client)return [];
   let q=PYEODA_SERVER.client.from('episodes')
-    .select('id,episode_no,title,body,price,published,created_at,updated_at')
+    .select('id,episode_no,title,body,body_html,price,published,created_at,updated_at')
     .eq('book_id',bookId)
     .order('episode_no',{ascending:true});
   if(!owner)q=q.eq('published',true);
@@ -4127,7 +4147,7 @@ async function loadServerBookForEditing(bookId,{navigate='editor',silent=false}=
     pendingNewCover=row.cover_url||'';
     safeSaveBookData(data,pendingNewCover);
     episodes=eps.length
-      ? eps.map(e=>({no:Number(e.episode_no),title:e.title||'',body:e.body||'',published:!!e.published,price:Number(e.episode_no)<=5?0:normalizeEpisodePrice(e.price)}))
+      ? eps.map(e=>({no:Number(e.episode_no),title:e.title||'',body:e.body||'',bodyHtml:sanitizeManuscriptHTML(e.body_html||''),published:!!e.published,price:Number(e.episode_no)<=5?0:normalizeEpisodePrice(e.price)}))
       : [{no:1,title:'',body:'',published:false}];
     currentEpisodeNo=episodes[0].no;
     persistEpisodes();
@@ -4559,7 +4579,10 @@ function renderReader(){
     document.getElementById('readerEpisodeNo').textContent=`${ep?.episode_no||currentReaderEpisode}화`;
     document.getElementById('readerEpisodeTitle').textContent=ep?.title||`${ep?.episode_no||currentReaderEpisode}화`;
     document.getElementById('readerEpisodePrice').textContent=episodePriceLabel(ep);
-    document.getElementById('readerBody').textContent=effectiveEpisodePrice(ep)>0?'유료 회차 판매를 준비 중입니다. 결제 오픈 후 이용할 수 있습니다.':ep?.body||'본문이 없습니다.';
+    const readerBody=document.getElementById('readerBody');
+    if(effectiveEpisodePrice(ep)>0)readerBody.textContent='유료 회차 판매를 준비 중입니다. 결제 오픈 후 이용할 수 있습니다.';
+    else if(ep?.body_html)readerBody.innerHTML=sanitizeManuscriptHTML(ep.body_html);
+    else readerBody.textContent=ep?.body||'본문이 없습니다.';
   }else{
     document.getElementById('readerEpisodeNo').textContent=`${currentReaderEpisode}화`;
     document.getElementById('readerEpisodeTitle').textContent=demoEpisodeTitle(b,currentReaderEpisode);
@@ -6739,6 +6762,118 @@ function findEpisode(no){
   return episodes.find(ep=>ep.no===Number(no));
 }
 
+// Persist only supported manuscript formatting, never executable pasted markup.
+function sanitizeManuscriptHTML(html){
+  const parsed=new DOMParser().parseFromString(String(html||''),'text/html');
+  const allowed=new Set(['DIV','P','BR','SPAN','B','STRONG','I','EM','U','S','STRIKE','FONT','UL','OL','LI','BLOCKQUOTE','SUB','SUP']);
+  const fonts=['Noto Serif KR','Noto Sans KR','Batang','Gungsuh','Arial'];
+  parsed.body.querySelectorAll('script,style,iframe,object,embed,svg,math,link,meta,base,form,input,button,textarea,select,video,audio,img').forEach(e=>e.remove());
+  parsed.body.querySelectorAll('.proof-issue').forEach(e=>e.replaceWith(...e.childNodes));
+  for(const el of [...parsed.body.querySelectorAll('*')]){
+    if(!allowed.has(el.tagName)){el.replaceWith(...el.childNodes);continue;}
+    const saved={};
+    for(const prop of ['font-family','font-size','font-weight','font-style','text-decoration','text-align'])saved[prop]=el.style.getPropertyValue(prop);
+    const face=el.getAttribute('face'),size=el.getAttribute('size');
+    for(const attr of [...el.attributes])el.removeAttribute(attr.name);
+    const family=value=>fonts.find(f=>String(value||'').split(',').some(v=>v.trim().replace(/["']/g,'').toLowerCase()===f.toLowerCase()));
+    const font=family(saved['font-family'])||family(face);
+    if(font)el.style.fontFamily=font;
+    const fs=saved['font-size'].match(/^(\d+(?:\.\d+)?)(px|pt)$/);
+    if(fs&&Number(fs[1])>=8&&Number(fs[1])<=64)el.style.fontSize=saved['font-size'];
+    if(/^(normal|bold|[1-9]00)$/.test(saved['font-weight']))el.style.fontWeight=saved['font-weight'];
+    if(/^(normal|italic)$/.test(saved['font-style']))el.style.fontStyle=saved['font-style'];
+    if(/^(none|underline|line-through|underline line-through|line-through underline)$/.test(saved['text-decoration']))el.style.textDecoration=saved['text-decoration'];
+    if(/^(left|center|right|justify)$/.test(saved['text-align']))el.style.textAlign=saved['text-align'];
+    if(el.tagName==='FONT'&&/^[1-7]$/.test(size||''))el.setAttribute('size',size);
+  }
+  return parsed.body.innerHTML;
+}
+function captureManuscriptHTML(){return sanitizeManuscriptHTML(body.innerHTML);}
+function restoreManuscript(ep){
+  richEditorRange=null;
+  if(ep?.bodyHtml)body.innerHTML=sanitizeManuscriptHTML(ep.bodyHtml);
+  else body.textContent=ep?.body||'';
+  updateRichEditorToolbar();
+}
+let richEditorRange=null;
+function rememberRichEditorSelection(){
+  const selection=window.getSelection();
+  if(!selection?.rangeCount)return;
+  const range=selection.getRangeAt(0);
+  if(body.contains(range.startContainer)&&body.contains(range.endContainer))richEditorRange=range.cloneRange();
+}
+function restoreRichEditorSelection(){
+  body.focus({preventScroll:true});
+  const selection=window.getSelection();
+  if(richEditorRange&&body.contains(richEditorRange.startContainer)&&body.contains(richEditorRange.endContainer)){
+    selection.removeAllRanges();selection.addRange(richEditorRange);
+  }else{
+    const range=document.createRange();range.selectNodeContents(body);range.collapse(false);
+    selection.removeAllRanges();selection.addRange(range);
+  }
+}
+function updateRichEditorToolbar(){
+  const toolbar=document.getElementById('manuscriptToolbar');if(!toolbar)return;
+  for(const button of toolbar.querySelectorAll('[data-rich-command]')){
+    const command=button.dataset.richCommand;
+    if(['bold','italic','underline','strikeThrough','justifyLeft','justifyCenter','justifyRight','justifyFull','insertUnorderedList'].includes(command)){
+      let active=false;try{active=document.queryCommandState(command);}catch(e){}
+      button.setAttribute('aria-pressed',String(active));
+    }
+  }
+}
+function applyManuscriptCommand(command,value=null){
+  restoreRichEditorSelection();
+  try{
+    if(typeof document.execCommand!=='function')throw new Error('Formatting unavailable');
+    const applied=document.execCommand(command,false,value);
+    if(!applied){toast('이 브라우저에서 해당 서식을 적용하지 못했습니다. 글자를 선택한 뒤 다시 시도해 주세요.');return;}
+    rememberRichEditorSelection();
+    autosaveEpisode();wc();updateRichEditorToolbar();queueTypewriterCaret();
+  }catch(err){console.error('manuscript format failed',err);toast('서식을 적용하지 못했습니다. 원고는 그대로 유지됩니다.');}
+}
+function bindRichEditorToolbar(){
+  const toolbar=document.getElementById('manuscriptToolbar');
+  toolbar.querySelectorAll('[data-rich-command]').forEach(button=>{
+    button.addEventListener('mousedown',event=>{rememberRichEditorSelection();event.preventDefault();});
+    button.addEventListener('click',()=>applyManuscriptCommand(button.dataset.richCommand));
+  });
+  for(const [id,command] of [['manuscriptFont','fontName'],['manuscriptSize','fontSize']]){
+    const select=document.getElementById(id);
+    select.addEventListener('pointerdown',rememberRichEditorSelection);
+    select.addEventListener('change',()=>applyManuscriptCommand(command,select.value));
+  }
+  document.addEventListener('selectionchange',()=>{rememberRichEditorSelection();updateRichEditorToolbar();});
+  body.addEventListener('paste',event=>{
+    const html=event.clipboardData?.getData('text/html');
+    if(!html)return;
+    event.preventDefault();
+    document.execCommand('insertHTML',false,sanitizeManuscriptHTML(html));
+    autosaveEpisode();wc();rememberRichEditorSelection();
+  });
+}
+function richProofText(){return body.textContent||'';}
+function markRichProofIssues(text,issues){
+  const walker=document.createTreeWalker(body,NodeFilter.SHOW_TEXT);
+  const nodes=[];let offset=0,node;
+  while(node=walker.nextNode()){nodes.push({node,start:offset,end:offset+node.length});offset+=node.length;}
+  const marked=[];
+  for(const item of nodes){
+    const matches=issues.filter(x=>x.start>=item.start&&x.end<=item.end);
+    if(!matches.length)continue;
+    const frag=document.createDocumentFragment();let pos=0;
+    for(const x of matches){
+      const start=x.start-item.start,end=x.end-item.start;
+      frag.append(document.createTextNode(item.node.data.slice(pos,start)));
+      const span=document.createElement('span');span.className=`proof-issue proof-${x.type}`;
+      span.dataset.type=x.type;span.dataset.suggest=x.suggest||'';span.dataset.reason=x.reason||'';
+      span.textContent=item.node.data.slice(start,end);frag.append(span);pos=end;marked.push(x);
+    }
+    frag.append(document.createTextNode(item.node.data.slice(pos)));item.node.replaceWith(frag);
+  }
+  return marked;
+}
+
 function normalizeEpisodePrice(value){
   const n=Number(value);
   return Number.isInteger(n)&&n>=0&&n<=2147483647?n:0;
@@ -6835,6 +6970,7 @@ function saveCurrentEpisode(){
   updateEpisodePricingUI();
   ep.title=episodeTitleInput.value.trim();
   ep.body=(body.innerText||'').replace(/\u00a0/g,' ');
+  ep.bodyHtml=captureManuscriptHTML();
   persistEpisodes();
   renderEpisodeTabs();
   return true;
@@ -6923,7 +7059,7 @@ function openEpisode(no,saveFirst=true){
   currentEpisodeNo=no;
   episodeNoInput.value=`${no}화`;
   episodeTitleInput.value=ep.title||'';
-  body.textContent=ep.body||'';
+  restoreManuscript(ep);
   editorStatus.textContent=ep.published?'공개됨':'자동 저장됨 · 공개 전';
   proofStatus.textContent='';
   proofStatus.classList.remove('has-issues');
@@ -7004,6 +7140,7 @@ function autosaveEpisode(){
   if(!ep) return;
   ep.title=episodeTitleInput.value.trim();
   ep.body=(body.innerText||'').replace(/\u00a0/g,' ');
+  ep.bodyHtml=captureManuscriptHTML();
   persistEpisodes();
   scheduleDraftServerSave(ep);
   if(!ep.published) editorStatus.textContent=PYEODA_SERVER.authorReady?'자동 저장됨 · 서버 동기화 중':'자동 저장됨 · 공개 전';
@@ -7054,7 +7191,8 @@ async function saveEpisodeOnRequest(toServer=false){
       if(currentEpisodeNo===snapshot.no && current.title===book.title &&
         (!book.serverId||current.serverId===book.serverId)){
         const changed=episodeTitleInput.value.trim()!==snapshot.title ||
-          (body.innerText||'').replace(/\u00a0/g,' ')!==snapshot.body;
+          (body.innerText||'').replace(/\u00a0/g,' ')!==snapshot.body ||
+          captureManuscriptHTML()!==(snapshot.bodyHtml||'');
         editorStatus.textContent=changed?'저장 후 수정됨 · 자동 저장 중':
           `서버에 저장됨 · ${visibility}`;
       }
@@ -7079,7 +7217,7 @@ function bodyText(){return (body.innerText||'').replace(/\u00a0/g,' ')}
 function wc(){count.textContent=`${bodyText().length.toLocaleString()}자 · 초안`;try{updateEditorWritingGuide()}catch(e){}}
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function clearProofMarks(){
-  body.querySelectorAll('.proof-issue').forEach(el=>el.replaceWith(document.createTextNode(el.textContent)));
+  body.querySelectorAll('.proof-issue').forEach(el=>el.replaceWith(...el.childNodes));
   body.normalize();
   proofPanel.classList.remove('show');
   activeProofIssue=null;
@@ -7191,23 +7329,17 @@ function remainingProofSummary(){
 }
 function applyProofreading(){
   clearProofMarks();
-  const text=bodyText();
+  const text=richProofText();
   const issues=collectProofIssues(text);
   if(!issues.length){proofStatus.textContent='✓ 교정할 부분을 찾지 못했습니다.';proofStatus.classList.remove('has-issues');toast(`${writingRule(currentWritingSettings().type).label} 기준과 문맥까지 확인했습니다. 표시할 교정 제안이 없습니다.`);return}
-  let html='',pos=0;
-  issues.forEach((x,i)=>{
-    html+=escapeHTML(text.slice(pos,x.start)).replace(/\n/g,'<br>');
-    html+=`<span class="proof-issue proof-${x.type}" data-type="${x.type}" data-suggest="${escapeHTML(x.suggest)}" data-reason="${escapeHTML(x.reason)}">${escapeHTML(x.original)}</span>`;
-    pos=x.end;
-  });
-  html+=escapeHTML(text.slice(pos)).replace(/\n/g,'<br>');
-  body.innerHTML=html;
-  const counts=issues.reduce((a,x)=>(a[x.type]=(a[x.type]||0)+1,a),{});
+  const marked=markRichProofIssues(text,issues);
+  const counts=marked.reduce((a,x)=>(a[x.type]=(a[x.type]||0)+1,a),{});
   proofStatus.textContent=`맞춤법 ${counts.spell||0} · 문장 ${counts.awkward||0} · 반복 ${counts.repeat||0} · 밑줄을 눌러 확인`;
   proofStatus.classList.add('has-issues');
   const wr=writingRule(currentWritingSettings().type); toast(`원고 검사 완료: 맞춤법 ${counts.spell||0} · 문장 ${counts.awkward||0} · 반복 ${counts.repeat||0} · ${wr.label} 기준 확인`);
   wc();
 }
+bindRichEditorToolbar();
 body.addEventListener('input',()=>{
   wc();
   autosaveEpisode();
