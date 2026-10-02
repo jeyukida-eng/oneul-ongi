@@ -3990,12 +3990,14 @@ async function syncBookCompletionToServer(){
 }
 async function fetchServerEpisodes(bookId,{owner=false}={}){
   if(!PYEODA_SERVER.client)return [];
-  let q=PYEODA_SERVER.client.from('episodes')
+  if(!owner){
+    const {data,error}=await PYEODA_SERVER.client.functions.invoke('public-episodes',{body:{bookId}});
+    if(error||!data?.ok)throw new Error(data?.message||'공개 회차를 불러오지 못했습니다.');
+    return data.episodes||[];
+  }
+  const {data,error}=await PYEODA_SERVER.client.from('episodes')
     .select('id,episode_no,title,body,body_html,price,published,created_at,updated_at')
-    .eq('book_id',bookId)
-    .order('episode_no',{ascending:true});
-  if(!owner)q=q.eq('published',true);
-  const {data,error}=await q;
+    .eq('book_id',bookId).order('episode_no',{ascending:true});
   if(error)throw error;
   return data||[];
 }
@@ -4491,7 +4493,13 @@ function renderReader(){
     document.getElementById('readerEpisodeTitle').textContent=ep?.title||`${ep?.episode_no||currentReaderEpisode}화`;
     document.getElementById('readerEpisodePrice').textContent=episodePriceLabel(ep);
     const readerBody=document.getElementById('readerBody');
-    if(effectiveEpisodePrice(ep)>0)readerBody.textContent='유료 회차 판매를 준비 중입니다. 결제 오픈 후 이용할 수 있습니다.';
+    if(ep?.locked){
+      readerBody.classList.remove('reader-rich');readerBody.replaceChildren();
+      const message=document.createElement('p');message.textContent='테스트 유료 회차입니다. 테스트 구매가 완료되면 본문을 읽을 수 있습니다. 실제 돈은 청구되지 않습니다.';
+      const buy=document.createElement('button');buy.type='button';buy.className='primary';buy.textContent=effectiveEpisodePrice(ep).toLocaleString('ko-KR')+'원 테스트 구매';
+      buy.onclick=()=>openTestPayment({type:'episode',title:b.title,author:b.author,serverId:b.serverId,episodeNo:ep.episode_no});
+      readerBody.append(message,buy);
+    }
     else if(ep?.body_html)renderRichReaderManuscript(readerBody,ep.body_html);
     else renderPlainReaderManuscript(readerBody,ep?.body||'본문이 없습니다.',b);
   }else{
@@ -7140,7 +7148,7 @@ function updateEpisodePricingUI(){
   document.querySelector('.episode-pricing').hidden=fixed||!String(currentBookData().format||'회차 연재').includes('연재');
   document.getElementById('episodePriceNotice').textContent=fixed?
     '1~5화는 누구나 로그인 없이 읽을 수 있는 무료 회차입니다.':
-    amount>0?'유료 회차 가격이 설정되었습니다.':'무료 · 가격은 0원으로 고정됩니다.';
+    amount>0?'테스트 유료 회차 · 실제 돈은 청구되지 않습니다.':'무료 · 가격은 0원으로 고정됩니다.';
 }
 function readEpisodePricing(ep){
   const mode=document.getElementById('episodeSaleMode');
@@ -7150,14 +7158,11 @@ function readEpisodePricing(ep){
   if(paid&&(!input.value.trim()||!Number.isInteger(amount)||amount<1||amount>2147483647)){
     toast('유료 회차 가격을 1원 이상의 정수로 입력해 주세요.');input.focus();return false;
   }
-  if(paid&&ep.published){
-    toast('현재 공개된 회차는 무료입니다. 유료 전환은 결제 오픈 후 가능합니다.');return false;
-  }
   ep.price=amount;return true;
 }
 function episodePriceLabel(ep){
   const price=effectiveEpisodePrice(ep);
-  return price>0?`${price.toLocaleString('ko-KR')}원 · 판매 준비 중`:'무료';
+  return price>0?`${price.toLocaleString('ko-KR')}원 · 테스트 유료`:'무료';
 }
 function bindEpisodePricing(){
   const mode=document.getElementById('episodeSaleMode');
@@ -7165,9 +7170,6 @@ function bindEpisodePricing(){
   mode.onchange=()=>{
     const ep=findEpisode(currentEpisodeNo);if(!ep)return;
     if(Number(ep.no)<=5){updateEpisodePricingUI();return;}
-    if(ep.published&&mode.value==='paid'){
-      toast('공개된 회차의 유료 전환은 결제 오픈 후 가능합니다.');updateEpisodePricingUI();return;
-    }
     const paid=mode.value==='paid';
     input.disabled=!paid;
     input.value=paid?(effectiveEpisodePrice(ep)>0?String(effectiveEpisodePrice(ep)):''):'0';
@@ -7666,52 +7668,32 @@ function needsEpisodePublicationPrice(book,ep){
 }
 let episodePublicationBusy=false;
 document.getElementById('publishEpisode').onclick=async()=>{
-  if(episodePublicationBusy)return;
-  episodePublicationBusy=true;
-  const publishButton=document.getElementById('publishEpisode');
-  publishButton.disabled=true;
+ if(episodePublicationBusy)return;
+ episodePublicationBusy=true;
+ const publishButton=document.getElementById('publishEpisode');publishButton.disabled=true;
+ try{
+  const selected=findEpisode(currentEpisodeNo);
+  if(needsEpisodePublicationPrice(currentBookData(),selected))window.alert('회차 연재는 1~5화까지 무료이며, 6화부터 가격을 설정할 수 있습니다. 현재 유료 회차는 테스트 결제로만 이용하며 실제 돈은 청구되지 않습니다.');
+  if(!saveCurrentEpisode())return;
+  const ep=findEpisode(currentEpisodeNo);if(!ep)return;
+  if(!PYEODA_SERVER.connected||!PYEODA_SERVER.authorReady){toast('작가 로그인과 서버 연결 후 회차를 공개해 주세요. 원고는 저장되었습니다.');return;}
+  const oldPublished=ep.published,book=currentBookData(),oldBookPublished=book.published;
   try{
-    const selected=findEpisode(currentEpisodeNo);
-    if(needsEpisodePublicationPrice(currentBookData(),selected)){
-      window.alert('회차 연재는 1~5화까지 무료이며, 6화부터 가격을 설정할 수 있습니다. 무료를 선택하면 가격은 0원으로 고정됩니다.');
-    }
-    if(!saveCurrentEpisode())return;
-  const ep=findEpisode(currentEpisodeNo);
-  if(ep){
-    if(effectiveEpisodePrice(ep)>0){
-      editorStatus.textContent='유료 회차 저장됨 · 판매 준비 중';
-      if(PYEODA_SERVER.authorReady){try{await syncDraftEpisodeToServer({...ep});toast('유료 가격과 원고를 서버에 저장했습니다. 유료 공개는 결제 오픈 후 가능합니다.');}catch(err){console.error(err);toast('이 기기에 저장했습니다. 서버 저장에 실패했으니 다시 저장해 주세요.');}}
-      else toast('유료 가격과 원고를 이 기기에 저장했습니다. 유료 공개는 결제 오픈 후 가능합니다.');
-      return;
-    }
-    ep.published=true;
-    persistEpisodes();
-    const bookState=currentBookData();
-    bookState.published=true;
-    saveCurrentBookData(bookState);
-    editorStatus.textContent=PYEODA_SERVER.connected?'서버 공개 중…':'공개됨';
-    if(PYEODA_SERVER.connected&&PYEODA_SERVER.authorReady){
-      try{
-        await syncPublishedEpisodeToServer(ep);
-        editorStatus.textContent='서버에 공개됨';
-        toast(`${currentEpisodeNo}화가 서버에 공개되었습니다. 다른 브라우저에서도 읽을 수 있습니다.`);
-      }catch(err){
-        console.error(err);
-        editorStatus.textContent='로컬 공개됨 · 서버 오류';
-        toast('회차는 브라우저에 저장했지만 서버 공개에 실패했습니다.');
-      }
-    }else{
-      editorStatus.textContent='공개됨 · 로컬 모드';
-      toast(`${currentEpisodeNo}화가 현재 브라우저에서 공개 처리되었습니다. 서버를 연결하면 모든 방문자에게 공개됩니다.`);
-    }
+   ep.published=true;persistEpisodes();book.published=true;saveCurrentBookData(book);
+   editorStatus.textContent='서버 공개 중…';
+   const synced=await syncPublishedEpisodeToServer(ep);
+   if(!synced)throw new Error('회차 공개 연결을 확인해 주세요.');
+   const paid=effectiveEpisodePrice(ep)>0;
+   editorStatus.textContent=paid?'서버에 공개됨 · 유료 테스트':'서버에 공개됨';
+   toast(paid?`${currentEpisodeNo}화가 ${effectiveEpisodePrice(ep).toLocaleString()}원 테스트 유료 회차로 공개되었습니다. 실제 돈은 청구되지 않습니다.`:`${currentEpisodeNo}화가 서버에 공개되었습니다. 다른 브라우저에서도 읽을 수 있습니다.`);
+  }catch(error){
+   ep.published=oldPublished;persistEpisodes();book.published=oldBookPublished;saveCurrentBookData(book);
+   editorStatus.textContent='원고 저장됨 · 공개 재확인 필요';
+   console.error('episode publication failed',error);
+   toast('공개 처리를 완료하지 못했습니다. 원고는 저장되어 있습니다. 서버 작품을 다시 불러와 상태를 확인해 주세요.');
   }
-  }catch(err){
-    console.error('episode publication failed',err);
-    toast('회차 공개를 완료하지 못했습니다. 원고를 저장한 뒤 다시 시도해 주세요.');
-  }finally{
-    episodePublicationBusy=false;
-    publishButton.disabled=false;
-  }
+ }catch(error){console.error(error);toast('회차 공개를 완료하지 못했습니다. 원고를 저장한 뒤 다시 시도해 주세요.');}
+ finally{episodePublicationBusy=false;publishButton.disabled=false;}
 };
 const TRANSLATION_JOB_KEY='pyeoda-translated-books-v3';
 const TRANSLATION_LOCAL_RULES={
@@ -9135,6 +9117,9 @@ async function resumeTestPaymentReturn(){
    if(!data.testMode||data.order?.status!=='confirmed')throw new Error('승인된 테스트 주문을 확인하지 못했습니다.');
    document.getElementById('testPaymentTitle').textContent='테스트 결제 완료';
    testPaymentMessage('승인과 주문 저장이 완료되었습니다. 실제 돈은 청구되지 않았습니다.');testPaymentReceipt(data.order);
+   if(currentReaderBook?.serverId&&readTestPaymentContext()?.intent?.serverId===currentReaderBook.serverId){
+    try{currentServerEpisodes=await fetchServerEpisodes(currentReaderBook.serverId,{owner:false});renderReader();}catch(error){console.warn('purchased episode refresh deferred');}
+   }
   }
   sessionStorage.removeItem(TEST_PAYMENT_CALLBACK);
  }catch(error){testPaymentMessage(error.message,true);document.getElementById('testPaymentRetry').hidden=false;}
@@ -9154,7 +9139,7 @@ async function loadTestPaymentOrders(){
 }
 function returnFromTestPayment(){
  const context=readTestPaymentContext();document.getElementById('testPaymentDialog').close();
- if(context?.returnScreen==='reader'&&context.intent?.serverId){const book=PYEODA_SERVER.publicBooks.find(book=>book.serverId===context.intent.serverId);if(book){openReader(book,{state:'resume',lastEpisode:context.intent.episodeNo||1});return;}}
+ if(context?.returnScreen==='reader'&&context.intent?.serverId){const book=PYEODA_SERVER.publicBooks.find(book=>book.serverId===context.intent.serverId)||{serverId:context.intent.serverId,title:context.intent.title||context.productName,author:context.intent.author||''};if(book){openReader(book,{state:'resume',lastEpisode:context.intent.episodeNo||1});return;}}
  const screen=['home','discover','reader'].includes(context?.returnScreen)?context.returnScreen:'home';go(screen==='reader'&&!currentReaderBook?'home':screen);requestAnimationFrame(()=>window.scrollTo(0,Number(context?.returnScroll)||0));
 }
 function bindTestPayments(){
