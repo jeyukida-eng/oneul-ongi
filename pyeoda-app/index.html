@@ -2783,7 +2783,26 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 .reader-subscribe:disabled{opacity:.6;cursor:default}
 .reader-subscribe[hidden]{display:none!important}
 @media(max-width:600px){.reader-book-heading{gap:8px}.reader-subscribe{padding:8px 10px}}
-</style></head><body class='mobile-build'><button type='button' id='pyeodaMobileInstall'>앱 설치</button><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='mobilePageBack' aria-label='이전 화면' title='이전 화면' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M19 12H5m7-7-7 7 7 7'/></svg><span>이전</span></button><button type='button' id='mobilePageRefresh' aria-label='새로고침' title='새로고침'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 7v5h-5M20 12a8 8 0 1 1-2.35-5.65L20 9'/></svg><span>새로고침</span></button><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button data-go='publishing'>출판 센터</button><button data-go='revenue'>내 수익</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
+</style><style>
+/* Compact reading header and shared picture layout controls. */
+.reader-shell{padding-top:18px}
+.reader-top{margin-bottom:12px}
+.reader-book-head{grid-template-columns:40px minmax(0,1fr);gap:10px;padding-bottom:10px}
+.reader-cover{width:40px;border-radius:6px}
+.reader-cover img{padding:2px}
+.reader-book-head h2{font-size:18px;margin:0 0 3px;line-height:1.35}
+.reader-book-head p{font-size:11px;line-height:1.4}
+.reader-book-heading{gap:8px}
+.reader-subscribe{min-height:32px;font-size:11px;padding:5px 9px}
+.reader-progress-bar{margin:12px 0 18px}
+.reader-top button{min-height:36px;padding:6px 12px;font-size:12px}
+.reader-episode{margin-bottom:16px}
+.book-image-layout{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;background:#f7f4eb;border:1px solid var(--line,#ddd);border-radius:14px;margin:14px 0}
+.book-image-layout label{font:13px/1.5 system-ui}
+.book-image-layout select{min-height:40px;margin-left:8px;padding:6px 10px;border:1px solid #d5d0c5;border-radius:10px;background:#fffdf8;font:13px system-ui}
+.book-image-layout p{margin:0;font:12px/1.5 system-ui;color:#766f63}
+@media(max-width:760px){.reader-shell{padding-top:14px}.reader-book-head{grid-template-columns:32px minmax(0,1fr);gap:8px}.reader-cover{width:32px}.reader-book-head h2{font-size:16px}.reader-book-head p{font-size:10px}.reader-progress-bar{margin:10px 0 14px}.reader-top{margin-bottom:10px}.reader-episode h1{font-size:24px}.book-image-layout{gap:8px}.book-image-layout label{width:100%}}
+</style><style>.mobilebar{grid-template-columns:repeat(4,1fr)}</style></head><body class='mobile-build'><button type='button' id='pyeodaMobileInstall'>앱 설치</button><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='mobilePageBack' aria-label='이전 화면' title='이전 화면' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M19 12H5m7-7-7 7 7 7'/></svg><span>이전</span></button><button type='button' id='mobilePageRefresh' aria-label='새로고침' title='새로고침'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 7v5h-5M20 12a8 8 0 1 1-2.35-5.65L20 9'/></svg><span>새로고침</span></button><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
 <div class='author-auth-modal' id='authorAuthModal' hidden>
   <div class='author-auth-card' role='dialog' aria-modal='true' aria-labelledby='authorAuthTitle'>
     <div class='author-auth-head'>
@@ -2890,7 +2909,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
     <button data-go='books'>등록 책</button>
     <button data-go='register' data-register-mode='new'>작품 쓰기</button>
     <button data-go='publishing'>출판 센터</button>
-    <button data-go='revenue'>판매·정산</button>
+    <button data-go='revenue'>내 수익</button>
   </aside>
   <div>
     <div class='panel'>
@@ -3156,7 +3175,8 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
           <span class='epub-ready' id='epubReadyState'>✓ EPUB 자동 구성 완료</span>
         </div>
 
-        <div class='epub-preview-shell'>
+        <div class='book-image-layout'><label>그림 배치<select data-book-image-layout aria-label='그림책 페이지 배치'><option value='auto'>자동 · 그림 비율로 판별</option><option value='single'>한 페이지 · 그림 한 장씩</option><option value='spread'>펼침면 · 두 페이지 폭</option></select></label><p data-book-image-layout-status></p><p>가로로 넓은 그림은 자동으로 펼침면에 배치합니다. 그림 전체를 유지하며, PDF와 EPUB에 같은 설정을 적용합니다.</p></div>
+<div class='epub-preview-shell'>
           <div class='epub-preview-toolbar'>
             <select id='epubChapterSelect' aria-label='EPUB 미리보기 목차'></select>
             <div class='epub-preview-nav'>
@@ -3189,7 +3209,8 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
       <p>아마존 KDP의 종이책 제작 흐름을 참고해 필요한 항목만 선택하면, 여백·책등·전체 표지 크기는 자동으로 계산합니다.</p>
       <div class='print-kdp-note'>복잡한 인쇄 수치는 직접 입력하지 않아도 됩니다. 현재 원고를 선택한 판형·폰트·행간·여백에 실제로 배치해 페이지를 계산합니다. 인쇄소/POD 연동 시에는 최종 PDF 규격을 한 번 더 검증합니다.</div>
 
-      <div class='print-option-grid'>
+      <div class='book-image-layout'><label>그림 배치<select data-book-image-layout aria-label='그림책 페이지 배치'><option value='auto'>자동 · 그림 비율로 판별</option><option value='single'>한 페이지 · 그림 한 장씩</option><option value='spread'>펼침면 · 두 페이지 폭</option></select></label><p data-book-image-layout-status></p><p>가로로 넓은 그림은 자동으로 펼침면에 배치합니다. 그림 전체를 유지하며, PDF와 EPUB에 같은 설정을 적용합니다.</p></div>
+<div class='print-option-grid'>
         <div class='reg-field'>
           <label for='paperBinding'>제본 형태</label>
           <select id='paperBinding'>
@@ -3474,7 +3495,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
     </div>
   </div>
 </section>
-</main></div><div class='mobilebar'><button data-go='home'>홈</button><button data-go='discover'>발견</button><button class='plus' data-go='register' data-register-mode='new'>＋ 쓰기</button><button data-go='studio'>스튜디오</button><button data-go='revenue'>수익</button></div><div class='toast' id='toast'></div>
+</main></div><div class='mobilebar'><button data-go='home'>홈</button><button data-go='discover'>발견</button><button class='plus' data-go='register' data-register-mode='new'>＋ 쓰기</button><button data-go='studio'>스튜디오</button></div><div class='toast' id='toast'></div>
 <script src="./server-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -3601,6 +3622,7 @@ function serverRowToBook(row){
     category:row.category||'',
     genre:row.genre||'',
     writingType:row.writing_type||'',
+    imageLayout:row.image_layout||'auto',
     discoverKind:serverDiscoverKind(row),
     price:Number(row.price)>0?`₩${Number(row.price).toLocaleString()}`:'',
     action:'첫 화 보기'
@@ -3945,7 +3967,7 @@ async function refreshServerLibrary({silent=false}={}){
   if(!PYEODA_SERVER.client)return;
   const {data,error}=await PYEODA_SERVER.client
     .from('books')
-    .select('id,title,subtitle,pen_name,category,writing_type,genre,format,intro,author_note,cover_url,completed,published,price,episode_count,views,likes,subscriber_count,owned,created_at,updated_at')
+    .select('id,title,subtitle,pen_name,category,writing_type,image_layout,genre,format,intro,author_note,cover_url,completed,published,price,episode_count,views,likes,subscriber_count,owned,created_at,updated_at')
     .eq('published',true)
     .order('updated_at',{ascending:false})
     .limit(200);
@@ -4076,6 +4098,7 @@ function serverBookPayload(data){
     pen_name:data.pen||'작가',
     category:data.category||'',
     writing_type:data.writingType||'',
+    image_layout:bookImageLayout(data),
     genre:data.genre||'',
     format:data.format||'',
     audience:data.audience||'',
@@ -4242,7 +4265,7 @@ async function loadServerBookForEditing(bookId,{navigate='editor',silent=false}=
     const data={
       serverId:row.id,serverCoverUrl:row.cover_url||'',
       title:row.title||'',subtitle:row.subtitle||'',pen:row.pen_name||'',
-      category:row.category||'소설',writingType:row.writing_type||'',
+      category:row.category||'소설',writingType:row.writing_type||'',imageLayout:row.image_layout||'auto',
       genre:row.genre||'',format:row.format||'회차 연재',
       audience:row.audience||'',purpose:row.purpose||'재미',
       styleNote:row.style_note||'',externalRule:row.external_rule||'',
@@ -5167,6 +5190,149 @@ function smartBookParagraphs(text){
   return out.filter(Boolean);}
 function isDialogueParagraph(text){return /^[“\"]/.test(String(text||'').trim())}
 
+/* PYEODA_ILLUSTRATED_EXPORTS */
+const EXPORT_IMAGE_CACHE=new Map();
+const EXPORT_IMAGE_DIMENSIONS=new Map();
+function bookImageLayout(book=currentBookData()){return ['single','spread'].includes(book.imageLayout)?book.imageLayout:'auto';}
+function isPictureBook(book=currentBookData()){return book.writingType==='pictureBook'||/그림책|그림동화/.test(book.genre||book.category||'');}
+function exportEpisodeHTML(ep){
+ const html=sanitizeManuscriptHTML(ep.bodyHtml||ep.body_html||'');
+ const parsed=new DOMParser().parseFromString(html,'text/html');
+ if(parsed.body.querySelector('img')||parsed.body.textContent.trim())return parsed.body.innerHTML;
+ return epubParagraphs(ep.body);
+}
+function exportEpisodeBlocks(ep){
+ const root=new DOMParser().parseFromString(exportEpisodeHTML(ep),'text/html').body,blocks=[];let text='';
+ const flush=()=>{if(text.trim())blocks.push({type:'text',text:text.trim()});text='';};
+ function walk(node){
+  if(node.nodeType===3){text+=node.textContent;return;}
+  if(node.nodeType!==1)return;
+  if(node.tagName==='IMG'){flush();const src=node.getAttribute('src'),known=EXPORT_IMAGE_DIMENSIONS.get(src);blocks.push({type:'image',src,alt:node.getAttribute('alt')||'그림',width:known?.width||Number(node.getAttribute('width'))||0,height:known?.height||Number(node.getAttribute('height'))||0});return;}
+  if(node.tagName==='BR'){text+='\n';return;}
+  const block=/^(P|DIV|LI|UL|OL|BLOCKQUOTE)$/.test(node.tagName);if(block)flush();
+  for(const child of node.childNodes)walk(child);if(block)flush();
+ }
+ for(const node of root.childNodes)walk(node);flush();return blocks;
+}
+function illustrationLayout(image,book=currentBookData()){
+ const selected=bookImageLayout(book);if(selected!=='auto')return selected;
+ return image.width>0&&image.height>0&&image.width/image.height>=1.25?'spread':'single';
+}
+async function loadExportImage(src){
+ const cached=EXPORT_IMAGE_CACHE.get(src);if(cached)return cached;
+ const result=await new Promise((resolve,reject)=>{
+  const image=new Image(),timer=setTimeout(()=>{image.onload=image.onerror=null;reject(new Error('본문 그림을 불러오는 시간이 초과됐습니다.'));},15000);
+  image.onload=()=>{clearTimeout(timer);if(!image.naturalWidth||!image.naturalHeight)return reject(new Error('본문 그림 크기를 확인하지 못했습니다.'));resolve({image,width:image.naturalWidth,height:image.naturalHeight});};
+  image.onerror=()=>{clearTimeout(timer);reject(new Error('본문 그림을 불러오지 못했습니다. 그림 파일을 다시 저장해 주세요.'));};image.src=src;
+ });EXPORT_IMAGE_DIMENSIONS.set(src,{width:result.width,height:result.height});EXPORT_IMAGE_CACHE.set(src,result);
+ while(EXPORT_IMAGE_CACHE.size>3)EXPORT_IMAGE_CACHE.delete(EXPORT_IMAGE_CACHE.keys().next().value);
+ return result;
+}
+async function prepareExportImages(eps=epubSortedEpisodes()){
+ const sources=new Set(eps.flatMap(ep=>exportEpisodeBlocks(ep).filter(b=>b.type==='image').map(b=>b.src)));
+ for(const src of sources)await loadExportImage(src);
+ invalidatePrintLayout();
+}
+function xhtmlExportBody(html){
+ const root=document.createElementNS('http://www.w3.org/1999/xhtml','div');root.innerHTML=html;
+ return new XMLSerializer().serializeToString(root);
+}
+async function portableCoverFile(src){
+ const decoded=await loadExportImage(await inlinePdfImage(src)),canvas=document.createElement('canvas');canvas.width=decoded.width;canvas.height=decoded.height;
+ try{const ctx=canvas.getContext('2d');if(!ctx)throw new Error('표지 변환을 지원하지 않습니다.');ctx.drawImage(decoded.image,0,0);return {mime:'image/png',ext:'png',bytes:bytesFromDataUrl(canvas.toDataURL('image/png'))};}
+ finally{canvas.width=canvas.height=1;}
+}
+async function packageEpisodeImages(eps,files,extraImages=[]){
+ const assets=new Map();let manifest='';
+ for(const block of [...eps.flatMap(ep=>exportEpisodeBlocks(ep)),...extraImages]){
+  if(block.type!=='image'||assets.has(block.src))continue;
+  const decoded=await loadExportImage(block.src),canvas=document.createElement('canvas');canvas.width=decoded.width;canvas.height=decoded.height;
+  try{
+   const context=canvas.getContext('2d');if(!context)throw new Error('그림 변환을 지원하지 않는 브라우저입니다.');context.drawImage(decoded.image,0,0);
+   const png=canvas.toDataURL('image/png');if(!png.startsWith('data:image/png;base64,'))throw new Error('그림 파일을 EPUB에 넣지 못했습니다.');
+   const id='illustration-'+(assets.size+1),href='images/'+id+'.png';files.push({name:'OEBPS/'+href,bytes:bytesFromDataUrl(png)});assets.set(block.src,href);manifest+=`<item id="${id}" href="${href}" media-type="image/png"${block.cover?' properties="cover-image"':''}/>`;
+  }finally{canvas.width=canvas.height=1;}
+ }
+ return {manifest,html(html){const root=new DOMParser().parseFromString(html,'text/html').body;for(const img of root.querySelectorAll('img')){const href=assets.get(img.getAttribute('src'));if(!href)throw new Error('EPUB 그림 리소스가 누락됐습니다.');img.setAttribute('src',href);img.removeAttribute('draggable');}return xhtmlExportBody(root.innerHTML);}};
+}
+function imagePageSpec(image,spec,book=currentBookData()){
+ const spread=isPictureBook(book)&&illustrationLayout(image,book)==='spread';
+ return {...spec,pageWidth:spec.pageWidth*(spread?2:1),inner:spec.outer,layout:spread?'spread':'single'};
+}
+function illustrationPage(image,spec){
+ const w=spec.pageWidth-spec.inner-spec.outer,h=spec.pageHeight-spec.top-spec.bottom;
+ const dimensions=image.width&&image.height?`width:${image.width}px;height:${image.height}px;`:'';
+ return {kind:'illustration',image,spec,units:spec.layout==='spread'?2:1,showNumber:false,html:`<div style="width:${w}px;height:${h}px;display:flex;align-items:center;justify-content:center"><img src="${htmlEscape(image.src)}" alt="${htmlEscape(image.alt)}" style="display:block;${dimensions}max-width:100%;max-height:100%;object-fit:contain" /></div>`};
+}
+function paginateIllustratedEpisode(ep,spec,pages){
+ const blocks=exportEpisodeBlocks(ep),picture=isPictureBook();let group=[],heading=[headingNodes(ep.no,ep.title,spec)];
+ const flush=()=>{if(!group.length)return;paginateParagraphsIntoPages(group.flatMap(t=>smartBookParagraphs(t)),spec,pages,heading);group=[];heading=[];};
+ for(const block of blocks){
+  if(block.type==='text'){group.push(block.text);continue;}
+  flush();
+  pages.push(illustrationPage(block,imagePageSpec(block,spec)));heading=[];
+ }
+ flush();if(!blocks.length)paginateParagraphsIntoPages([],spec,pages,heading);
+}
+function renderPictureInteriorPreview(){
+ buildInteriorPreviewPages();const opt=paperCurrentOptions(),pages=PRINT_PREVIEW_STATE.pages,total=pages.length;
+ PRINT_PREVIEW_STATE.spread=Math.max(0,Math.min(total-1,PRINT_PREVIEW_STATE.spread));const index=PRINT_PREVIEW_STATE.spread,page=pages[index],spec=page.spec||PRINT_PREVIEW_STATE.spec;
+ const available=Math.max(250,Math.min(1240,window.innerWidth*.91)-32),scale=Math.min(1,available/spec.pageWidth);
+ document.getElementById('printPreviewBody').innerHTML=`<div class="book-spread-stage" style="min-height:${spec.pageHeight*scale+24}px"><div style="width:${spec.pageWidth}px;height:${spec.pageHeight}px;transform:scale(${scale});transform-origin:top center;margin:auto">${pageBodyHtml(page,index+1,opt,'right')}</div></div>`;
+ document.getElementById('printPreviewTitle').textContent='그림책 내지 미리보기';
+ document.getElementById('printPreviewMeta').textContent=`${PAPER_TRIMS[opt.trimKey].label} · ${spec.layout==='spread'?'펼침면':'한 페이지'} · ${index+1}/${total} 화면`;
+ document.getElementById('printPrevSpread').disabled=index<=0;document.getElementById('printNextSpread').disabled=index>=total-1;document.getElementById('printPreviewNavs').style.display='flex';
+ document.getElementById('printPreviewCaption').textContent='그림 비율을 유지해 전체가 보이도록 배치합니다. 펼침면 PDF는 두 페이지 폭의 가로 화면으로 저장됩니다. 인쇄용 낱장이 필요하면 한 페이지를 선택하세요.';
+}
+function pictureEpubPreviewSections(){
+ const layout=computeMeasuredInteriorLayout(paperCurrentOptions());
+ return layout.pages.map((page,i)=>{
+  const spec=page.spec||layout.spec,label=page.episodeNo?`${page.episodeNo}화 · ${spec.layout==='spread'?'펼침면':'한 페이지'}`:`${i+1}쪽`;
+  const wrapped=xhtmlWrapForPrint(page.html||'',spec,'right',paperCurrentOptions());
+  return {label,spec,html:makePreviewDocument(label,`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${spec.pageWidth} ${spec.pageHeight}" style="width:100%;height:auto;display:block"><foreignObject x="0" y="0" width="${spec.pageWidth}" height="${spec.pageHeight}">${wrapped}</foreignObject></svg>`).replace('</style>','body{padding:0;margin:0;max-width:none}</style>')};
+ });
+}
+async function illustrationPageToJpeg(page,opt,dpi=200){
+ const spec=page.spec,decoded=await loadExportImage(page.image.src),scale=dpi/96,canvas=document.createElement('canvas');canvas.width=Math.round(spec.pageWidth*scale);canvas.height=Math.round(spec.pageHeight*scale);
+ try{
+  const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('PDF 그림 변환을 지원하지 않는 브라우저입니다.');ctx.fillStyle=opt.paper==='cream'?'#f7f0df':'#fffefb';ctx.fillRect(0,0,canvas.width,canvas.height);
+  const availW=(spec.pageWidth-spec.inner-spec.outer)*scale,availH=(spec.pageHeight-spec.top-spec.bottom)*scale,fit=Math.min(availW/decoded.width,availH/decoded.height),w=decoded.width*fit,h=decoded.height*fit;
+  ctx.drawImage(decoded.image,spec.inner*scale+(availW-w)/2,spec.top*scale+(availH-h)/2,w,h);
+  return {bytes:bytesFromDataUrl(canvas.toDataURL('image/jpeg',.94)),width:canvas.width,height:canvas.height,pageWidthPt:spec.pageWidth*72/96,pageHeightPt:spec.pageHeight*72/96};
+ }finally{canvas.width=canvas.height=1;}
+}
+function fixedEpubPage(title,html,spec){
+ return `<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=${Math.round(spec.pageWidth)},height=${Math.round(spec.pageHeight)}"/><title>${xmlEscape(title)}</title><link rel="stylesheet" type="text/css" href="style.css"/></head><body style="width:${spec.pageWidth}px;height:${spec.pageHeight}px;margin:0;padding:${spec.top}px ${spec.outer}px ${spec.bottom}px ${spec.inner}px;box-sizing:border-box;overflow:hidden">${html}</body></html>`;
+}
+async function buildPictureEpubBlob(){
+ await prepareExportImages();const book=currentBookData(),eps=epubSortedEpisodes(),files=[{name:'mimetype',bytes:utf8('application/epub+zip')},{name:'META-INF/container.xml',bytes:utf8('<?xml version="1.0"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>')}];
+ const cover=activeCoverSource(book)?await inlinePdfImage(activeCoverSource(book)):null;
+ const coverDecoded=cover?await loadExportImage(cover):null;
+ const coverImage=cover?{type:'image',src:cover,alt:'표지',width:coverDecoded.width,height:coverDecoded.height,cover:true}:null;
+ const assets=await packageEpisodeImages(eps,files,coverImage?[coverImage]:[]),layout=computeMeasuredInteriorLayout(paperCurrentOptions());let manifest='',spine='';
+ if(coverImage){
+  const spec={...layout.spec,inner:layout.spec.outer},page=illustrationPage(coverImage,spec);
+  files.push({name:'OEBPS/cover.xhtml',bytes:utf8(fixedEpubPage('표지',assets.html(page.html),spec))});manifest+='<item id="cover-page" href="cover.xhtml" media-type="application/xhtml+xml"/>';spine+='<itemref idref="cover-page" properties="rendition:page-spread-center"/>';
+ }
+ files.push({name:'OEBPS/style.css',bytes:utf8('body{font-family:serif;color:#302b25}*{box-sizing:border-box}img{object-fit:contain;max-width:100%;max-height:100%}h1,h2{line-height:1.4}p{line-height:1.88}nav li{margin:.6em 0}')});
+ layout.pages.forEach((page,i)=>{const spec=page.spec||layout.spec,id='p'+(i+1),href='page-'+(i+1)+'.xhtml';files.push({name:'OEBPS/'+href,bytes:utf8(fixedEpubPage(book.title,assets.html(page.html||''),spec))});manifest+=`<item id="${id}" href="${href}" media-type="application/xhtml+xml"/>`;spine+=`<itemref idref="${id}" properties="rendition:page-spread-center"/>`;});
+ const navItems=eps.map(ep=>{const index=layout.pages.findIndex(p=>p.episodeNo===Number(ep.no));return `<li><a href="page-${Math.max(0,index)+1}.xhtml">${Number(ep.no)}화 · ${xmlEscape(ep.title||'')}</a></li>`;}).join('');
+ files.push({name:'OEBPS/nav.xhtml',bytes:utf8(`<?xml version="1.0"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko"><head><title>목차</title></head><body><nav epub:type="toc"><h1>목차</h1><ol>${navItems}</ol></nav></body></html>`)});
+ files.push({name:'OEBPS/content.opf',bytes:utf8(`<?xml version="1.0"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid" prefix="rendition: http://www.idpf.org/vocab/rendition/#"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bookid">urn:pyeoda:${Date.now()}</dc:identifier><dc:title>${xmlEscape(book.title||'제목 없는 책')}</dc:title><dc:creator>${xmlEscape(book.pen||'작가')}</dc:creator><dc:language>ko</dc:language><meta property="dcterms:modified">${new Date().toISOString().replace(/\.\d{3}Z$/,'Z')}</meta><meta property="rendition:layout">pre-paginated</meta><meta property="rendition:spread">none</meta></metadata><manifest><item id="css" href="style.css" media-type="text/css"/><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>${assets.manifest}${manifest}</manifest><spine page-progression-direction="ltr">${spine}</spine></package>`)});
+ return new Blob([makeStoredZip(files)],{type:'application/epub+zip'});
+}
+function syncImageLayoutControls(){
+ const book=currentBookData(),mode=bookImageLayout(book);document.querySelectorAll('[data-book-image-layout]').forEach(select=>select.value=mode);
+ const images=epubSortedEpisodes().flatMap(ep=>exportEpisodeBlocks(ep).filter(b=>b.type==='image')),spread=images.filter(img=>illustrationLayout(img,book)==='spread').length;
+ document.querySelectorAll('[data-book-image-layout-status]').forEach(el=>el.textContent=images.length?`그림 ${images.length}장 · 펼침면 ${spread}장 · 한 페이지 ${images.length-spread}장`:'본문 그림을 삽입하면 배치 방식이 표시됩니다.');
+}
+async function changeBookImageLayout(mode){
+ const book=currentBookData();book.imageLayout=['single','spread'].includes(mode)?mode:'auto';saveCurrentBookData(book);invalidatePrintLayout();syncImageLayoutControls();renderEpubPreview();updatePaperBookUI();refreshOpenPrintPreview();
+ if(book.serverId&&PYEODA_SERVER.authorReady&&PYEODA_SERVER.client){const {error}=await PYEODA_SERVER.client.from('books').update({image_layout:book.imageLayout}).eq('id',book.serverId).eq('owner_id',PYEODA_SERVER.user.id);if(error)toast('배치는 이 기기에 저장됐습니다. 서버 저장을 다시 눌러 주세요.');}
+}
+function bindImageLayoutControls(){document.querySelectorAll('[data-book-image-layout]').forEach(select=>select.onchange=()=>changeBookImageLayout(select.value).catch(error=>{console.error(error);toast('그림 배치 설정을 저장하지 못했습니다.');}));syncImageLayoutControls();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindImageLayoutControls,{once:true});else bindImageLayoutControls();
+
 function epubParagraphs(text){
   const clean=String(text||'').replace(/\r/g,'').trim();
   if(!clean)return '<p class="empty">본문이 아직 없습니다.</p>';
@@ -5180,6 +5346,7 @@ function epubSortedEpisodes(){
 }
 function epubPreviewCss(){
   return `
+    img{max-width:100%;height:auto;object-fit:contain;display:block;margin:1em auto}
     @page{margin:1.6em}
     html{background:#fffefa;color:#302b25}
     body{max-width:38em;margin:0 auto;padding:3.5em 3em 5em;font-family:"Noto Serif KR","Batang",serif;line-height:1.9;font-size:17px;word-break:keep-all}
@@ -5200,6 +5367,10 @@ function makePreviewDocument(title,body){
 </body></html>`;
 }
 function buildEpubPreviewSections(){
+  if(isPictureBook()){
+    EPUB_PREVIEW.sections=pictureEpubPreviewSections();
+    EPUB_PREVIEW.index=Math.min(EPUB_PREVIEW.index,Math.max(0,EPUB_PREVIEW.sections.length-1));return;
+  }
   const book=currentBookData();
   const eps=epubSortedEpisodes();
   const sections=[];
@@ -5226,7 +5397,7 @@ function buildEpubPreviewSections(){
       html:makePreviewDocument(label,
         `<div class="episode-meta">${no}화</div>
          <h2>${htmlEscape(ep.title||`${no}화`)}</h2>
-         ${epubParagraphs(ep.body)}`)
+         ${exportEpisodeHTML(ep)}`)
     });
   });
 
@@ -5234,6 +5405,7 @@ function buildEpubPreviewSections(){
   EPUB_PREVIEW.index=Math.min(EPUB_PREVIEW.index,Math.max(0,sections.length-1));
 }
 function renderEpubPreview(){
+  syncImageLayoutControls();
   buildEpubPreviewSections();
   const book=currentBookData();
   const eps=epubSortedEpisodes();
@@ -5250,7 +5422,7 @@ function renderEpubPreview(){
 
   if(titleEl)titleEl.textContent=book.title||'제목 없는 책';
   if(authorEl)authorEl.textContent=book.pen||'작가';
-  if(statsEl)statsEl.textContent=`${eps.length}화 · ${chars.toLocaleString()}자`;
+  if(statsEl)statsEl.textContent=`${eps.length}화 · ${chars.toLocaleString()}자`+(isPictureBook()?' · 그림책 고정 배치':'');
   if(ready)ready.textContent=isBookCompleted()?'✓ EPUB 자동 구성 완료':'완결 후 EPUB 생성 가능';
 
   if(select){
@@ -5264,7 +5436,7 @@ function renderEpubPreview(){
   }
 
   const current=EPUB_PREVIEW.sections[EPUB_PREVIEW.index];
-  if(frame && current)frame.srcdoc=current.html;
+  if(frame && current){frame.srcdoc=current.html;frame.parentElement.style.height=current.spec?'auto':'';frame.parentElement.style.aspectRatio=current.spec?current.spec.pageWidth+'/'+current.spec.pageHeight:'';}
   if(prev)prev.disabled=EPUB_PREVIEW.index<=0;
   if(next)next.disabled=EPUB_PREVIEW.index>=EPUB_PREVIEW.sections.length-1;
 }
@@ -5347,7 +5519,9 @@ function xhtmlDoc(title,body,lang='ko'){
 <head><meta charset="UTF-8"/><title>${xmlEscape(title)}</title><link rel="stylesheet" type="text/css" href="style.css"/></head>
 <body>${body}</body></html>`;
 }
-function buildEpubBlob(){
+async function buildEpubBlob(){
+  if(isPictureBook())return await buildPictureEpubBlob();
+  await prepareExportImages();
   const book=currentBookData();
   const eps=epubSortedEpisodes();
   const files=[];
@@ -5358,13 +5532,14 @@ function buildEpubBlob(){
   <rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles>
 </container>`)});
 
-  const css=`body{font-family:serif;line-height:1.85;margin:5%;color:#302b25}h1,h2{line-height:1.35}h1{text-align:center;margin-top:18%}.author{text-align:center;color:#666}.intro{margin-top:3em}.episode-meta{font-size:.85em;color:#777}p{margin:0 0 1.12em}.narration{text-indent:1em}.dialogue{text-indent:0;margin-top:.25em;margin-bottom:1.22em}nav ol{padding-left:1.4em}`;
+  const imageAssets=await packageEpisodeImages(eps,files);
+  const css=`img{max-width:100%;height:auto;object-fit:contain;display:block;margin:1em auto}body{font-family:serif;line-height:1.85;margin:5%;color:#302b25}h1,h2{line-height:1.35}h1{text-align:center;margin-top:18%}.author{text-align:center;color:#666}.intro{margin-top:3em}.episode-meta{font-size:.85em;color:#777}p{margin:0 0 1.12em}.narration{text-indent:1em}.dialogue{text-indent:0;margin-top:.25em;margin-bottom:1.22em}nav ol{padding-left:1.4em}`;
   files.push({name:'OEBPS/style.css',bytes:utf8(css)});
 
   let coverManifest='',coverMeta='',coverSpine='',coverFile=null;
   const runtimeCover=activeCoverSource(book);
   if(runtimeCover){
-    try{coverFile=dataUrlToFile(runtimeCover)}catch(e){coverFile=null}
+    try{coverFile=await portableCoverFile(runtimeCover)}catch(e){coverFile=null}
   }
   if(coverFile && ['png','jpg','svg'].includes(coverFile.ext)){
     const coverName=`cover.${coverFile.ext}`;
@@ -5389,7 +5564,7 @@ function buildEpubBlob(){
 
   eps.forEach((ep,i)=>{
     const no=Number(ep.no)||i+1;
-    const chapterBody=`<p class="episode-meta">${no}화</p><h2>${xmlEscape(ep.title||`${no}화`)}</h2>${epubParagraphs(ep.body)}`;
+    const chapterBody=`<p class="episode-meta">${no}화</p><h2>${xmlEscape(ep.title||`${no}화`)}</h2>${imageAssets.html(exportEpisodeHTML(ep))}`;
     files.push({name:`OEBPS/chapter-${i+1}.xhtml`,bytes:utf8(xhtmlDoc(ep.title||`${no}화`,chapterBody))});
   });
 
@@ -5413,6 +5588,7 @@ function buildEpubBlob(){
     <item id="title-page" href="title.xhtml" media-type="application/xhtml+xml"/>
     ${coverManifest}
     ${chapterManifest}
+    ${imageAssets.manifest}
   </manifest>
   <spine>
     ${coverSpine}
@@ -5429,14 +5605,16 @@ function safeEpubFilename(name){
   const clean=String(name||'전자책').replace(/[\\/:*?"<>|]+/g,'_').trim();
   return `${clean||'전자책'}.epub`;
 }
-function downloadCurrentEpub(){
+async function downloadCurrentEpub(){
   if(!isBookCompleted()){
     toast('작품을 완결한 뒤 EPUB 파일을 만들 수 있습니다.');
     return;
   }
   try{
-    saveCurrentEpisode();
-    const blob=buildEpubBlob();
+    if(saveCurrentEpisode()===false)return;
+    const stamp=printContentFingerprint();
+    const blob=await buildEpubBlob();
+    if(stamp!==printContentFingerprint())throw new Error('원고가 변경됐습니다. 다시 EPUB 저장을 눌러 주세요.');
     const a=document.createElement('a');
     const url=URL.createObjectURL(blob);
     a.href=url;
@@ -6361,8 +6539,9 @@ function printContentFingerprint(){
   const data=currentBookData();
   let h=2166136261;
   const parts=[
+    data.imageLayout||'auto',
     data.title||'',data.pen||'',data.intro||'',data.note||'',
-    ...episodes.map(ep=>`${ep.no}|${ep.title||''}|${ep.body||''}`)
+    ...episodes.map(ep=>`${ep.no}|${ep.title||''}|${ep.body||''}|${ep.bodyHtml||ep.body_html||''}`)
   ];
   for(const part of parts){
     const s=String(part);
@@ -6623,17 +6802,23 @@ function paginateInteriorOnce(opt,pageGuess){
   printEpisodes.forEach(ep=>{
     const entry=contentsEntries.find(entry=>entry.type==='episode'&&entry.no===ep.no);
     if(entry)entry.page=pages.length+1;
-    const paras=smartBookParagraphs(ep.body||'');
-    const heading=headingNodes(ep.no,ep.title,spec);
-    if(!paras.some(p=>p.trim()))paras.push('');
-    paginateParagraphsIntoPages(paras,spec,pages,[heading]);
+    const first=pages.length;
+    if(exportEpisodeBlocks(ep).some(block=>block.type==='image'))paginateIllustratedEpisode(ep,spec,pages);
+    else{
+      const paras=smartBookParagraphs(ep.body||'');
+      const heading=headingNodes(ep.no,ep.title,spec);
+      if(!paras.some(p=>p.trim()))paras.push('');
+      paginateParagraphsIntoPages(paras,spec,pages,[heading]);
+    }
+    for(let index=first;index<pages.length;index++)pages[index].episodeNo=ep.no;
   });
 
   fillPrintContentsPageNumbers(pages,contentsIndexes,contentsEntries);
 
   // Printed interiors need an even number of pages.
-  if(pages.length%2!==0)pages.push({kind:'blank',html:'',showNumber:false});
-  return {pages,spec,count:pages.length};
+  const physicalCount=pages.reduce((sum,page)=>sum+(page.units||1),0);
+  if(physicalCount%2!==0)pages.push({kind:'blank',html:'',showNumber:false});
+  return {pages,spec,count:pages.reduce((sum,page)=>sum+(page.units||1),0)};
 }
 
 function computeMeasuredInteriorLayout(opt=paperCurrentOptions()){
@@ -6660,6 +6845,7 @@ function computeMeasuredInteriorLayout(opt=paperCurrentOptions()){
 }
 function updatePaperBookUI(){
   const data=currentBookData();
+  syncImageLayoutControls();
   const chars=episodes.reduce((sum,ep)=>sum+String(ep.body||'').length,0);
   const count=episodes.length;
 
@@ -6771,7 +6957,8 @@ function allPrintText(){
   return epubSortedEpisodes().map(ep=>({
     no:Number(ep.no)||0,
     title:ep.title||`${Number(ep.no)||''}화`,
-    body:String(ep.body||'').replace(/\r/g,'').trim()
+    body:String(ep.body||'').replace(/\r/g,'').trim(),
+    bodyHtml:ep.bodyHtml||ep.body_html||''
   }));
 }
 function buildInteriorPreviewPages(){
@@ -6781,7 +6968,7 @@ function buildInteriorPreviewPages(){
   PRINT_PREVIEW_STATE.spec=measured.spec;
 }
 function pageBodyHtml(page,pageNo,opt,side){
-  const spec=PRINT_PREVIEW_STATE.spec||printTypographySpec(opt,PRINT_PREVIEW_STATE.pages.length||100);
+  const spec=page?.spec||PRINT_PREVIEW_STATE.spec||printTypographySpec(opt,PRINT_PREVIEW_STATE.pages.length||100);
   const cream=opt.paper==='cream'?' cream':'';
   const color=opt.ink==='bw'?'':' color';
   const bleed=opt.bleed==='bleed'?' bleed':'';
@@ -6794,6 +6981,7 @@ function pageBodyHtml(page,pageNo,opt,side){
   return `<div class="book-page ${side}${cream}${color}${bleed}" style="width:${spec.pageWidth}px;height:${spec.pageHeight}px;padding:${padding};font-size:${spec.fontSize}px;line-height:${spec.lineHeight}"><div class="gutter-guide"></div>${html}${folio}</div>`;
 }
 function renderInteriorPreview(){
+  if(isPictureBook())return renderPictureInteriorPreview();
   buildInteriorPreviewPages();
   const opt=paperCurrentOptions();
   const trim=PAPER_TRIMS[opt.trimKey]||PAPER_TRIMS['152.4x228.6'];
@@ -6844,6 +7032,7 @@ function renderCoverPreview(){
 function openPrintPreview(mode){
   PRINT_PREVIEW_STATE.mode=mode;
   PRINT_PREVIEW_STATE.spread=0;
+  saveCurrentEpisode();
   updatePaperBookUI();
   if(mode==='cover')renderCoverPreview();else renderInteriorPreview();
   const modal=document.getElementById('printPreviewModal');
@@ -6902,6 +7091,7 @@ function buildJpegPdf(images,pageWidthPt,pageHeightPt){
 
   for(let i=0;i<count;i++){
     const img=images[i];
+    const pageW=img.pageWidthPt||pageWidthPt,pageH=img.pageHeightPt||pageHeightPt;
     const imageId=3+i*3, contentId=4+i*3, pageId=5+i*3;
     const imgHead=asciiBytes(
       `<< /Type /XObject /Subtype /Image /Width ${img.width} /Height ${img.height} `+
@@ -6910,11 +7100,11 @@ function buildJpegPdf(images,pageWidthPt,pageHeightPt){
     const imgTail=asciiBytes('\nendstream');
     objects[imageId]=concatUint8([imgHead,img.bytes,imgTail]);
 
-    const stream=`q\n${pageWidthPt.toFixed(3)} 0 0 ${pageHeightPt.toFixed(3)} 0 0 cm\n/Im${i+1} Do\nQ`;
+    const stream=`q\n${pageW.toFixed(3)} 0 0 ${pageH.toFixed(3)} 0 0 cm\n/Im${i+1} Do\nQ`;
     const streamBytes=asciiBytes(stream);
     objects[contentId]=asciiBytes(`<< /Length ${streamBytes.length} >>\nstream\n${stream}\nendstream`);
     objects[pageId]=asciiBytes(
-      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidthPt.toFixed(3)} ${pageHeightPt.toFixed(3)}] `+
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageW.toFixed(3)} ${pageH.toFixed(3)}] `+
       `/Resources << /XObject << /Im${i+1} ${imageId} 0 R >> >> /Contents ${contentId} 0 R >>`
     );
   }
@@ -7043,6 +7233,8 @@ function xhtmlWrapForPrint(content,spec,side,opt,pageNo=null){
   </div>`;
 }
 async function measuredPageToJpeg(page,index,opt,spec,dpi=200){
+  if(page?.kind==='illustration')return illustrationPageToJpeg(page,opt,dpi);
+  spec=page?.spec||spec;
   const scale=dpi/96;
   const widthPx=Math.max(1,Math.round(spec.pageWidth*scale));
   const heightPx=Math.max(1,Math.round(spec.pageHeight*scale));
@@ -7063,6 +7255,9 @@ async function generateInteriorPdf(){
   try{
     if(btn){btn.disabled=true;btn.classList.add('is-working')}
     if(document.fonts?.ready)await document.fonts.ready;
+    if(saveCurrentEpisode()===false)return;
+    const exportStamp=printContentFingerprint();
+    await prepareExportImages();
     invalidatePrintLayout();
     const opt=paperCurrentOptions();
     const measured=computeMeasuredInteriorLayout(opt);
@@ -7074,6 +7269,7 @@ async function generateInteriorPdf(){
       images.push(await measuredPageToJpeg(measured.pages[i],i,opt,measured.spec,200));
       if(i%3===0)await new Promise(r=>setTimeout(r,0));
     }
+    if(exportStamp!==printContentFingerprint())throw new Error('원고가 변경됐습니다. 다시 PDF 저장을 눌러 주세요.');
     let pageWmm=trim.w, pageHmm=trim.h;
     // KDP-style bleed interior: outer edge +3.2 mm, top/bottom total +6.4 mm.
     if(opt.bleed==='bleed'){pageWmm+=3.2;pageHmm+=6.4}
@@ -9125,6 +9321,7 @@ async function applyBookRegistration(){
   const isNewRegistration=registrationMode==='new';
   const data={
     title,pen,category,genre,format,writingType,audience,purpose,styleNote,externalRule,
+    imageLayout:isNewRegistration?'auto':bookImageLayout(previous),
     intro,note,tags,subtitle,coverPrompt,coverStyle,cover:pendingNewCover,
     aiCoverFreeUsed:!!aiCoverFreeUsed,
     coverGenerationKey:isNewRegistration?ensureRegistrationCoverKey():(previous.coverGenerationKey||ensureRegistrationCoverKey()),
