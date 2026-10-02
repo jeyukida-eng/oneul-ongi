@@ -2607,6 +2607,15 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 .editor-episode-navigation span{text-align:center;font-size:14px;font-weight:800;line-height:1.5}
 .mobile-build .editor-episode-navigation{max-width:none;width:100%;margin-top:14px}
 
+
+/* Episode pricing: separate from full-book ownership price */
+.episode-pricing{margin:20px 0 8px;padding:16px;background:#f5f4ec;border:1px solid #dedfd2;border-radius:12px;font-family:system-ui,-apple-system,'Noto Sans KR',sans-serif;word-break:keep-all;overflow-wrap:break-word}
+.episode-pricing-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.episode-pricing select,.episode-pricing input,.episode-pricing button{font:inherit;font-size:13px;min-height:42px;border:1px solid #cbd0bf;border-radius:8px;background:#fffdf8;padding:8px 10px;color:#414938}
+.episode-pricing input{width:120px;max-width:100%;box-sizing:border-box}.episode-pricing label{display:inline-flex;align-items:center;gap:6px}.episode-pricing [hidden]{display:none!important}
+.episode-pricing p{font-size:12px;line-height:1.7;margin:10px 0 0;color:#68705e}.episode-pricing details{margin-top:12px;border-top:1px solid #dedfd2;padding-top:10px}.episode-pricing summary{font-size:13px;cursor:pointer}.episode-default-label{margin-top:12px;flex-wrap:wrap;font-size:13px}
+.reader-episode-price{font-size:13px;line-height:1.6;color:#68705e;margin:8px 0 16px}
+@media(max-width:480px){.episode-pricing{padding:12px}.episode-pricing-main{gap:8px}.episode-pricing-main strong{flex-basis:100%}.episode-pricing input{width:105px}}
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2706,7 +2715,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
       <div><h2 id='readerBookTitle'>작품명</h2><p id='readerBookMeta'>작가 · 장르</p></div>
     </div>
     <div class='reader-progress-bar'><i id='readerProgressBar'></i></div>
-    <div class='reader-episode'><span class='ep-no' id='readerEpisodeNo'>1화</span><h1 id='readerEpisodeTitle'>첫 번째 이야기</h1></div>
+    <div class='reader-episode'><span class='ep-no' id='readerEpisodeNo'>1화</span><h1 id='readerEpisodeTitle'>첫 번째 이야기</h1></div><p id='readerEpisodePrice' class='reader-episode-price'>무료</p>
     <article class='reader-body' id='readerBody'></article>
     <div class='reader-nav'>
       <button class='prev' id='readerPrev'>← 이전 화</button>
@@ -2914,7 +2923,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
     <div class='editor-guide-external'><b>적용 순서</b><span id='editorGuideExternal'>공통 원칙 → 장르별 규칙 → 작품별 설정 → 출판처 기준</span></div>
   </div>
 </details>
-<div class='editor-episode-tools'><nav class='editor-episode-navigation' aria-label='집필 회차 이동'><button type='button' id='editorPrevEpisode' aria-label='이전 회차' title='이전 회차' disabled>←</button><span id='editorEpisodePosition' aria-live='polite'>회차 선택</span><button type='button' id='editorNextEpisode' aria-label='다음 회차' title='다음 회차' disabled>→</button></nav><div class='editor-book-tools'><button type='button' class='editor-action editor-action-delete editor-top-action' id='deleteEpisode'>회차 삭제</button><button type='button' class='editor-action editor-action-complete editor-top-action' id='completeBook'>책 완결</button></div></div><div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-draft' id='draftEpisodeBtn' title='현재 기기에 원고를 임시 저장합니다.'>임시 저장</button><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
+<div class='editor-episode-tools'><nav class='editor-episode-navigation' aria-label='집필 회차 이동'><button type='button' id='editorPrevEpisode' aria-label='이전 회차' title='이전 회차' disabled>←</button><span id='editorEpisodePosition' aria-live='polite'>회차 선택</span><button type='button' id='editorNextEpisode' aria-label='다음 회차' title='다음 회차' disabled>→</button></nav><div class='editor-book-tools'><button type='button' class='editor-action editor-action-delete editor-top-action' id='deleteEpisode'>회차 삭제</button><button type='button' class='editor-action editor-action-complete editor-top-action' id='completeBook'>책 완결</button></div></div><div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><section class='episode-pricing' aria-label='회차 가격 설정'><div class='episode-pricing-main'><strong>회차 가격</strong><select id='episodeSaleMode' aria-label='회차 무료 또는 유료'><option value='free'>무료</option><option value='paid'>유료</option></select><label id='episodePriceAmount' hidden><input id='episodeSalePrice' type='number' min='1' max='2147483647' step='1' inputmode='numeric' placeholder='가격 입력' aria-label='이 회차 가격'><span>원</span></label><button type='button' id='useDefaultEpisodePrice'>기본 가격 적용</button></div><p id='episodePriceNotice'>1~5화는 무료로 고정됩니다.</p><details><summary>작품의 기본 회차 가격</summary><label class='episode-default-label'>6화 이후 새 회차 <input id='defaultEpisodePrice' type='number' min='0' max='2147483647' step='1' value='0' inputmode='numeric' aria-label='새 회차 기본 가격'><span>원</span></label><p>0원은 무료입니다. 새 회차에 적용하며, 기존 회차 가격은 바뀌지 않습니다. 전체 소장 가격과 별도입니다.</p></details></section><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-draft' id='draftEpisodeBtn' title='현재 기기에 원고를 임시 저장합니다.'>임시 저장</button><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
 
 <section id='publishing' class='screen'>
   <div class='publish-center-shell'>
@@ -3803,7 +3812,7 @@ async function refreshMyServerBooks(){
   if(!PYEODA_SERVER.client||!PYEODA_SERVER.user)return;
   const {data,error}=await PYEODA_SERVER.client
     .from('books')
-    .select('id,title,pen_name,genre,category,completed,published,episode_count,cover_url,price,updated_at')
+    .select('id,title,pen_name,genre,category,completed,published,episode_count,cover_url,price,default_episode_price,updated_at')
     .eq('owner_id',PYEODA_SERVER.user.id)
     .order('updated_at',{ascending:false});
   if(error){console.error(error);return}
@@ -3926,6 +3935,7 @@ function serverBookPayload(data){
     completed:!!data.completed,
     completed_at:data.completedAt||null,
     price,
+    default_episode_price:normalizeEpisodePrice(data.defaultEpisodePrice),
     episode_count:episodes.filter(ep=>ep.published).length
   };
 }
@@ -3978,8 +3988,11 @@ async function syncDraftEpisodeToServer(ep){
     episode_no:Number(ep.no),
     title:ep.title||'',
     body:ep.body||'',
-    published:!!ep.published
+    published:!!ep.published,
+    price:effectiveEpisodePrice(ep)
   };
+  const defaults=await PYEODA_SERVER.client.from('books').update({default_episode_price:normalizeEpisodePrice(book.defaultEpisodePrice)}).eq('id',book.serverId);
+  if(defaults.error)throw defaults.error;
   const {error}=await PYEODA_SERVER.client.from('episodes').upsert(payload,{onConflict:'book_id,episode_no'});
   if(error)throw error;
   return true;
@@ -4009,7 +4022,8 @@ async function syncPublishedEpisodeToServer(ep){
     episode_no:Number(ep.no),
     title:ep.title||'',
     body:ep.body||'',
-    published:true
+    published:true,
+    price:effectiveEpisodePrice(ep)
   };
   const {error}=await PYEODA_SERVER.client
     .from('episodes')
@@ -4048,7 +4062,7 @@ async function syncBookCompletionToServer(){
 async function fetchServerEpisodes(bookId,{owner=false}={}){
   if(!PYEODA_SERVER.client)return [];
   let q=PYEODA_SERVER.client.from('episodes')
-    .select('id,episode_no,title,body,published,created_at,updated_at')
+    .select('id,episode_no,title,body,price,published,created_at,updated_at')
     .eq('book_id',bookId)
     .order('episode_no',{ascending:true});
   if(!owner)q=q.eq('published',true);
@@ -4075,12 +4089,12 @@ async function loadServerBookForEditing(bookId,{navigate='editor',silent=false}=
       coverPrompt:row.cover_prompt||'',coverStyle:row.cover_style||'pencil',
       coverGenerationKey:row.cover_generation_key||createCoverGenerationKey(),
       cover:row.cover_url||'',salePrice:Number(row.price)||0,published:!!row.published,
-      completed:!!row.completed,completedAt:row.completed_at||undefined
+      completed:!!row.completed,completedAt:row.completed_at||undefined,defaultEpisodePrice:normalizeEpisodePrice(row.default_episode_price)
     };
     pendingNewCover=row.cover_url||'';
     safeSaveBookData(data,pendingNewCover);
     episodes=eps.length
-      ? eps.map(e=>({no:Number(e.episode_no),title:e.title||'',body:e.body||'',published:!!e.published}))
+      ? eps.map(e=>({no:Number(e.episode_no),title:e.title||'',body:e.body||'',published:!!e.published,price:Number(e.episode_no)<=5?0:normalizeEpisodePrice(e.price)}))
       : [{no:1,title:'',body:'',published:false}];
     currentEpisodeNo=episodes[0].no;
     persistEpisodes();
@@ -4511,10 +4525,12 @@ function renderReader(){
     const ep=currentServerEpisodes[currentReaderEpisode-1];
     document.getElementById('readerEpisodeNo').textContent=`${ep?.episode_no||currentReaderEpisode}화`;
     document.getElementById('readerEpisodeTitle').textContent=ep?.title||`${ep?.episode_no||currentReaderEpisode}화`;
-    document.getElementById('readerBody').textContent=ep?.body||'본문이 없습니다.';
+    document.getElementById('readerEpisodePrice').textContent=episodePriceLabel(ep);
+    document.getElementById('readerBody').textContent=effectiveEpisodePrice(ep)>0?'유료 회차 판매를 준비 중입니다. 결제 오픈 후 이용할 수 있습니다.':ep?.body||'본문이 없습니다.';
   }else{
     document.getElementById('readerEpisodeNo').textContent=`${currentReaderEpisode}화`;
     document.getElementById('readerEpisodeTitle').textContent=demoEpisodeTitle(b,currentReaderEpisode);
+    document.getElementById('readerEpisodePrice').textContent='무료';
     document.getElementById('readerBody').textContent=readerTextFor(b,currentReaderEpisode);
   }
 
@@ -5271,6 +5287,7 @@ function registeredSnapshot(data){
     genre:data?.genre||'',
     format:data?.format||'',
     salePrice:Number(data?.salePrice)||0,
+    defaultEpisodePrice:normalizeEpisodePrice(data?.defaultEpisodePrice),
     cover:smallCoverForRegistry(data),
     published:!!data?.published,
     completed:!!data?.completed,
@@ -5337,6 +5354,7 @@ function resolveRegisteredBooks(){
       genre:sr.genre||'',
       cover:sr.cover_url||'',
       salePrice:Number(sr.price)||0,
+      defaultEpisodePrice:normalizeEpisodePrice(sr.default_episode_price),
       published:!!sr.published,
       completed:!!sr.completed,
       episodeCount:Number(sr.episode_count)||0,
@@ -6657,7 +6675,7 @@ async function deleteWholeBook(sourceBtn=null){
 }
 
 async function toggleBookCompletion(){
-  saveCurrentEpisode();
+  if(!saveCurrentEpisode())return;
   const data=currentBookData();
   const willComplete=!data.completed;
 
@@ -6686,6 +6704,91 @@ async function toggleBookCompletion(){
 function findEpisode(no){
   return episodes.find(ep=>ep.no===Number(no));
 }
+
+function normalizeEpisodePrice(value){
+  const n=Number(value);
+  return Number.isInteger(n)&&n>=0&&n<=2147483647?n:0;
+}
+function effectiveEpisodePrice(ep){
+  if(!ep||Number(ep.no??ep.episode_no)<=5)return 0;
+  return normalizeEpisodePrice(ep.price);
+}
+function updateEpisodePricingUI(){
+  const ep=findEpisode(currentEpisodeNo);
+  const fixed=!ep||Number(ep.no)<=5;
+  const amount=effectiveEpisodePrice(ep);
+  const mode=document.getElementById('episodeSaleMode');
+  const input=document.getElementById('episodeSalePrice');
+  const wrap=document.getElementById('episodePriceAmount');
+  mode.value=amount>0?'paid':'free';mode.disabled=fixed;
+  input.value=amount>0?String(amount):'';input.disabled=fixed||amount===0;
+  wrap.hidden=fixed||amount===0;
+  document.getElementById('episodePriceNotice').textContent=fixed?
+    '1~5화는 누구나 로그인 없이 읽을 수 있는 무료 회차입니다.':
+    amount>0?'유료 가격과 원고를 저장할 수 있습니다. 유료 공개·판매는 결제 오픈 후 가능합니다.':
+    '무료 회차는 로그인 없이 읽을 수 있습니다. 유료로 선택하면 회차 가격을 입력해 주세요.';
+  document.getElementById('defaultEpisodePrice').value=String(normalizeEpisodePrice(currentBookData().defaultEpisodePrice));
+  document.getElementById('useDefaultEpisodePrice').disabled=fixed;
+}
+function readEpisodePricing(ep){
+  const mode=document.getElementById('episodeSaleMode');
+  const input=document.getElementById('episodeSalePrice');
+  const paid=Number(ep.no)>5&&mode.value==='paid';
+  const amount=paid?Number(input.value):0;
+  if(paid&&(!input.value.trim()||!Number.isInteger(amount)||amount<1||amount>2147483647)){
+    toast('유료 회차 가격을 1원 이상의 정수로 입력해 주세요.');input.focus();return false;
+  }
+  if(paid&&ep.published){
+    toast('현재 공개된 회차는 무료입니다. 유료 전환은 결제 오픈 후 가능합니다.');return false;
+  }
+  ep.price=amount;return true;
+}
+function episodePriceLabel(ep){
+  const price=effectiveEpisodePrice(ep);
+  return price>0?`${price.toLocaleString('ko-KR')}원 · 판매 준비 중`:'무료';
+}
+function bindEpisodePricing(){
+  const mode=document.getElementById('episodeSaleMode');
+  const input=document.getElementById('episodeSalePrice');
+  mode.onchange=()=>{
+    const ep=findEpisode(currentEpisodeNo);if(!ep)return;
+    if(Number(ep.no)<=5){updateEpisodePricingUI();return;}
+    if(ep.published&&mode.value==='paid'){
+      toast('공개된 회차의 유료 전환은 결제 오픈 후 가능합니다.');updateEpisodePricingUI();return;
+    }
+    const paid=mode.value==='paid';
+    input.disabled=!paid;document.getElementById('episodePriceAmount').hidden=!paid;
+    document.getElementById('episodePriceNotice').textContent=paid?
+      '가격 입력 후 저장해 주세요. 유료 공개·판매는 결제 오픈 후 가능합니다.':
+      '무료 회차는 로그인 없이 읽을 수 있습니다.';
+    if(paid){input.value=String(effectiveEpisodePrice(ep)||normalizeEpisodePrice(currentBookData().defaultEpisodePrice)||'');input.focus();}
+    else if(saveCurrentEpisode())scheduleDraftServerSave(findEpisode(currentEpisodeNo));
+  };
+  input.onchange=()=>{if(saveCurrentEpisode())scheduleDraftServerSave(findEpisode(currentEpisodeNo));};
+  document.getElementById('defaultEpisodePrice').onchange=async event=>{
+    const raw=event.target.value.trim(),amount=Number(raw);
+    if(!raw||!Number.isInteger(amount)||amount<0||amount>2147483647){
+      toast('기본 회차 가격은 0원 이상의 정수로 입력해 주세요.');event.target.value=String(normalizeEpisodePrice(currentBookData().defaultEpisodePrice));return;
+    }
+    const book=currentBookData();if(!book.title){toast('먼저 책을 등록해 주세요.');return;}
+    try{
+      book.defaultEpisodePrice=amount;saveCurrentBookData(book);rememberRegisteredBook(book);
+      if(book.serverId&&PYEODA_SERVER.authorReady){
+        const result=await PYEODA_SERVER.client.from('books').update({default_episode_price:amount}).eq('id',book.serverId);
+        if(result.error)throw result.error;
+        toast('기본 회차 가격을 서버에 저장했습니다.');
+      }else toast('기본 회차 가격을 이 기기에 저장했습니다.');
+    }catch(err){console.error(err);toast('기본 가격의 서버 저장에 실패했습니다. 저장 버튼으로 다시 시도해 주세요.');}
+  };
+  document.getElementById('useDefaultEpisodePrice').onclick=()=>{
+    const ep=findEpisode(currentEpisodeNo);if(!ep||Number(ep.no)<=5)return;
+    const amount=normalizeEpisodePrice(currentBookData().defaultEpisodePrice);
+    if(ep.published&&amount>0){toast('공개된 회차의 유료 전환은 결제 오픈 후 가능합니다.');return;}
+    mode.value=amount>0?'paid':'free';input.value=amount>0?String(amount):'';
+    if(saveCurrentEpisode()){updateEpisodePricingUI();scheduleDraftServerSave(findEpisode(currentEpisodeNo));}
+  };
+}
+
 function parseEpisodeNumber(value){
   const match=String(value||'').match(/\d+/);
   return match?Number(match[0]):null;
@@ -6700,6 +6803,8 @@ function saveCurrentEpisode(){
     episodes.push(ep);
   }
 
+  const pricingSnapshot={...ep};
+  if(!readEpisodePricing(pricingSnapshot))return false;
   const requestedNo=parseEpisodeNumber(episodeNoInput.value);
   if(!requestedNo || requestedNo<1){
     toast('회차 번호는 1 이상의 숫자로 입력해 주세요.');
@@ -6716,6 +6821,8 @@ function saveCurrentEpisode(){
     }
   }
 
+  ep.price=Number(ep.no)<=5?0:pricingSnapshot.price;
+  updateEpisodePricingUI();
   ep.title=episodeTitleInput.value.trim();
   ep.body=(body.innerText||'').replace(/\u00a0/g,' ');
   persistEpisodes();
@@ -6799,7 +6906,7 @@ function renderEpisodeTabs(){
 }
 function openEpisode(no,saveFirst=true){
   no=Number(no);
-  if(saveFirst) saveCurrentEpisode();
+  if(saveFirst&&!saveCurrentEpisode())return;
   const ep=findEpisode(no);
   if(!ep) return;
   clearProofMarks();
@@ -6811,6 +6918,7 @@ function openEpisode(no,saveFirst=true){
   proofStatus.textContent='';
   proofStatus.classList.remove('has-issues');
   renderEpisodeTabs();
+  updateEpisodePricingUI();
   wc();
 }
 function createNextEpisode(){
@@ -6823,9 +6931,9 @@ function createNextEpisode(){
     toast('완결된 작품입니다. 새 회차를 추가하려면 먼저 완결을 취소해 주세요.');
     return;
   }
-  saveCurrentEpisode();
+  if(!saveCurrentEpisode())return;
   const nextNo=(episodes.length?Math.max(...episodes.map(ep=>Number(ep.no)||0)):0)+1;
-  const ep={no:nextNo,title:'',body:'',published:false};
+  const ep={no:nextNo,title:'',body:'',published:false,price:nextNo<=5?0:normalizeEpisodePrice(currentBookData().defaultEpisodePrice)};
   episodes.push(ep);
   persistEpisodes();
   openEpisode(nextNo,false);
@@ -7136,10 +7244,17 @@ document.querySelectorAll('[data-studio-step]').forEach(btn=>{
   btn.onclick=()=>openStudioProgressStep(btn.dataset.studioStep);
 });
 
+bindEpisodePricing();
 document.getElementById('publishEpisode').onclick=async()=>{
-  saveCurrentEpisode();
+  if(!saveCurrentEpisode())return;
   const ep=findEpisode(currentEpisodeNo);
   if(ep){
+    if(effectiveEpisodePrice(ep)>0){
+      editorStatus.textContent='유료 회차 저장됨 · 판매 준비 중';
+      if(PYEODA_SERVER.authorReady){try{await syncDraftEpisodeToServer({...ep});toast('유료 가격과 원고를 서버에 저장했습니다. 유료 공개는 결제 오픈 후 가능합니다.');}catch(err){console.error(err);toast('이 기기에 저장했습니다. 서버 저장에 실패했으니 다시 저장해 주세요.');}}
+      else toast('유료 가격과 원고를 이 기기에 저장했습니다. 유료 공개는 결제 오픈 후 가능합니다.');
+      return;
+    }
     ep.published=true;
     persistEpisodes();
     const bookState=currentBookData();
