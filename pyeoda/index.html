@@ -2528,6 +2528,17 @@ html,body{max-width:100%;overflow-x:clip}
 .cover-style-grid .style-option input:focus-visible+span{outline:2px solid #697158;outline-offset:3px}
 @media(max-width:600px){.cover-style-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cover-style-grid .style-option span{font-size:13px;padding:10px;gap:7px}}
 
+.mobile-page-controls{order:-1;display:flex;gap:8px;align-items:center;width:100%;padding:0 0 3px;border-bottom:1px solid var(--line)}
+.mobile-page-controls button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--ink);font:inherit;font-size:12px;line-height:1;white-space:nowrap}
+.mobile-page-controls button:hover{background:var(--soft)}
+.mobile-page-controls button:disabled{opacity:.35;cursor:default}
+.mobile-page-controls button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.mobile-page-controls svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+
+.top{height:auto;min-height:72px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px;row-gap:8px}
+.mobile-page-controls{flex:0 0 100%}
+
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2536,7 +2547,7 @@ html,body{max-width:100%;overflow-x:clip}
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=2">
 <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png?v=2">
 <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png?v=2">
-</head><body><div class='app'><header class='top'><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button data-go='publishing'>출판 센터</button><button data-go='revenue'>내 수익</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
+</head><body><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='mobilePageBack' aria-label='이전 화면' title='이전 화면' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M19 12H5m7-7-7 7 7 7'/></svg><span>이전</span></button><button type='button' id='mobilePageRefresh' aria-label='새로고침' title='새로고침'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 7v5h-5M20 12a8 8 0 1 1-2.35-5.65L20 9'/></svg><span>새로고침</span></button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button data-go='publishing'>출판 센터</button><button data-go='revenue'>내 수익</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
 <div class='author-auth-modal' id='authorAuthModal' hidden>
   <div class='author-auth-card' role='dialog' aria-modal='true' aria-labelledby='authorAuthTitle'>
     <div class='author-auth-head'>
@@ -3682,6 +3693,7 @@ async function connectPyeodaServer({silent=false}={}){
     await refreshServerLibrary({silent:true});
     resumeReaderPurchaseAfterLogin();
     subscribeServerBooks();
+    restoreMobileScreenAfterReload();
 
     if(!silent)toast(PYEODA_SERVER.authorReady?'작가 계정과 서버를 연결했습니다.':'공개 작품 서버에 연결했습니다.');
     return true;
@@ -5058,7 +5070,122 @@ function downloadCurrentEpub(){
   }
 }
 
-function go(id){if(AUTHOR_SCREENS.has(id)&&!PYEODA_SERVER.authorReady){openAuthorAuthModal('login',id);toast('작가 기능은 로그인 후 사용할 수 있습니다.');return;}document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.go===id));if(id==='publish'){try{saveCurrentEpisode()}catch(e){};try{renderEpubPreview()}catch(e){console.error(e)}}if(id==='paper'){try{saveCurrentEpisode()}catch(e){};try{restorePaperOptions()}catch(e){console.error(e)}}if(id==='revenue'||id==='studio'){try{refreshActualMetrics()}catch(e){};if(id==='studio'){try{syncStudioManagementUI()}catch(e){console.error(e)}}if(id==='revenue'){try{syncRevenueBookUI()}catch(e){console.error(e)}}}if(id==='global'){try{syncLocalizedUI()}catch(e){console.error(e)}}if(id==='books'){try{renderRegisteredBookList()}catch(e){console.error(e)}}if((id==='home'||id==='discover')&&PYEODA_SERVER.connected){refreshServerLibrary({silent:true}).catch(console.error)}scrollTo(0,0)}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+
+const MOBILE_RELOAD_STATE_KEY='pyeoda-mobile-reload-screen';
+let mobileScreenHistory=[];
+let mobileNavigationReplaying=false;
+let mobileNavigationBusy=false;
+let mobileReloadRestoring=false;
+function mobileActiveScreen(){return document.querySelector('.screen.active')?.id||'home';}
+function updateMobileNavigationButtons(){
+  const back=document.getElementById('mobilePageBack');
+  if(back)back.disabled=mobileNavigationBusy||!mobileScreenHistory.length;
+  const refresh=document.getElementById('mobilePageRefresh');
+  if(refresh)refresh.disabled=mobileNavigationBusy;
+}
+function go(id){
+  const previous={screen:mobileActiveScreen(),scroll:window.scrollY};
+  showMobileScreen(id);
+  const current=mobileActiveScreen();
+  if(current!==previous.screen&&!mobileNavigationReplaying){mobileScreenHistory.push(previous);if(mobileScreenHistory.length>50)mobileScreenHistory.shift();}
+  updateMobileNavigationButtons();
+}
+function saveBeforeMobileNavigation(){
+  if(mobileActiveScreen()!=='editor')return true;
+  if(manuscriptComposing){toast('한글 입력을 마친 뒤 다시 눌러 주세요.');return false;}
+  return saveCurrentEpisode();
+}
+async function mobilePreviousScreen(){
+  if(mobileNavigationBusy||!mobileScreenHistory.length)return;
+  try{
+    if(!saveBeforeMobileNavigation())return;
+    const previous=mobileScreenHistory[mobileScreenHistory.length-1];
+    mobileNavigationReplaying=true;
+    go(previous.screen);
+    if(mobileActiveScreen()===previous.screen){mobileScreenHistory.pop();window.scrollTo(0,previous.scroll||0);}
+  }catch(error){console.error(error);toast('원고를 저장하지 못해 이전 화면으로 이동하지 않았습니다.');}
+  finally{mobileNavigationReplaying=false;updateMobileNavigationButtons();}
+}
+function mobileReloadSnapshot(){
+  const screen=mobileActiveScreen();
+  const snapshot={screen,scroll:window.scrollY,history:mobileScreenHistory,episodeNo:currentEpisodeNo};
+  if(screen==='reader'&&currentReaderBook){snapshot.readerBook=currentReaderBook;snapshot.readerEpisode=currentReaderEpisode;}
+  if(screen==='register'){
+    snapshot.registrationMode=registrationMode;
+    snapshot.registrationCoverKey=registrationCoverKey;
+    snapshot.pendingCover=pendingNewCover;
+    snapshot.aiCoverFreeUsed=aiCoverFreeUsed;
+    snapshot.form=[...document.querySelectorAll('#register input, #register select, #register textarea')]
+      .filter(input=>input.type!=='file'&&input.type!=='password')
+      .map(input=>({id:input.id,name:input.name,value:input.value,checked:input.checked,type:input.type}));
+  }
+  return snapshot;
+}
+async function mobileRefreshPage(){
+  if(mobileNavigationBusy)return;
+  const screenElement=document.getElementById(mobileActiveScreen());
+  try{
+    if(!saveBeforeMobileNavigation())return;
+    if(screenElement)screenElement.inert=true;
+    mobileNavigationBusy=true;updateMobileNavigationButtons();
+    if(mobileActiveScreen()==='editor'){
+      clearTimeout(draftServerTimer);
+      const ep=findEpisode(currentEpisodeNo);
+      if(ep&&PYEODA_SERVER.connected&&PYEODA_SERVER.authorReady){
+        const saved=await syncDraftEpisodeToServer({...ep});
+        if(!saved)throw new Error('Server save unavailable');
+      }
+    }
+    sessionStorage.setItem(MOBILE_RELOAD_STATE_KEY,JSON.stringify(mobileReloadSnapshot()));
+    window.location.reload();
+  }catch(error){
+    console.error('mobile refresh stopped',error);
+    toast('현재 내용을 보관하지 못해 새로고침을 멈췄습니다. 저장 후 다시 눌러 주세요.');
+    if(screenElement)screenElement.inert=false;
+    mobileNavigationBusy=false;updateMobileNavigationButtons();
+  }
+}
+async function restoreMobileScreenAfterReload(){
+  if(mobileReloadRestoring)return;
+  let saved=null;
+  try{saved=JSON.parse(sessionStorage.getItem(MOBILE_RELOAD_STATE_KEY)||'null');}catch(e){}
+  if(!saved||!document.getElementById(saved.screen)?.classList.contains('screen'))return;
+  if((AUTHOR_SCREENS.has(saved.screen)||saved.readerBook?.serverId)&&!PYEODA_SERVER.connected)return;
+  mobileReloadRestoring=true;mobileNavigationReplaying=true;
+  try{
+    if(AUTHOR_SCREENS.has(saved.screen)&&!PYEODA_SERVER.authorReady)return;
+    if(saved.screen==='register'&&Array.isArray(saved.form)){
+      registrationMode=saved.registrationMode==='edit'?'edit':'new';
+      registrationCoverKey=saved.registrationCoverKey||registrationCoverKey;
+      for(const item of saved.form){
+        const input=item.id?document.getElementById(item.id):[...document.querySelectorAll('#register input')].find(input=>input.name===item.name&&input.value===item.value);
+        if(!input||!document.getElementById('register').contains(input)||input.type==='file'||input.type==='password')continue;
+        if(input.tagName==='SELECT'&&['newWritingType','newGenre'].includes(input.id))continue;
+        input.value=item.value;if(input.type==='radio'||input.type==='checkbox')input.checked=!!item.checked;
+      }
+      syncCategoryFields();
+      for(const id of ['newWritingType','newGenre']){const item=saved.form.find(item=>item.id===id);if(item)document.getElementById(id).value=item.value;}
+      pendingNewCover=saved.pendingCover||'';paintRegisterCover(pendingNewCover);
+      aiCoverFreeUsed=!!saved.aiCoverFreeUsed;syncAICoverButtonLabel();
+      updateLimitedTextCount('newBookIntro','introCount',BOOK_INTRO_MAX);
+      updateLimitedTextCount('newAuthorNote','authorNoteCount',AUTHOR_NOTE_MAX);
+    }
+    if(saved.screen==='reader'&&saved.readerBook)await openReader(saved.readerBook,{state:'resume',lastEpisode:saved.readerEpisode||1});
+    else{if(saved.screen==='editor'&&findEpisode(saved.episodeNo))openEpisode(saved.episodeNo,false);go(saved.screen);}
+    mobileScreenHistory=Array.isArray(saved.history)?saved.history.filter(item=>document.getElementById(item.screen)?.classList.contains('screen')).slice(-50):[];
+    requestAnimationFrame(()=>window.scrollTo(0,saved.scroll||0));
+    sessionStorage.removeItem(MOBILE_RELOAD_STATE_KEY);
+  }catch(error){console.error('mobile screen restoration failed',error);}
+  finally{mobileReloadRestoring=false;mobileNavigationReplaying=false;updateMobileNavigationButtons();}
+}
+function bindMobilePageNavigation(){
+  document.getElementById('mobilePageBack').addEventListener('click',mobilePreviousScreen);
+  document.getElementById('mobilePageRefresh').addEventListener('click',mobileRefreshPage);
+  updateMobileNavigationButtons();
+  restoreMobileScreenAfterReload();
+}
+
+function showMobileScreen(id){if(AUTHOR_SCREENS.has(id)&&!PYEODA_SERVER.authorReady){openAuthorAuthModal('login',id);toast('작가 기능은 로그인 후 사용할 수 있습니다.');return;}document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.go===id));if(id==='publish'){try{saveCurrentEpisode()}catch(e){};try{renderEpubPreview()}catch(e){console.error(e)}}if(id==='paper'){try{saveCurrentEpisode()}catch(e){};try{restorePaperOptions()}catch(e){console.error(e)}}if(id==='revenue'||id==='studio'){try{refreshActualMetrics()}catch(e){};if(id==='studio'){try{syncStudioManagementUI()}catch(e){console.error(e)}}if(id==='revenue'){try{syncRevenueBookUI()}catch(e){console.error(e)}}}if(id==='global'){try{syncLocalizedUI()}catch(e){console.error(e)}}if(id==='books'){try{renderRegisteredBookList()}catch(e){console.error(e)}}if((id==='home'||id==='discover')&&PYEODA_SERVER.connected){refreshServerLibrary({silent:true}).catch(console.error)}scrollTo(0,0)}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 document.querySelectorAll('[data-publish-target]').forEach(btn=>{
   btn.addEventListener('click',()=>{
     if(!isBookCompleted()){
@@ -8868,5 +8995,6 @@ priceInput.addEventListener('keydown',e=>{
 });
 
 syncRevenueBookUI();
+bindMobilePageNavigation();
 
 </script></body></html>
