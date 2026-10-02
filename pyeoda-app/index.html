@@ -2667,6 +2667,26 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 .body-editor font[size='6'],#readerBody font[size='6']{font-size:32px}
 .body-editor font[size='7'],#readerBody font[size='7']{font-size:48px}
 @media(max-width:600px){.manuscript-toolbar{padding:10px}.manuscript-format-selects{gap:10px}.manuscript-toolbar label{flex:1;justify-content:space-between}.manuscript-toolbar select{flex:1;min-width:70px}.manuscript-format-buttons{gap:6px}.manuscript-toolbar button{min-height:42px;height:42px;padding:0 9px}}
+
+/* Comfortable Korean manuscript layout and balanced episode controls. */
+#reader .reader-nav{align-items:stretch;gap:12px}
+#reader .reader-nav button{display:flex!important;align-items:center!important;justify-content:center!important;min-width:0;box-sizing:border-box;min-height:50px;height:50px;margin:0;padding:0 16px!important;line-height:1.4!important;text-align:center;white-space:nowrap;vertical-align:middle}
+#reader .reader-body{min-height:0;padding-bottom:24px;white-space:normal;line-break:strict;word-break:keep-all;overflow-wrap:break-word;letter-spacing:0;text-align:left}
+#reader .reader-body.reader-rich{white-space:pre-wrap}
+#reader .reader-body p{margin:0 0 1em;line-height:inherit;word-break:keep-all;overflow-wrap:break-word;text-wrap:pretty}
+#reader .reader-body p:last-child{margin-bottom:0}
+#reader .reader-body hr{height:0;border:0;border-top:1px solid rgba(105,95,77,.2);margin:24px 0}
+@media(max-width:760px){
+ #reader .reader-shell{padding:22px 16px calc(100px + env(safe-area-inset-bottom))!important}
+ #reader .reader-body{font-size:16px!important;line-height:1.85!important;padding:4px 0 24px!important}
+ #reader .reader-nav{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;padding-top:20px;gap:10px}
+ #reader .reader-nav button{width:100%;height:48px;min-height:48px;font-size:14px;justify-self:stretch!important}
+ #reader .reader-nav #readerPrev{grid-column:1;grid-row:1}
+ #reader .reader-nav #readerNext{grid-column:2;grid-row:1}
+ #reader .reader-nav #readerDone{grid-column:1/-1;grid-row:2}
+ #reader .reader-body font,#reader .reader-body span[style*="font-size"]{font-size:inherit!important}
+}
+.mobile-build #reader .reader-nav button{display:flex!important;align-items:center!important;justify-content:center!important;font-size:14px!important;line-height:1.4!important}
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4566,6 +4586,41 @@ function updateReaderState(){
   // 현재 읽고 있는 위치만 저장합니다.
   saveReadingState(currentReaderBook,{state:'resume',lastEpisode:currentReaderEpisode,totalEpisodes:total});
 }
+function renderPlainReaderManuscript(container,text,book){
+  const preserveLines=book?.category==='시'||book?.genre==='시'||/poem|poetry|scenario|script/.test(String(book?.writingType||book?.writing_type||''));
+  container.replaceChildren();
+  container.classList.remove('reader-rich');
+  const lines=String(text||'').replace(/\r\n?/g,'\n').trim().split('\n');
+  let paragraph=[];
+  const flush=()=>{
+    if(!paragraph.length)return;
+    const p=document.createElement('p');
+    if(preserveLines){
+      paragraph.forEach((line,index)=>{if(index)p.append(document.createElement('br'));p.append(document.createTextNode(line));});
+    }else p.textContent=paragraph.join(' ');
+    container.append(p);paragraph=[];
+  };
+  for(const raw of lines){
+    const line=raw.trim();
+    if(!line){flush();continue;}
+    if(/^(?:-{3,}|[*]{3,}|_{3,})$/.test(line)){flush();container.append(document.createElement('hr'));continue;}
+    if(!preserveLines&&paragraph.length&&/[.!?。！？][”’"']?$/.test(paragraph[paragraph.length-1]))flush();
+    paragraph.push(line);
+  }
+  flush();
+}
+function renderRichReaderManuscript(container,html){
+  container.innerHTML=sanitizeManuscriptHTML(html);
+  container.classList.add('reader-rich');
+  // Empty lines at the end of a manuscript must not push the episode buttons away.
+  while(container.lastChild){
+    const last=container.lastChild;
+    const empty=!last.textContent.trim()&&!(last.nodeType===1&&last.tagName==='HR');
+    if(!empty)break;
+    last.remove();
+  }
+}
+
 function renderReader(){
   const b=currentReaderBook;if(!b)return;
   const total=inferTotalEpisodes(b);
@@ -4581,13 +4636,13 @@ function renderReader(){
     document.getElementById('readerEpisodePrice').textContent=episodePriceLabel(ep);
     const readerBody=document.getElementById('readerBody');
     if(effectiveEpisodePrice(ep)>0)readerBody.textContent='유료 회차 판매를 준비 중입니다. 결제 오픈 후 이용할 수 있습니다.';
-    else if(ep?.body_html)readerBody.innerHTML=sanitizeManuscriptHTML(ep.body_html);
-    else readerBody.textContent=ep?.body||'본문이 없습니다.';
+    else if(ep?.body_html)renderRichReaderManuscript(readerBody,ep.body_html);
+    else renderPlainReaderManuscript(readerBody,ep?.body||'본문이 없습니다.',b);
   }else{
     document.getElementById('readerEpisodeNo').textContent=`${currentReaderEpisode}화`;
     document.getElementById('readerEpisodeTitle').textContent=demoEpisodeTitle(b,currentReaderEpisode);
     document.getElementById('readerEpisodePrice').textContent='무료';
-    document.getElementById('readerBody').textContent=readerTextFor(b,currentReaderEpisode);
+    renderPlainReaderManuscript(document.getElementById('readerBody'),readerTextFor(b,currentReaderEpisode),b);
   }
 
   document.getElementById('readerProgressCopy').textContent=`${currentReaderEpisode} / ${total}화 · ${pct}%`;
