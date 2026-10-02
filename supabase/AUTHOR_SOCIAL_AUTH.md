@@ -1,0 +1,6 @@
+# Author social sign-in
+Both signup and login tabs expose Google, Naver and Kakao buttons. They reuse the configured reader provider identifiers: google, custom:naver, custom:kakao. Normal authenticated sessions can act as authors even when their OAuth provider has no email. Anonymous sessions cannot act as authors. Ownership remains enforced by auth.uid() RLS, not user_metadata. Metadata is used only as a display label.
+OAuth return intent is stored in sessionStorage for 30 minutes. Target is restricted to AUTHOR_SCREENS and canonical web/mobile path must match. Intent is consumed once after author session restoration; stale purchase/reload intent is cleared to prevent a wrong screen or checkout from reopening.
+Provider errors clear intent and restore buttons. Existing email/password sign-in and confirmation remain available. Secrets and provider configuration were not changed.
+Verified: both markup/scripts parse; all three buttons exist in signup/login; SDK provider mapping, platform redirect, one-time return, expiry, path/target validation, failure cleanup, email-optional and anonymous session behavior pass in DOM tests.
+A fresh external account authorization round trip was not performed in these tests.
