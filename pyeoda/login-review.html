@@ -18,6 +18,7 @@ const again=document.getElementById('again');
 const message=document.getElementById('message');
 function showError(text){message.textContent=text;login.disabled=false;again.disabled=false;}
 async function signIn(){
+ sessionStorage.setItem('pyeoda-naver-review-start',String(Date.now()));
  login.disabled=true;again.disabled=true;message.textContent='네이버 인증 화면으로 이동합니다…';
  const {error}=await client.auth.signInWithOAuth({provider:'custom:naver',options:{redirectTo:new URL('./login-review.html',location.href).href}});
  if(error)showError('인증 시작 오류: '+error.message);
@@ -33,9 +34,11 @@ async function verify(){
  if(!session.session){login.disabled=false;message.textContent='네이버 버튼을 눌러 인증을 시작하세요.';return;}
  const {data,error:userError}=await client.auth.getUser();
  if(userError){showError('사용자 인증을 확인하지 못했습니다. 다시 시도해 주세요.');return;}
+ const started=Number(sessionStorage.getItem('pyeoda-naver-review-start')||0);
+ if(!started||Date.now()-started>1800000){login.disabled=false;message.textContent='네이버 버튼을 눌러 인증을 시작하세요.';return;}
  const user=data.user;
  const providers=user?.app_metadata?.providers||[];
- if(user&&!user.is_anonymous&&providers.includes('custom:naver')){
+ if(user&&!user.is_anonymous&&providers.includes('custom:naver')&&user.app_metadata.provider==='custom:naver'){
   history.replaceState(null,'',location.pathname);
   document.getElementById('before').style.display='none';
   document.getElementById('completed').style.display='block';
