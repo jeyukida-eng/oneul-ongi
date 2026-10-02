@@ -2568,7 +2568,36 @@ html,body{max-width:100%;overflow-x:clip}
 .manuscript-file-tools [hidden]{display:none!important;}
 @media(max-width:600px){.manuscript-file-tools{grid-template-columns:1fr;gap:12px;padding:10px;}.manuscript-file-tools .manuscript-image-tools{padding-top:12px;border-top:1px solid #d9ddcf;}.manuscript-file-tools button{flex:1 1 auto;}}
 </style>
-</head><body><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='mobilePageBack' aria-label='이전 화면' title='이전 화면' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M19 12H5m7-7-7 7 7 7'/></svg><span>이전</span></button><button type='button' id='mobilePageRefresh' aria-label='새로고침' title='새로고침'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 7v5h-5M20 12a8 8 0 1 1-2.35-5.65L20 9'/></svg><span>새로고침</span></button><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button data-go='publishing'>출판 센터</button><button data-go='revenue'>내 수익</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
+<style id="reader-heart-styles">
+.reader-episode{gap:12px;flex-wrap:wrap;align-items:center;}
+.reader-episode h1{flex:1;min-width:0;word-break:keep-all;overflow-wrap:break-word;}
+.reader-heart{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:8px 12px;flex-shrink:0;border:1px solid var(--line);border-radius:10px;background:var(--paper-2);color:var(--muted);font:13px/1.4 system-ui,-apple-system,"Noto Sans KR",sans-serif;letter-spacing:0;cursor:pointer;}
+.reader-heart #readerHeartIcon{font-size:23px;line-height:1;color:#a56565;}
+.reader-heart[aria-pressed="true"]{color:#974e4e;background:#fbefec;border-color:#dcbbb5;}
+.reader-heart:disabled{opacity:.55;cursor:default;}
+.reader-heart[hidden]{display:none!important;}
+.reader-heart:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+@media(max-width:600px){.reader-episode{gap:8px;}.reader-heart{padding:8px 10px;}}
+</style>
+<style id="studio-book-list-styles">
+.studio-book-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0 16px;}
+.studio-book-filters button{min-height:48px;padding:12px 10px;border:1px solid var(--line);border-radius:12px;background:var(--paper-2);color:var(--ink);font:600 14px/1.5 system-ui,-apple-system,"Noto Sans KR",sans-serif;word-break:keep-all;cursor:pointer;}
+.studio-book-filters button[aria-pressed="true"]{background:#697158;border-color:#697158;color:#fff;}
+.studio-book-filters button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.studio-list-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end;}
+#studioCurrentWork[hidden]{display:none!important;}
+.studio-server-settings{margin-top:24px;border-top:1px solid var(--line);padding-top:14px;}
+.studio-server-settings>summary{font:13px/1.6 system-ui,-apple-system,"Noto Sans KR",sans-serif;color:var(--muted);cursor:pointer;}
+@media(max-width:600px){.studio-book-filters{gap:6px;}.studio-book-filters button{font-size:12px;padding:10px 5px;}.studio-list-actions{grid-column:1/-1;justify-content:stretch;}.studio-list-actions button{flex:1;min-height:44px;}}
+</style>
+<style>
+.reader-book-heading{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.reader-subscribe{min-height:44px;padding:8px 12px;border:1px solid var(--line,#ddd);border-radius:14px;background:#fffdf8;font:13px/1.4 system-ui;color:#605b4d;cursor:pointer}
+.reader-subscribe[aria-pressed="true"]{background:#edf0e3;border-color:#899866;color:#3b4929}
+.reader-subscribe:disabled{opacity:.6;cursor:default}
+.reader-subscribe[hidden]{display:none!important}
+@media(max-width:600px){.reader-book-heading{gap:8px}.reader-subscribe{padding:8px 10px}}
+</style></head><body><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='mobilePageBack' aria-label='이전 화면' title='이전 화면' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M19 12H5m7-7-7 7 7 7'/></svg><span>이전</span></button><button type='button' id='mobilePageRefresh' aria-label='새로고침' title='새로고침'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 7v5h-5M20 12a8 8 0 1 1-2.35-5.65L20 9'/></svg><span>새로고침</span></button><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button data-go='publishing'>출판 센터</button><button data-go='revenue'>내 수익</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
 <div class='author-auth-modal' id='authorAuthModal' hidden>
   <div class='author-auth-card' role='dialog' aria-modal='true' aria-labelledby='authorAuthTitle'>
     <div class='author-auth-head'>
@@ -2656,10 +2685,10 @@ html,body{max-width:100%;overflow-x:clip}
     </div>
     <div class='reader-book-head'>
       <div class='reader-cover' id='readerCover'>표지</div>
-      <div><h2 id='readerBookTitle'>작품명</h2><p id='readerBookMeta'>작가 · 장르</p></div>
+      <div><div class='reader-book-heading'><h2 id='readerBookTitle'>작품명</h2><button type='button' id='readerSubscribe' class='reader-subscribe' aria-pressed='false' hidden disabled><span id='readerSubscribeLabel'>책 구독</span> <span id='readerSubscribeCount' aria-live='polite'>—</span></button></div><p id='readerBookMeta'>작가 · 장르</p></div>
     </div>
     <div class='reader-progress-bar'><i id='readerProgressBar'></i></div>
-    <div class='reader-episode'><span class='ep-no' id='readerEpisodeNo'>1화</span><h1 id='readerEpisodeTitle'>첫 번째 이야기</h1></div><p id='readerEpisodePrice' class='reader-episode-price'>무료</p>
+    <div class='reader-episode'><span class='ep-no' id='readerEpisodeNo'>1화</span><h1 id='readerEpisodeTitle'>첫 번째 이야기</h1><button type='button' id='readerHeart' class='reader-heart' aria-label='이 회차 좋아요' aria-pressed='false' hidden disabled><span id='readerHeartIcon' aria-hidden='true'>♡</span><span id='readerHeartCount' aria-live='polite'>—</span></button></div><p id='readerEpisodePrice' class='reader-episode-price'>무료</p>
     <article class='reader-body' id='readerBody'></article>
     <div class='reader-nav'>
       <button class='prev' id='readerPrev'>← 이전 화</button>
@@ -2683,18 +2712,12 @@ html,body{max-width:100%;overflow-x:clip}
       <p class='meta'>글쓰기와 연재 상태를 관리하고, 완결 후에는 출판 센터로 이동합니다.</p>
       <div class='stats'>
         <div class='stat'><span>총 조회</span><b id='studioViews'>0</b></div>
-        <div class='stat'><span>구독</span><b id='studioSubscribers'>0</b></div>
+        <div class='stat'><span title='여러 책을 구독한 같은 독자는 한 번으로 집계합니다.'>구독 독자</span><b id='studioSubscribers'>0</b></div>
         <div class='stat'><span>판매</span><b id='studioSales'>0권</b></div>
         <div class='stat'><span>정산 예정</span><b id='studioPayout'>₩0</b></div>
       </div>
-      <div class='flow studio-flow' id='studioFlow' aria-label='작품 진행 단계'>
-        <button type='button' class='step' data-studio-step='1'>책 등록</button>
-        <button type='button' class='step' data-studio-step='2'>회차 작성</button>
-        <button type='button' class='step' data-studio-step='3'>공개·연재</button>
-        <button type='button' class='step' data-studio-step='4'>완결</button>
-        <button type='button' class='step' data-studio-step='5'>출판 센터</button>
-      </div>
-      <div class='card'>
+      <div class='studio-book-filters' role='group' aria-label='내 작품 목록'><button type='button' data-studio-book-filter='completed' aria-pressed='true'>완결 책 목록</button><button type='button' data-studio-book-filter='writing' aria-pressed='false'>작성 중 목록</button><button type='button' data-studio-book-filter='public' aria-pressed='false'>서버 공개 목록</button></div><div class='registered-book-list' id='studioBookList'></div>
+      <div class='card' id='studioCurrentWork' hidden>
         <div class='studio-current-label'>현재 작업 작품</div><h3 id='studioBookTitle'>새 작품</h3>
         <p id='studioBookStatus'>0화 · 0자 · 작성 전</p>
         <p id='studioBookGuide'><b>작품을 등록해 주세요.</b> 서버를 연결하면 다른 독자와 같은 작품 데이터를 공유할 수 있습니다.</p>
@@ -2708,7 +2731,7 @@ html,body{max-width:100%;overflow-x:clip}
         </div>
       </div>
 
-      <div class='server-panel'>
+      <details class='studio-server-settings'><summary>연결 설정</summary>      <div class='server-panel'>
         <div class='server-panel-head'>
           <div>
             <h3>공용 서버 연결</h3>
@@ -2730,14 +2753,8 @@ html,body{max-width:100%;overflow-x:clip}
           <button class='secondary' id='serverClearBtn'>연결 설정 지우기</button>
         </div>
         <p class='server-help' id='serverHelp'>service_role 키는 절대 입력하지 마세요. 작가 스튜디오에는 현재 작업 중인 작품만 표시하며, 예전 테스트·중복 서버 데이터는 섞어 보여주지 않습니다.</p>
-        <div class='server-own-head current-work-server-head'>
-          <b>현재 작품 서버 상태</b>
-          <span id='serverOwnCount'>0권</span>
-        </div>
-        <div class='server-own-list current-work-server-list' id='serverOwnBooks'>
-          <div class='server-empty'>현재 작업 중인 작품만 표시됩니다.</div>
-        </div>
-      </div>
+
+      </div></details>
     </div>
   </div>
 </div>
@@ -3392,6 +3409,7 @@ function serverRowToBook(row){
     episodeCount:count,
     views:Number(row.views)||0,
     likes:Number(row.likes)||0,
+    subscriberCount:Number(row.subscriber_count)||0,
     owned:Number(row.owned)||0,
     updatedAt:row.updated_at||row.created_at||'',
     category:row.category||'',
@@ -3741,7 +3759,7 @@ async function refreshServerLibrary({silent=false}={}){
   if(!PYEODA_SERVER.client)return;
   const {data,error}=await PYEODA_SERVER.client
     .from('books')
-    .select('id,title,subtitle,pen_name,category,writing_type,genre,format,intro,author_note,cover_url,completed,published,price,episode_count,views,likes,owned,created_at,updated_at')
+    .select('id,title,subtitle,pen_name,category,writing_type,genre,format,intro,author_note,cover_url,completed,published,price,episode_count,views,likes,subscriber_count,owned,created_at,updated_at')
     .eq('published',true)
     .order('updated_at',{ascending:false})
     .limit(200);
@@ -3760,12 +3778,14 @@ async function refreshMyServerBooks(){
   const ownerId=PYEODA_SERVER.user.id;
   const {data,error}=await PYEODA_SERVER.client
     .from('books')
-    .select('id,owner_id,title,pen_name,genre,category,completed,published,episode_count,cover_url,price,default_episode_price,views,updated_at')
+    .select('id,owner_id,title,pen_name,genre,category,completed,published,episode_count,cover_url,price,default_episode_price,views,likes,subscriber_count,updated_at')
     .eq('owner_id',ownerId)
     .order('updated_at',{ascending:false});
   if(PYEODA_SERVER.user?.id!==ownerId||!PYEODA_SERVER.authorReady)return;
   if(error){console.error(error);return}
   PYEODA_SERVER.myBooks=data||[];
+  await refreshAuthorSubscriberCount();
+  if(PYEODA_SERVER.user?.id!==ownerId||!PYEODA_SERVER.authorReady)return;
   renderMyServerBooks();
   refreshActualMetrics();
   try{renderRegisteredBookList()}catch(e){}
@@ -4124,9 +4144,10 @@ function saveBookEngagement(b,patch){
 }
 function publicMetricForBook(b,type){
   const m=bookEngagement(b);
-  if(type==='owned'||b.price)return `${m.owned.toLocaleString()}명 소장`;
-  if(String(b.meta||'').includes('전자책'))return `♥ ${m.likes.toLocaleString()} · 소장 ${m.owned.toLocaleString()}`;
-  return `♥ ${m.likes.toLocaleString()} · 조회 ${m.views.toLocaleString()}`;
+  const subscription=b.serverId?' · 구독 '+Math.max(0,Number(b.subscriberCount)||0).toLocaleString():'';
+  if(type==='owned'||b.price)return `♥ ${m.likes.toLocaleString()} · ${m.owned.toLocaleString()}명 소장${subscription}`;
+  if(String(b.meta||'').includes('전자책'))return `♥ ${m.likes.toLocaleString()} · 소장 ${m.owned.toLocaleString()}${subscription}`;
+  return `♥ ${m.likes.toLocaleString()} · 조회 ${m.views.toLocaleString()}${subscription}`;
 }
 
 function readingStore(){
@@ -4185,7 +4206,7 @@ function cardHTML(b,i,type){
     actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}" data-read-state="${stateAttr}">${action}</button></div>`;
   }
   const rankHtml=type==='popular'?`<span class='rank'>${i+1}</span>`:'';
-  return `<div class='card book-card'>${rankHtml}<div class='cover'>${coverMedia}</div><h3>${b.title}${b.serverId?'<span class="server-book-badge">공개</span>':''}</h3><p class='meta book-author'>${b.author} · ${b.meta}</p><p class='book-copy intro'><b>책 소개</b>${b.intro||''}</p><p class='book-copy note'><b>작가의 말</b>${b.note||''}</p><div class='book-foot'><div><p class='meta'>${type==='new'?b.metric:publicMetricForBook(b,type)}</p>${hint?`<div class='read-progress'>${hint}</div>`:''}</div><div class='book-actions'>${actionHtml}</div></div></div>`
+  return `<div class='card book-card'>${rankHtml}<div class='cover'>${coverMedia}</div><h3>${b.title}${b.serverId?'<span class="server-book-badge">공개</span>':''}</h3><p class='meta book-author'>${b.author} · ${b.meta}</p><p class='book-copy intro'><b>책 소개</b>${b.intro||''}</p><p class='book-copy note'><b>작가의 말</b>${b.note||''}</p><div class='book-foot'><div><p class='meta'>${type==='new'&&!b.serverId?b.metric:publicMetricForBook(b,type)}</p>${hint?`<div class='read-progress'>${hint}</div>`:''}</div><div class='book-actions'>${actionHtml}</div></div></div>`
 }
 function renderShelf(type='popular'){
   const s=shelves[type];
@@ -4507,6 +4528,139 @@ function renderRichReaderManuscript(container,html){
   }
 }
 
+/* PYEODA_EPISODE_HEARTS: episode reactions, shared book total. */
+let readerHeartVersion=0,readerHeartBusy=false,readerHeartState=null;
+function readerHeartToken(){
+ const key='pyeoda-reader-heart-token-v1';
+ let token=localStorage.getItem(key);
+ if(!/^[a-f0-9]{64}$/.test(token||'')){
+  const bytes=new Uint8Array(32);window.crypto.getRandomValues(bytes);
+  token=Array.from(bytes,value=>value.toString(16).padStart(2,'0')).join('');
+  localStorage.setItem(key,token);
+ }
+ return token;
+}
+function readerHeartContext(){
+ const book=currentReaderBook,ep=currentServerEpisodes[currentReaderEpisode-1];
+ return book?.serverId&&ep?{bookId:book.serverId,episodeNo:Number(ep.episode_no),actor:PYEODA_SERVER.authUser?.id||'guest'}:null;
+}
+function sameReaderHeartContext(a,b){return !!a&&!!b&&a.bookId===b.bookId&&a.episodeNo===b.episodeNo&&a.actor===b.actor;}
+function updateBookHeartCache(bookId,count){
+ const value=Math.max(0,Number(count)||0);
+ if(currentReaderBook?.serverId===bookId)currentReaderBook.likes=value;
+ for(const book of PYEODA_SERVER.publicBooks||[])if(book.serverId===bookId)book.likes=value;
+ for(const book of PYEODA_SERVER.myBooks||[])if(book.id===bookId)book.likes=value;
+ renderShelf(document.querySelector('.tab.active')?.dataset.shelf||'popular');
+ renderDiscover(activeDiscoverCategory,activeDiscoverSubcategory);
+}
+function paintReaderHeart(state=null){
+ const button=document.getElementById('readerHeart');if(!button)return;
+ const context=readerHeartContext();button.hidden=!context;
+ const liked=!!state?.liked,ep=currentServerEpisodes[currentReaderEpisode-1];
+ button.disabled=!state||readerHeartBusy||!!ep?.locked;
+ button.setAttribute('aria-pressed',String(liked));
+ document.getElementById('readerHeartIcon').textContent=liked?'♥':'♡';
+ document.getElementById('readerHeartCount').textContent=state?Math.max(0,Number(state.episode_likes)||0).toLocaleString('ko-KR'):'—';
+ button.setAttribute('aria-label',(liked?'이 회차 좋아요 취소':'이 회차 좋아요')+(state?' · '+Math.max(0,Number(state.episode_likes)||0)+'개':''));
+ button.title=ep?.locked?'회차를 읽은 뒤 좋아요를 눌러 주세요.':'회차의 하트는 작품 전체 하트에 합산됩니다.';
+}
+async function refreshReaderHeart(){
+ const version=++readerHeartVersion,context=readerHeartContext();readerHeartState=null;paintReaderHeart();
+ if(!context||!PYEODA_SERVER.client)return;
+ try{
+  const {data,error}=await PYEODA_SERVER.client.rpc('get_episode_heart',{p_book_id:context.bookId,p_episode_no:context.episodeNo,p_reader_token:readerHeartToken()});
+  if(error||!data)throw error||new Error('Heart state unavailable');
+  if(version!==readerHeartVersion||!sameReaderHeartContext(context,readerHeartContext()))return;
+  readerHeartState={...data,context};paintReaderHeart(data);updateBookHeartCache(context.bookId,data.likes);
+ }catch(error){
+  if(version!==readerHeartVersion||!sameReaderHeartContext(context,readerHeartContext()))return;
+  const button=document.getElementById('readerHeart');button.disabled=!!currentServerEpisodes[currentReaderEpisode-1]?.locked;button.title='좋아요 상태를 다시 확인하려면 눌러 주세요.';
+  console.warn('episode heart state unavailable',error);
+ }
+}
+async function toggleReaderHeart(){
+ if(readerHeartBusy)return;
+ const context=readerHeartContext();if(!context)return;
+ if(!readerHeartState||!sameReaderHeartContext(context,readerHeartState.context)){await refreshReaderHeart();return;}
+ if(currentServerEpisodes[currentReaderEpisode-1]?.locked)return;
+ const liked=!readerHeartState.liked;readerHeartBusy=true;paintReaderHeart(readerHeartState);
+ try{
+  const {data,error}=await PYEODA_SERVER.client.rpc('set_episode_heart',{p_book_id:context.bookId,p_episode_no:context.episodeNo,p_reader_token:readerHeartToken(),p_liked:liked});
+  if(error||!data)throw error||new Error('좋아요를 저장하지 못했습니다.');
+  updateBookHeartCache(context.bookId,data.likes);
+  if(sameReaderHeartContext(context,readerHeartContext())){readerHeartState={...data,context};paintReaderHeart(data);}
+ }catch(error){console.warn('episode heart save failed',error);toast('좋아요를 저장하지 못했습니다. 연결을 확인한 뒤 다시 눌러 주세요.');}
+ finally{readerHeartBusy=false;await refreshReaderHeart();}
+}
+function bindReaderHeart(){
+ document.getElementById('readerHeart').onclick=toggleReaderHeart;
+ window.addEventListener('pyeoda:purchase-login-ready',()=>refreshReaderHeart());
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindReaderHeart,{once:true});else bindReaderHeart();
+
+/* PYEODA_BOOK_SUBSCRIPTIONS: free follows, no paid access or notification delivery. */
+let readerSubscriptionVersion=0,readerSubscriptionBusy=false,readerSubscriptionState=null;
+function readerSubscriptionContext(){return currentReaderBook?.serverId?{bookId:currentReaderBook.serverId,actor:PYEODA_SERVER.authUser?.id||'guest'}:null;}
+function sameSubscriptionContext(a,b){return !!a&&!!b&&a.bookId===b.bookId&&a.actor===b.actor;}
+function updateBookSubscriptionCache(bookId,count){
+ const value=Math.max(0,Number(count)||0);
+ if(currentReaderBook?.serverId===bookId)currentReaderBook.subscriberCount=value;
+ for(const book of PYEODA_SERVER.publicBooks||[])if(book.serverId===bookId)book.subscriberCount=value;
+ for(const book of PYEODA_SERVER.myBooks||[])if(book.id===bookId)book.subscriber_count=value;
+ renderShelf(document.querySelector('.tab.active')?.dataset.shelf||'popular');
+ renderDiscover(activeDiscoverCategory,activeDiscoverSubcategory);
+}
+function paintReaderSubscription(state=null){
+ const button=document.getElementById('readerSubscribe');if(!button)return;
+ button.hidden=!readerSubscriptionContext();button.disabled=!state||readerSubscriptionBusy;
+ button.setAttribute('aria-pressed',String(!!state?.subscribed));
+ document.getElementById('readerSubscribeLabel').textContent=state?.subscribed?'구독 중':'책 구독';
+ document.getElementById('readerSubscribeCount').textContent=state?Math.max(0,Number(state.subscriber_count)||0).toLocaleString('ko-KR'):'—';
+ button.title='무료 관심 구독입니다. 유료 회차 이용권과 별개이며 알림 발송은 아직 제공하지 않습니다.';
+}
+async function refreshReaderSubscription(){
+ const version=++readerSubscriptionVersion,context=readerSubscriptionContext();readerSubscriptionState=null;paintReaderSubscription();
+ if(!context||!PYEODA_SERVER.client)return;
+ try{
+  const {data,error}=await PYEODA_SERVER.client.rpc('get_book_subscription',{p_book_id:context.bookId,p_reader_token:readerHeartToken()});
+  if(error||!data)throw error||new Error('Subscription state unavailable');
+  if(version!==readerSubscriptionVersion||!sameSubscriptionContext(context,readerSubscriptionContext()))return;
+  readerSubscriptionState={...data,context};paintReaderSubscription(data);updateBookSubscriptionCache(context.bookId,data.subscriber_count);
+ }catch(error){
+  if(version!==readerSubscriptionVersion||!sameSubscriptionContext(context,readerSubscriptionContext()))return;
+  const button=document.getElementById('readerSubscribe');button.disabled=false;button.title='구독 상태를 다시 확인하려면 눌러 주세요.';
+  console.warn('book subscription state unavailable',error);
+ }
+}
+async function refreshAuthorSubscriberCount(){
+ const owner=PYEODA_SERVER.authorReady?PYEODA_SERVER.user?.id:null;if(!owner||!PYEODA_SERVER.client)return;
+ try{
+  const {data,error}=await PYEODA_SERVER.client.rpc('get_author_subscriber_count');
+  if(error||PYEODA_SERVER.user?.id!==owner||!PYEODA_SERVER.authorReady)return;
+  PYEODA_SERVER.subscriberStats={ownerId:owner,count:Math.max(0,Number(data)||0)};
+  refreshActualMetrics();
+ }catch(error){console.warn('author subscriber count unavailable',error);}
+}
+async function toggleReaderSubscription(){
+ if(readerSubscriptionBusy)return;
+ const context=readerSubscriptionContext();if(!context)return;
+ if(!readerSubscriptionState||!sameSubscriptionContext(context,readerSubscriptionState.context)){await refreshReaderSubscription();return;}
+ readerSubscriptionBusy=true;paintReaderSubscription(readerSubscriptionState);
+ try{
+  const {data,error}=await PYEODA_SERVER.client.rpc('set_book_subscription',{p_book_id:context.bookId,p_reader_token:readerHeartToken(),p_subscribed:!readerSubscriptionState.subscribed});
+  if(error||!data)throw error||new Error('구독을 저장하지 못했습니다.');
+  updateBookSubscriptionCache(context.bookId,data.subscriber_count);
+  if(sameSubscriptionContext(context,readerSubscriptionContext())){readerSubscriptionState={...data,context};paintReaderSubscription(data);}
+  await refreshAuthorSubscriberCount();
+ }catch(error){console.warn('book subscription save failed',error);toast('구독을 저장하지 못했습니다. 연결을 확인한 뒤 다시 눌러 주세요.');}
+ finally{readerSubscriptionBusy=false;await refreshReaderSubscription();}
+}
+function bindReaderSubscription(){
+ document.getElementById('readerSubscribe').onclick=toggleReaderSubscription;
+ window.addEventListener('pyeoda:purchase-login-ready',()=>{refreshReaderSubscription();refreshAuthorSubscriberCount();});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindReaderSubscription,{once:true});else bindReaderSubscription();
+
 function renderReader(){
   const b=currentReaderBook;if(!b)return;
   const total=inferTotalEpisodes(b);
@@ -4553,6 +4707,8 @@ function renderReader(){
   const cover=document.getElementById('readerCover');
   cover.innerHTML=b.cover?`<img src="${b.cover}" alt="${b.title} 표지">`:'책 표지';
   updateReaderState();
+  refreshReaderHeart();
+  refreshReaderSubscription();
   window.scrollTo(0,0);
 }
 async function openReader(b,state){
@@ -5225,7 +5381,7 @@ function bindMobilePageNavigation(){
   restoreMobileScreenAfterReload();
 }
 
-function showMobileScreen(id){if(AUTHOR_SCREENS.has(id)&&!PYEODA_SERVER.authorReady){openAuthorAuthModal('login',id);toast('작가 기능은 로그인 후 사용할 수 있습니다.');return;}document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.go===id));if(id==='publish'){try{saveCurrentEpisode()}catch(e){};try{renderEpubPreview()}catch(e){console.error(e)}}if(id==='paper'){try{saveCurrentEpisode()}catch(e){};try{restorePaperOptions()}catch(e){console.error(e)}}if(id==='revenue'||id==='studio'){try{refreshActualMetrics()}catch(e){};if(id==='studio'){try{syncStudioManagementUI()}catch(e){console.error(e)}refreshMyServerBooks().catch(console.error);}if(id==='revenue'){try{syncRevenueBookUI()}catch(e){console.error(e)}}}if(id==='global'){try{syncLocalizedUI()}catch(e){console.error(e)}}if(id==='books'){try{renderRegisteredBookList()}catch(e){console.error(e)}}if((id==='home'||id==='discover')&&PYEODA_SERVER.connected){refreshServerLibrary({silent:true}).catch(console.error)}scrollTo(0,0)}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+function showMobileScreen(id){if(AUTHOR_SCREENS.has(id)&&!PYEODA_SERVER.authorReady){openAuthorAuthModal('login',id);toast('작가 기능은 로그인 후 사용할 수 있습니다.');return;}document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.go===id));if(id==='publish'){try{saveCurrentEpisode()}catch(e){};try{renderEpubPreview()}catch(e){console.error(e)}}if(id==='paper'){try{saveCurrentEpisode()}catch(e){};try{restorePaperOptions()}catch(e){console.error(e)}}if(id==='revenue'||id==='studio'){try{refreshActualMetrics()}catch(e){};if(id==='studio'){try{syncStudioManagementUI();renderStudioBookLists()}catch(e){console.error(e)}refreshMyServerBooks().catch(console.error);}if(id==='revenue'){try{syncRevenueBookUI()}catch(e){console.error(e)}}}if(id==='global'){try{syncLocalizedUI()}catch(e){console.error(e)}}if(id==='books'){try{renderRegisteredBookList()}catch(e){console.error(e)}}if((id==='home'||id==='discover')&&PYEODA_SERVER.connected){refreshServerLibrary({silent:true}).catch(console.error)}scrollTo(0,0)}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 document.querySelectorAll('[data-publish-target]').forEach(btn=>{
   btn.addEventListener('click',()=>{
     if(!isBookCompleted()){
@@ -5527,7 +5683,47 @@ function registeredBookCoverHtml(row){
     ? `<img src="${src}" alt="${htmlEscape(row.title||'')} 표지">`
     : '책 표지';
 }
+var studioBookFilter='completed';
+function studioBooksForFilter(rows,filter){
+ if(filter==='completed')return rows.filter(row=>row.completed);
+ if(filter==='public')return rows.filter(row=>row.serverId&&row.published);
+ return rows.filter(row=>!row.completed);
+}
+function renderStudioBookLists(){
+ if(!studioBookFilter)studioBookFilter='completed';
+ const wrap=document.getElementById('studioBookList');if(!wrap)return;
+ const ownIds=new Set((PYEODA_SERVER.myBooks||[]).map(row=>String(row.id)));
+ const rows=resolveRegisteredBooks().filter(row=>!row.serverId||ownIds.has(String(row.serverId)));
+ const labels={completed:'완결 책 목록',writing:'작성 중 목록',public:'서버 공개 목록'};
+ document.querySelectorAll('[data-studio-book-filter]').forEach(button=>{
+  const filter=button.dataset.studioBookFilter,count=studioBooksForFilter(rows,filter).length;
+  button.setAttribute('aria-pressed',String(filter===studioBookFilter));
+  button.textContent=labels[filter]+' · '+count+'권';
+ });
+ const selected=studioBooksForFilter(rows,studioBookFilter);
+ if(!selected.length){wrap.innerHTML='<div class="registered-empty">'+(studioBookFilter==='completed'?'완결한 책이 없습니다.':studioBookFilter==='public'?'서버에 공개한 책이 없습니다.':'작성 중인 책이 없습니다.')+'</div>';return;}
+ wrap.innerHTML=selected.map(row=>`<article class="registered-book-row studio-list-book" data-studio-book-key="${htmlEscape(row.key||registeredBookKey(row))}">
+ <div class="registered-book-cover">${registeredBookCoverHtml(row)}</div>
+ <div class="registered-book-info"><h3>${htmlEscape(row.title||'제목 없는 책')}</h3><p class="registered-book-meta">${htmlEscape([row.pen,row.genre||row.category,(Number(row.episodeCount)||0)+'화'].filter(Boolean).join(' · '))}</p><p class="meta">${row.completed?'완결':'작성 중'} · ${row.published?'공개':'비공개'}</p></div>
+ <div class="studio-list-actions"><button type="button" data-studio-list-action="read" class="registered-book-btn primary">${row.completed?'원고 보기':'이어 쓰기'}</button><button type="button" data-studio-list-action="manage" class="registered-book-btn">책 관리</button></div></article>`).join('');
+ wrap.querySelectorAll('[data-studio-book-key]').forEach(card=>{
+  const row=selected.find(row=>(row.key||registeredBookKey(row))===card.dataset.studioBookKey);if(!row)return;
+  card.querySelectorAll('[data-studio-list-action]').forEach(button=>button.onclick=async()=>{
+   button.disabled=true;
+   try{if(!await activateRegisteredBook(row))return;go(button.dataset.studioListAction==='manage'?'books':'editor');}
+   catch(error){console.error(error);toast('작품을 불러오지 못했습니다. 다시 시도해 주세요.');}
+   finally{if(document.body.contains(button))button.disabled=false;}
+  });
+ });
+}
+function bindStudioBookLists(){
+ document.querySelectorAll('[data-studio-book-filter]').forEach(button=>button.onclick=()=>{studioBookFilter=button.dataset.studioBookFilter;renderStudioBookLists();});
+ renderStudioBookLists();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindStudioBookLists,{once:true});else bindStudioBookLists();
+
 function renderRegisteredBookList(){
+  renderStudioBookLists();
   const wrap=document.getElementById('registeredBookList');
   const count=document.getElementById('registeredBookCount');
   if(!wrap)return;
@@ -8903,8 +9099,7 @@ function saveSalesLedger(rows){
 function loadPerformance(){
   const ownerId=PYEODA_SERVER.authorReady?PYEODA_SERVER.user?.id:null;
   const views=ownerId?(PYEODA_SERVER.myBooks||[]).filter(row=>String(row.owner_id)===String(ownerId)).reduce((sum,row)=>sum+Math.max(0,Number(row.views)||0),0):0;
-  let subscribers=0;
-  try{const data=JSON.parse(localStorage.getItem(PERFORMANCE_KEY)||'{}')||{};subscribers=Math.max(0,Number(data.subscribers)||0);}catch(_){}
+  const subscribers=ownerId&&PYEODA_SERVER.subscriberStats?.ownerId===ownerId?Math.max(0,Number(PYEODA_SERVER.subscriberStats.count)||0):0;
   return {views,subscribers};
 }
 function completedSales(rows=loadSalesLedger()){
