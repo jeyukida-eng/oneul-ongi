@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PYEODA · 네이버 로그인 검수</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#faf9f5;color:#242820;font:16px/1.7 system-ui,sans-serif}header{padding:22px 6%;border-bottom:1px solid #e5e5da;font-weight:800;letter-spacing:2px}main{max-width:720px;margin:70px auto;padding:0 22px}small{color:#6c7462;letter-spacing:0}h1{font-size:30px;line-height:1.4}section{padding:32px;background:white;border:1px solid #e2e5da;border-radius:22px}p{color:#606858}.tag{display:inline-block;border-radius:20px;background:#edf0e5;padding:4px 12px;font-size:13px}.naver{border:0;border-radius:12px;background:#03c75a;color:#fff;min-height:52px;width:100%;font-size:17px;font-weight:700;cursor:pointer}.naver:disabled{opacity:.6}#status{padding:18px;border-radius:12px;background:#f2f4ed;margin:18px 0;white-space:pre-line}a{color:#526740}.note{font-size:14px}#completed{display:none}.success{color:#226b42}footer{margin-top:22px;font-size:14px}
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="./server-config.js"></script></head>
+<body><header>⌒ PYEODA <small>쓰고, 만드는 당신의 이야기</small></header>
+<main><span class="tag">네이버 로그인 검수용 개발 화면</span><h1>구매 전 독자 간편 로그인</h1>
+<p>무료 작품과 무료 회차는 로그인 없이 읽을 수 있습니다.<br>포인트 충전·유료 회차·전체 소장 구매 시 독자 인증을 진행합니다.</p>
+<section><div id="before"><h2>네이버로 로그인</h2><p>이 화면에서는 실제 네이버 인증과 PYEODA 복귀만 테스트합니다. 결제하거나 포인트를 충전하지 않습니다.</p><button class="naver" id="login" disabled>N 네이버로 로그인</button></div>
+<div id="completed"><h2 class="success">네이버 로그인 완료</h2><p>네이버 인증 후 원래 화면으로 돌아왔습니다.</p><div id="status" role="status"></div><p>독자 계정 인증이 완료되었습니다. 별도의 PYEODA 비밀번호는 요구하지 않습니다.</p><button class="naver" id="again">네이버 로그인 다시 테스트</button></div><p id="message" role="status">서버 연결을 확인하고 있습니다.</p></section>
+<p class="note">조회 정보: 네이버 이용자 식별자만 사용합니다. 이름·이메일·휴대전화번호 조회 권한은 요청하지 않습니다.</p>
+<footer><a href="./">PYEODA 웹으로</a> · <a href="../pyeoda-app/">PYEODA 모바일 웹으로</a></footer></main>
+<script>
+const config=window.PYEODA_SERVER_CONFIG;
+const client=window.supabase.createClient(config.url,config.anonKey);
+const login=document.getElementById('login');
+const again=document.getElementById('again');
+const message=document.getElementById('message');
+function showError(text){message.textContent=text;login.disabled=false;again.disabled=false;}
+async function signIn(){
+ login.disabled=true;again.disabled=true;message.textContent='네이버 인증 화면으로 이동합니다…';
+ const {error}=await client.auth.signInWithOAuth({provider:'custom:naver',options:{redirectTo:new URL('./login-review.html',location.href).href}});
+ if(error)showError('인증 시작 오류: '+error.message);
+}
+login.addEventListener('click',signIn);again.addEventListener('click',signIn);
+async function verify(){
+ const hash=new URLSearchParams(location.hash.slice(1));
+ const error=hash.get('error_description');
+ if(error){history.replaceState(null,'',location.pathname);showError('인증을 완료하지 못했습니다. 다시 시도해 주세요.');return;}
+ // getSession waits for the SDK to finish processing the OAuth callback.
+ const {data:session,error:sessionError}=await client.auth.getSession();
+ if(sessionError){showError('세션 확인 오류: '+sessionError.message);return;}
+ if(!session.session){login.disabled=false;message.textContent='네이버 버튼을 눌러 인증을 시작하세요.';return;}
+ const {data,error:userError}=await client.auth.getUser();
+ if(userError){showError('사용자 인증을 확인하지 못했습니다. 다시 시도해 주세요.');return;}
+ const user=data.user;
+ const providers=user?.app_metadata?.providers||[];
+ if(user&&!user.is_anonymous&&providers.includes('custom:naver')){
+  history.replaceState(null,'',location.pathname);
+  document.getElementById('before').style.display='none';
+  document.getElementById('completed').style.display='block';
+  document.getElementById('status').textContent='인증 제공자: 네이버\n계정 상태: 인증된 독자\n복귀 상태: 원래 화면 복귀 완료\n결제 상태: 결제 없음 (로그인 검수 테스트)';
+  message.textContent='Supabase 서버에서 실제 사용자 인증을 확인했습니다.';
+ }else{login.disabled=false;message.textContent='네이버 버튼을 눌러 테스트하세요.';}
+}
+verify().catch(()=>showError('서버 연결을 확인하지 못했습니다. 다시 시도해 주세요.'));
+</script></body></html>
