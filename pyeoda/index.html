@@ -2395,6 +2395,29 @@ html,body{max-width:100%;overflow-x:clip}
   opacity:.55;cursor:wait;transform:none;box-shadow:none;
 }
 
+
+/* Adjacent manuscript episode navigation */
+.editor-book-tools{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.editor-episode-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:16px 0 8px}
+.editor-episode-tools .editor-episode-navigation{flex:1;min-width:176px;margin:0}
+.editor-top-action{flex:0 0 auto;width:auto;height:44px;min-height:44px;padding:0 12px;font-size:12.5px;margin-left:0}
+.mobile-build .editor-episode-tools .editor-episode-navigation{width:auto;margin:0}
+.mobile-build .editor-top-action{width:auto!important;min-height:44px!important;height:44px!important;padding:0 12px!important}
+
+.editor-episode-navigation{
+  display:grid;grid-template-columns:44px minmax(0,1fr) 44px;
+  align-items:center;gap:12px;max-width:340px;margin:16px 0 8px;
+  font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;
+}
+.editor-episode-navigation button{
+  width:44px;height:44px;padding:0;border:1px solid rgba(105,113,88,.35);
+  border-radius:50%;background:#fffdf8;color:#596148;font-size:22px;cursor:pointer;
+}
+.editor-episode-navigation button:hover:not(:disabled){background:#e4e8db}
+.editor-episode-navigation button:disabled{opacity:.35;cursor:default}
+.editor-episode-navigation span{text-align:center;font-size:14px;font-weight:800;line-height:1.5}
+.mobile-build .editor-episode-navigation{max-width:none;width:100%;margin-top:14px}
+
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2702,7 +2725,7 @@ html,body{max-width:100%;overflow-x:clip}
     <div class='editor-guide-external'><b>적용 순서</b><span id='editorGuideExternal'>공통 원칙 → 장르별 규칙 → 작품별 설정 → 출판처 기준</span></div>
   </div>
 </details>
-<div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-draft' id='draftEpisodeBtn' title='현재 기기에 원고를 임시 저장합니다.'>임시 저장</button><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-delete' id='deleteEpisode'>회차 삭제</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button><button class='editor-action editor-action-complete' id='completeBook'>책 완결</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
+<div class='editor-episode-tools'><nav class='editor-episode-navigation' aria-label='집필 회차 이동'><button type='button' id='editorPrevEpisode' aria-label='이전 회차' title='이전 회차' disabled>←</button><span id='editorEpisodePosition' aria-live='polite'>회차 선택</span><button type='button' id='editorNextEpisode' aria-label='다음 회차' title='다음 회차' disabled>→</button></nav><div class='editor-book-tools'><button type='button' class='editor-action editor-action-delete editor-top-action' id='deleteEpisode'>회차 삭제</button><button type='button' class='editor-action editor-action-complete editor-top-action' id='completeBook'>책 완결</button></div></div><div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-draft' id='draftEpisodeBtn' title='현재 기기에 원고를 임시 저장합니다.'>임시 저장</button><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
 
 <section id='publishing' class='screen'>
   <div class='publish-center-shell'>
@@ -6510,6 +6533,50 @@ function saveCurrentEpisode(){
   renderEpisodeTabs();
   return true;
 }
+
+function editorEpisodeNeighbours(){
+  const ordered=[...episodes].sort((a,b)=>Number(a.no)-Number(b.no));
+  const index=ordered.findIndex(ep=>Number(ep.no)===Number(currentEpisodeNo));
+  return {
+    current:index<0?null:ordered[index],
+    previous:index>0?ordered[index-1]:null,
+    next:index>=0?ordered[index+1]||null:null
+  };
+}
+function updateEditorEpisodeArrows(){
+  const {current,previous,next}=editorEpisodeNeighbours();
+  const prevButton=document.getElementById('editorPrevEpisode');
+  const nextButton=document.getElementById('editorNextEpisode');
+  const position=document.getElementById('editorEpisodePosition');
+  if(prevButton){
+    prevButton.disabled=!previous;
+    prevButton.title=previous?`이전 회차 · ${previous.no}화`:'이전 회차 없음';
+  }
+  if(nextButton){
+    nextButton.disabled=!next;
+    nextButton.title=next?`다음 회차 · ${next.no}화`:'다음 회차 없음';
+  }
+  if(position)position.textContent=current?`${current.no}화`:'회차 선택';
+}
+function navigateEditorEpisode(direction){
+  if(manualEpisodeSaveBusy){
+    toast('저장이 끝난 뒤 회차를 이동해 주세요.');
+    return;
+  }
+  if(!editorEpisodeNeighbours().current)return;
+  try{
+    if(!saveCurrentEpisode())return;
+  }catch(err){
+    console.error('save before episode navigation failed',err);
+    editorStatus.textContent='저장 실패 · 회차 이동을 중단했습니다';
+    toast('원고를 저장하지 못했습니다. 원고를 복사해 보관한 뒤 다시 시도해 주세요.');
+    return;
+  }
+  const neighbours=editorEpisodeNeighbours();
+  const target=direction<0?neighbours.previous:neighbours.next;
+  if(target)openEpisode(target.no,false);
+}
+
 function renderEpisodeTabs(){
   episodes.sort((a,b)=>a.no-b.no);
   episodeListEl.innerHTML='';
@@ -6539,6 +6606,7 @@ function renderEpisodeTabs(){
     add.addEventListener('click',createNextEpisode);
   }
   episodeListEl.appendChild(add);
+  updateEditorEpisodeArrows();
 }
 function openEpisode(no,saveFirst=true){
   no=Number(no);
@@ -6615,7 +6683,7 @@ async function saveEpisodeOnRequest(toServer=false){
     return;
   }
   clearTimeout(draftServerTimer);
-  const buttons=[...document.querySelectorAll('.editor-actions button')];
+  const buttons=[...document.querySelectorAll('.editor-actions button, #deleteEpisode, #completeBook')];
   const disabledStates=buttons.map(button=>button.disabled);
   manualEpisodeSaveBusy=true;
   buttons.forEach(button=>button.disabled=true);
@@ -6846,6 +6914,8 @@ wc();
 function toast(s){let t=document.getElementById('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
 document.getElementById('draftEpisodeBtn').onclick=()=>saveEpisodeOnRequest(false);
 document.getElementById('saveEpisodeBtn').onclick=()=>saveEpisodeOnRequest(true);
+document.getElementById('editorPrevEpisode').onclick=()=>navigateEditorEpisode(-1);
+document.getElementById('editorNextEpisode').onclick=()=>navigateEditorEpisode(1);
 document.getElementById('aiBtn').onclick=applyProofreading;
 document.getElementById('deleteEpisode').onclick=deleteCurrentEpisode;
 const nextEpisodeBtn=document.getElementById('nextEpisodeBtn');
