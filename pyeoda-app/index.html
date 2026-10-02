@@ -3878,7 +3878,7 @@ async function connectPyeodaServer({silent=false}={}){
     await applyAuthorSession(session,{silent:true});
     await refreshServerLibrary({silent:true});
     resumeReaderPurchaseAfterLogin();
-    subscribeServerBooks();
+    await disconnectPublicLibraryRealtime();
     restoreMobileScreenAfterReload();
 
     if(!silent)toast(PYEODA_SERVER.authorReady?'작가 계정과 서버를 연결했습니다.':'공개 작품 서버에 연결했습니다.');
@@ -3894,15 +3894,12 @@ async function connectPyeodaServer({silent=false}={}){
     return false;
   }
 }
-function subscribeServerBooks(){
-  if(!PYEODA_SERVER.client)return;
-  try{
-    if(PYEODA_SERVER.channel)PYEODA_SERVER.client.removeChannel(PYEODA_SERVER.channel);
-    PYEODA_SERVER.channel=PYEODA_SERVER.client
-      .channel('pyeoda-public-books')
-      .on('postgres_changes',{event:'*',schema:'public',table:'books'},()=>refreshServerLibrary({silent:true}))
-      .subscribe();
-  }catch(e){console.warn('realtime subscription skipped',e)}
+async function disconnectPublicLibraryRealtime(){
+  const channel=PYEODA_SERVER.channel;
+  PYEODA_SERVER.channel=null;
+  if(!channel||!PYEODA_SERVER.client)return;
+  try{await PYEODA_SERVER.client.removeChannel(channel);}
+  catch(error){console.warn('unused public library connection cleanup failed',error);}
 }
 async function refreshServerLibrary({silent=false}={}){
   if(!PYEODA_SERVER.client)return;
@@ -4708,32 +4705,34 @@ function renderReader(){
 }
 async function openReader(b,state){
   if(!b)return;
-  currentReaderBook=b;
-  readerReturnScreen=document.getElementById('discover')?.classList.contains('active')?'discover':'home';
-
+  let loadedEpisodes=[];
+  const returnScreen=document.getElementById('discover')?.classList.contains('active')?'discover':'home';
   if(b.serverId){
     if(!PYEODA_SERVER.client){
-      toast('서버 작품을 읽으려면 공용 서버 연결이 필요합니다.');
+      toast('작품 서버에 아직 연결되지 않았습니다. 잠시 후 다시 열어 주세요.');
       return;
     }
     try{
-      currentServerEpisodes=await fetchServerEpisodes(b.serverId,{owner:false});
-      if(!currentServerEpisodes.length){
+      loadedEpisodes=await fetchServerEpisodes(b.serverId,{owner:false});
+      if(!loadedEpisodes.length){
         toast('아직 공개된 회차가 없습니다.');
         return;
       }
-      await incrementServerBookView(b);
-    }catch(err){
-      console.error(err);
-      toast('서버에서 회차를 불러오지 못했습니다.');
+    }catch(error){
+      console.error(error);
+      toast('작품을 불러오지 못했습니다. 연결을 확인한 뒤 다시 열어 주세요.');
       return;
     }
-  }else{
-    currentServerEpisodes=[];
+  }
+  // Commit a complete reading snapshot only after the request succeeds.
+  // Library refreshes and Realtime disconnections never replace this snapshot.
+  currentReaderBook=b;
+  currentServerEpisodes=loadedEpisodes;
+  readerReturnScreen=returnScreen;
+  if(!b.serverId){
     const engagement=bookEngagement(b);
     saveBookEngagement(b,{views:engagement.views+1});
   }
-
   const total=inferTotalEpisodes(b);
   if(!state||state.state==='first')currentReaderEpisode=1;
   else if(state.state==='resume')currentReaderEpisode=Math.max(1,Math.min(Number(state.lastEpisode)||1,total));
@@ -4744,6 +4743,8 @@ async function openReader(b,state){
   if(b.serverId){
     renderShelf(document.querySelector('.tab.active')?.dataset.shelf||'popular');
     renderDiscover(activeDiscoverCategory,activeDiscoverSubcategory);
+    // A view-count request must not delay or block access to an already loaded manuscript.
+    incrementServerBookView(b).catch(error=>console.warn('view count update skipped',error));
   }
 }
 function refreshReadingCards(){
