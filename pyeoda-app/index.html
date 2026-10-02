@@ -4467,15 +4467,11 @@ async function signInReaderWithOAuth(provider){
     setReaderAuthMessage('서버 연결 후 다시 시도해 주세요.','error');
     return;
   }
-  if(provider==='naver'){
-    setReaderAuthMessage('네이버 로그인은 네이버 개발자 Client ID·Secret을 연결한 뒤 활성화됩니다. 버튼과 결제 로그인 흐름은 준비해 두었습니다.','error');
-    return;
-  }
   try{
-    setReaderAuthMessage(provider==='kakao'?'카카오 로그인 화면으로 이동합니다…':'Google 로그인 화면으로 이동합니다…');
+    setReaderAuthMessage(provider==='kakao'?'카카오 로그인 화면으로 이동합니다…':provider==='naver'?'네이버 로그인 화면으로 이동합니다…':'Google 로그인 화면으로 이동합니다…');
     const options={redirectTo:readerAuthRedirectUrl()};
     if(provider==='google')options.queryParams={prompt:'select_account'};
-    const authProvider=provider==='kakao'?'custom:kakao':provider;
+    const authProvider=provider==='kakao'?'custom:kakao':provider==='naver'?'custom:naver':provider;
     const {error}=await PYEODA_SERVER.client.auth.signInWithOAuth({provider:authProvider,options});
     if(error)throw error;
   }catch(err){
