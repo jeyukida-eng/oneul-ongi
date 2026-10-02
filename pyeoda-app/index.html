@@ -4475,7 +4475,8 @@ async function signInReaderWithOAuth(provider){
     setReaderAuthMessage(provider==='kakao'?'카카오 로그인 화면으로 이동합니다…':'Google 로그인 화면으로 이동합니다…');
     const options={redirectTo:readerAuthRedirectUrl()};
     if(provider==='google')options.queryParams={prompt:'select_account'};
-    const {error}=await PYEODA_SERVER.client.auth.signInWithOAuth({provider,options});
+    const authProvider=provider==='kakao'?'custom:kakao':provider;
+    const {error}=await PYEODA_SERVER.client.auth.signInWithOAuth({provider:authProvider,options});
     if(error)throw error;
   }catch(err){
     console.error('reader oauth failed',err);
