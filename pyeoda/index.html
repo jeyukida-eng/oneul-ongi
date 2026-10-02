@@ -2521,6 +2521,13 @@ html,body{max-width:100%;overflow-x:clip}
 #body.manuscript-grid :is(ul,ol){list-style:none;padding-left:0!important}
 #body.manuscript-grid:empty:before{padding-left:8px}
 
+
+.cover-style-grid .style-option{position:relative;min-width:0}
+.cover-style-grid .style-option input{display:block;position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.cover-style-grid .style-option span{box-sizing:border-box;min-height:52px;height:100%;padding:10px 12px;gap:8px;line-height:1.5;word-break:keep-all;white-space:normal}
+.cover-style-grid .style-option input:focus-visible+span{outline:2px solid #697158;outline-offset:3px}
+@media(max-width:600px){.cover-style-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cover-style-grid .style-option span{font-size:13px;padding:10px;gap:7px}}
+
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2754,10 +2761,14 @@ html,body{max-width:100%;overflow-x:clip}
       <p class='cover-ai-status' id='coverAiStatus'>실제 AI 이미지를 만들려면 작가 스튜디오에서 공용 서버를 연결해 주세요.</p>
     </div>
     <div class='cover-style-wrap'>
-      <label class='cover-style-label'>표지 스타일</label><span class='reg-help'>연필 드로잉과 동화책풍 중에서 선택할 수 있습니다.</span>
-      <div class='cover-style-grid'>
+      <label class='cover-style-label'>표지 스타일</label><span class='reg-help'>원하는 분위기에 맞춰 6가지 스타일 중에서 선택하세요.</span>
+      <div class='cover-style-grid' role='radiogroup' aria-label='표지 스타일'>
+        <label class='style-option'><input type='radio' name='coverStyle' value='watercolor'><span>수채화</span></label>
         <label class='style-option'><input type='radio' name='coverStyle' value='pencil' checked><span>연필 드로잉</span></label>
         <label class='style-option'><input type='radio' name='coverStyle' value='storybook'><span>동화책풍</span></label>
+        <label class='style-option'><input type='radio' name='coverStyle' value='essay'><span>감성 에세이풍</span></label>
+        <label class='style-option'><input type='radio' name='coverStyle' value='realistic'><span>실사 분위기</span></label>
+        <label class='style-option'><input type='radio' name='coverStyle' value='minimal'><span>미니멀 그래픽</span></label>
       </div>
     </div>
     <p class='cover-guide'><b>권장 표지 규격: 세로 2:3 · 1200×1800px 이상 · JPG/PNG</b><br>다른 크기의 이미지를 올려도 자동으로 2:3 표지용 이미지로 맞춰 저장합니다.<br>프롬프트에 적은 장면·분위기·소품을 최대한 반영해 실제 표지용 이미지로 만듭니다.</p>
@@ -7694,14 +7705,38 @@ function setCoverAIStatus(text='',kind=''){
   coverAiStatus.textContent=text||'';
   coverAiStatus.className=`cover-ai-status ${kind}`.trim();
 }
-function coverStyleLabel(style){return style==='storybook'?'동화책풍':'연필 드로잉'}
+const COVER_STYLES={
+  "watercolor": {
+    "label": "수채화",
+    "guide": "delicate watercolor washes on paper, softly layered color, expressive brushwork, calm refined literary book-cover artwork"
+  },
+  "pencil": {
+    "label": "연필 드로잉",
+    "guide": "refined pencil drawing, delicate graphite texture, restrained color accents, elegant literary mood"
+  },
+  "storybook": {
+    "label": "동화책풍",
+    "guide": "warm narrative picture-book illustration, hand-crafted shapes, gentle colors, cohesive storytelling composition"
+  },
+  "essay": {
+    "label": "감성 에세이풍",
+    "guide": "quiet emotional editorial artwork, subtle paper texture, generous negative space, a small everyday motif and restrained warm palette"
+  },
+  "realistic": {
+    "label": "실사 분위기",
+    "guide": "photorealistic editorial photography, natural lighting, realistic materials and perspective, detailed photographic scene; no drawing, painting, cartoon or illustration"
+  },
+  "minimal": {
+    "label": "미니멀 그래픽",
+    "guide": "minimal graphic design, precise clean geometric shapes, a limited color palette, one symbolic motif, generous negative space; no busy collage"
+  }
+};
+function coverStyleLabel(style){return (COVER_STYLES[style]||COVER_STYLES.pencil).label}
 function buildCoverImagePrompt({prompt,title,subtitle,pen,category,genre,style}){
-  const styleGuide = style==='storybook'
-    ? 'storybook book-cover illustration, warm and narrative, hand-crafted picture-book mood, soft shapes, rich storytelling composition'
-    : 'refined pencil drawing book-cover illustration, delicate graphite texture, realistic depth, elegant literary mood';
+  const styleGuide=(COVER_STYLES[style]||COVER_STYLES.pencil).guide;
   const meta=[title&&`book title: ${title}`, subtitle&&`subtitle: ${subtitle}`, pen&&`author: ${pen}`, category&&`category: ${category}`, genre&&`genre: ${genre}`].filter(Boolean).join(', ');
   return [
-    'Create a high-quality portrait 2:3 Korean book cover illustration.',
+    style==='realistic'?'Create a high-quality portrait 2:3 Korean book cover using photorealistic photography.':'Create a high-quality portrait 2:3 Korean book cover artwork.',
     'The image must closely follow the user prompt and feel like a polished final cover, not a rough concept sketch.',
     'Leave clean visual breathing room suitable for title typography. Do not add random logos, watermarks, or unrelated objects.',
     'Avoid messy layouts and avoid tiny collage-like elements. One strong, cohesive scene only.',
@@ -7816,7 +7851,7 @@ async function makeAICover(){
   const category=(document.getElementById('newCategory')?.value||'').trim();
   const genre=(document.getElementById('newGenre')?.value||'').trim();
   let style=(document.querySelector('input[name="coverStyle"]:checked')?.value)||'pencil';
-  if(!['pencil','storybook'].includes(style)) style='pencil';
+  if(!Object.hasOwn(COVER_STYLES,style)) style='pencil';
   if(!prompt){toast('AI 표지 프롬프트를 먼저 적어 주세요.');setCoverAIStatus('프롬프트가 비어 있습니다. 장소·분위기·시간대를 적어 주세요.','error');return}
   const btn=document.getElementById('generateCoverBtn');
   const old=btn?.textContent||'AI 표지 생성';
@@ -8195,7 +8230,7 @@ function fillRegistrationFormFromBook(d){
   if(document.getElementById('newCoverPrompt'))document.getElementById('newCoverPrompt').value=d.coverPrompt||'';
 
   if(d.coverStyle){
-    const safeStyle=['pencil','storybook'].includes(d.coverStyle)?d.coverStyle:'pencil';
+    const safeStyle=Object.hasOwn(COVER_STYLES,d.coverStyle)?d.coverStyle:'pencil';
     const radio=document.querySelector(`input[name="coverStyle"][value="${safeStyle}"]`);
     if(radio)radio.checked=true;
   }else{
