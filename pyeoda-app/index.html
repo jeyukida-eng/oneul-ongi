@@ -9297,8 +9297,12 @@ async function startTestPayment(){
   const success=new URL(window.location.href);success.search='';success.hash='';success.searchParams.set('testPayment','success');
   const failure=new URL(success);failure.searchParams.set('testPayment','fail');failure.searchParams.set('checkoutOrder',order.orderId);
   testPaymentMessage('토스 테스트 결제창으로 이동합니다…');
-  await sdk(data.clientKey).payment({customerKey:data.customerKey}).requestPayment({method:'CARD',amount:{currency:'KRW',value:order.amount},orderId:order.orderId,orderName:order.productName,successUrl:success.toString(),failUrl:failure.toString()});
+  const payment=sdk(data.clientKey).payment({customerKey:data.customerKey});
+  // Native modal dialogs occupy the browser top layer and block the Toss iframe.
+  document.getElementById('testPaymentDialog').close();
+  await payment.requestPayment({method:'CARD',amount:{currency:'KRW',value:order.amount},orderId:order.orderId,orderName:order.productName,successUrl:success.toString(),failUrl:failure.toString()});
  }catch(error){
+  showTestPaymentDialog();
   let saved=false;
   if(order){try{await testPaymentApi('confirm-test-payment',{action:'fail',orderId:order.orderId,code:error.code||'CHECKOUT_FAILED',message:error.message});saved=true;}catch(_){} }
   testPaymentMessage((error.code==='PAY_PROCESS_CANCELED'?'테스트 결제를 취소했습니다.':error.message||'결제창을 열지 못했습니다.')+(order&&!saved?'\n주문 상태 저장을 확인하지 못했습니다. 주문내역에서 확인해 주세요.':''),true);
