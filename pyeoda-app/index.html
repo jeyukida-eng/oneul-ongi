@@ -2328,6 +2328,139 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 @media(max-width:390px){.mobile-build .stats{grid-template-columns:1fr!important}.mobile-build .book-card{grid-template-columns:82px minmax(0,1fr)!important}.mobile-build .cover{height:132px!important}.mobile-build .hero h1{font-size:27px!important}}
 
 
+
+/* Mobile Korean copy and typography */
+.mobile-build{
+  word-break:keep-all;
+  overflow-wrap:break-word;
+  line-break:strict;
+}
+.mobile-build :is(h1,h2,h3,h4,p,label,button,summary,.meta,.reg-help,.note){
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+.mobile-build :is(h1,h2,h3,h4){
+  text-wrap:balance;
+  line-height:1.4;
+}
+.mobile-build :is(p,.meta,.reg-help,.note,.cover-guide,.cover-prompt-help,
+  .server-help,.writing-rule-note,.author-auth-auto,.reader-auth-copy){
+  text-wrap:pretty;
+}
+.mobile-build :is(.meta,.reg-help,.note,.server-help,.cover-guide,
+  .cover-prompt-help,.author-auth-auto,.author-auth-message,
+  .reader-auth-copy,.reader-auth-message){
+  line-height:1.75;
+}
+.mobile-build :is(.register-head,.publish-center-head,.epub-head,
+  .paper-head,.translation-head,.revenue-head) p{
+  text-align:left;
+}
+.mobile-build .hero>div:first-child{
+  text-align:left!important;
+}
+.mobile-build .hero .eyebrow{
+  letter-spacing:.04em;
+  line-height:1.65;
+}
+.mobile-build .hero h1{
+  font-size:clamp(24px,7.1vw,30px)!important;
+  letter-spacing:-.045em!important;
+  line-height:1.4!important;
+  margin:10px 0 18px!important;
+}
+.mobile-build .hero p{
+  margin:0!important;
+  padding:0!important;
+  line-height:1.85!important;
+  text-align:left!important;
+}
+.mobile-build .hero .hero-copy br{display:block!important}
+.mobile-build .copy-sentence{display:block}
+.mobile-build .copy-sentence+.copy-sentence{margin-top:.55em}
+.mobile-build :is(.register-head h2,.publish-center-head h2,
+  .epub-head h2,.paper-head h2,.translation-head h2,.revenue-head h2){
+  font-size:clamp(24px,6.7vw,30px);
+  letter-spacing:-.035em;
+}
+.mobile-build :is(.book-author,.book-copy,.reader-book-head p,
+  .current-book-info,.publish-book-info,.revenue-book-info){
+  min-width:0;
+  text-align:left;
+}
+.mobile-build :is(.current-book-info b,.publish-book-info h3,
+  .revenue-book-info h3,.registered-book-info h3){
+  white-space:normal;
+  overflow:visible;
+  text-overflow:clip;
+  line-height:1.5;
+}
+.mobile-build .book-copy{line-height:1.7}
+.mobile-build .book-author{line-height:1.65}
+.mobile-build .book-foot .meta{
+  white-space:normal;
+  line-height:1.65;
+}
+.mobile-build .read-progress{
+  white-space:normal;
+  line-height:1.6;
+}
+.mobile-build :is(.reg-help,.text-limit-row,.cover-guide,
+  .cover-prompt-help,.writing-rule-note,.publish-note,.epub-note){
+  text-align:left;
+}
+.mobile-build .text-limit-row{
+  align-items:flex-start;
+  gap:8px;
+  line-height:1.65;
+}
+.mobile-build .text-limit-row>:first-child{
+  flex:1;
+  min-width:0;
+}
+.mobile-build .text-limit-row .count{flex:0 0 auto}
+.mobile-build :is(.editor-action,.cover-tool-btn,.register-actions button,
+  .paper-actions button,.epub-footer-actions button,.server-actions button){
+  white-space:normal!important;
+  line-height:1.5!important;
+  height:auto;
+  padding-top:12px;
+  padding-bottom:12px;
+}
+.mobile-build :is(.author-auth-head,.reader-auth-head)>div{
+  flex:1;
+  min-width:0;
+}
+.mobile-build :is(.author-auth-close,.reader-auth-close){flex:0 0 auto}
+.mobile-build :is(.author-auth-head h2,.reader-auth-head h2){
+  font-size:22px;
+  letter-spacing:-.03em;
+}
+.mobile-build :is(.author-auth-head p,.reader-auth-head p){
+  line-height:1.8;
+  text-align:left;
+}
+.mobile-build :is(.reader-auth-card,.author-auth-card){
+  max-height:88dvh;
+  overflow-y:auto;
+}
+.mobile-build :is(.reader-body,.body-editor){
+  line-break:strict;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+  text-align:left;
+  letter-spacing:0;
+}
+.mobile-build .reader-body{line-height:1.95!important}
+.mobile-build .toast{
+  max-width:calc(100vw - 32px);
+  white-space:normal;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+  line-height:1.65;
+  text-align:center;
+}
+
 /* PYEODA_AUTH_V1 */
 .author-auth-btn{
   flex:0 0 auto;
@@ -2486,7 +2619,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
     <div class='reader-auth-head'>
       <div>
         <h2 id='readerAuthTitle'>구매하려면 로그인</h2>
-        <p id='readerAuthSubtitle'>구매한 회차와 소장 작품을 웹·모바일에서 안전하게 이어보기 위해 간편 로그인이 필요합니다.</p>
+        <p id='readerAuthSubtitle'>구매한 회차와 소장 작품을 웹·모바일에서 안전하게 이어 보기 위해 간편 로그인이 필요합니다.</p>
       </div>
       <button type='button' class='reader-auth-close' id='readerAuthClose' aria-label='닫기'>×</button>
     </div>
@@ -2500,7 +2633,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
   </div>
 </div>
 <main>
-<section id='home' class='screen active'><div class='hero'><div><div class='eyebrow'>쓰고, 만들고, 세상과 나누는</div><h1>당신의 이야기가<br>한 권의 책이 되는 곳</h1><p>글을 쓰고, 연재하고, 한 권의 책으로 만드세요.<br>완성된 원고는 한국어 · 영어 · 일본어 · 중국어로 출판할 수 있습니다.<br>시작 비용은 없습니다.</p><div class='cta'><button class='primary' data-go='register' data-register-mode='new'>지금, 시작하기</button><button class='secondary' data-go='discover'>읽으러 가기</button></div></div><div class='promise'><h3>작가와 플랫폼의 약속</h3><div class='free'>시작 비용 0원</div><p>가입 · 연재 · 기본 편집<br>전자책 제작 · 4개 언어 출판</p><div class='fee'><b>판매가 발생했을 때만</b><br>플랫폼 수수료 <strong>30%</strong> <span class='note'>(사업 검증용 가정)</span></div></div></div><div class='section'><div class='shelf-head'><div><h2 id='shelfTitle'>지금 인기 있는 작품</h2><p class='meta' id='shelfDesc'>지금 독자들의 반응이 좋은 작품을 만나보세요.</p></div><div class='tabs' role='tablist'><button class='tab active' data-shelf='popular'>인기</button><button class='tab' data-shelf='new'>신작</button><button class='tab' data-shelf='owned'>소장</button></div></div><div class='grid' id='bookGrid'></div></div></section>
+<section id='home' class='screen active'><div class='hero'><div><div class='eyebrow'>쓰고, 만들고, 세상과 나누는</div><h1>당신의 이야기가<br>한 권의 책이 되는 곳</h1><p class='hero-copy'><span class='copy-sentence'>글을 쓰고, 연재하고,<br>한 권의 책으로 만드세요.</span><span class='copy-sentence'>완성된 원고는 한국어·영어·일본어·중국어로<br>출판할 수 있습니다.</span><span class='copy-sentence'>시작 비용은 없습니다.</span></p><div class='cta'><button class='primary' data-go='register' data-register-mode='new'>지금, 시작하기</button><button class='secondary' data-go='discover'>읽으러 가기</button></div></div><div class='promise'><h3>작가와 플랫폼의 약속</h3><div class='free'>시작 비용 0원</div><p>가입 · 연재 · 기본 편집<br>전자책 제작 · 4개 언어 출판</p><div class='fee'><b>판매가 발생했을 때만</b><br>플랫폼 수수료 <strong>30%</strong> <span class='note'>(사업 검증용 가정)</span></div></div></div><div class='section'><div class='shelf-head'><div><h2 id='shelfTitle'>지금 인기 있는 작품</h2><p class='meta' id='shelfDesc'>지금 독자들의 반응이 좋은 작품을 만나보세요.</p></div><div class='tabs' role='tablist'><button class='tab active' data-shelf='popular'>인기</button><button class='tab' data-shelf='new'>신작</button><button class='tab' data-shelf='owned'>소장</button></div></div><div class='grid' id='bookGrid'></div></div></section>
 <section id='discover' class='screen'><div class='section'>
   <div class='discover-head'>
     <div>
@@ -2572,7 +2705,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
         <button type='button' class='step' data-studio-step='5'>5 출판 센터</button>
       </div>
       <div class='card'>
-        <div class='studio-current-label'>현재 작업 작품</div><h3 id='studioBookTitle'>새 작품</h3>
+        <div class='studio-current-label'>작업 중인 작품</div><h3 id='studioBookTitle'>새 작품</h3>
         <p id='studioBookStatus'>0화 · 0자 · 작성 전</p>
         <p id='studioBookGuide'><b>작품을 등록해 주세요.</b> 서버를 연결하면 다른 독자와 같은 작품 데이터를 공유할 수 있습니다.</p>
         <div class='studio-work-status' id='studioWorkStatus'>
@@ -2625,8 +2758,8 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
       <div class='registered-books-head'>
         <div>
           <div class='eyebrow'>작가 스튜디오</div>
-          <h2>등록 책</h2>
-          <p>내가 실제 등록한 작품만 표시합니다. 공개·완결·삭제 상태를 책별로 바로 관리할 수 있습니다.</p>
+          <h2>등록한 책</h2>
+          <p>직접 등록한 작품만 표시합니다. 공개·완결·삭제 상태를 책별로 바로 관리할 수 있습니다.</p>
         </div>
         <button type='button' class='primary registered-new-btn' id='registeredNewBookBtn'>＋ 새 책 등록</button>
       </div>
@@ -4440,11 +4573,11 @@ function openReaderAuthModal(intent={}){
   const subtitle=document.getElementById('readerAuthSubtitle');
   if(subtitle){
     if(intent.type==='book'){
-      subtitle.textContent=`${intent.title||'이 작품'}을 소장하고 구매내역을 웹·모바일에서 이어보려면 간편 로그인이 필요합니다.`;
+      subtitle.textContent=`${intent.title||'이 작품'}을 소장하고 구매 내역을 웹·모바일에서 이어보려면 간편 로그인이 필요합니다.`;
     }else if(intent.type==='episode'){
       subtitle.textContent=`${intent.episodeNo||''}화 유료 회차를 구매하고 다른 기기에서도 이어보려면 간편 로그인이 필요합니다.`;
     }else{
-      subtitle.textContent='구매한 회차와 소장 작품을 웹·모바일에서 안전하게 이어보기 위해 간편 로그인이 필요합니다.';
+      subtitle.textContent='구매한 회차와 소장 작품을 웹·모바일에서 안전하게 이어 보기 위해 간편 로그인이 필요합니다.';
     }
   }
   setReaderAuthMessage('');
