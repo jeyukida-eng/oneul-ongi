@@ -6732,6 +6732,35 @@ function openEpisode(no,saveFirst=true){
   updateEpisodePricingUI();
   wc();
 }
+function focusNewEpisodeWriting(){
+  const heading=episodeTitleInput.closest('.episode-head')||episodeTitleInput;
+  body.focus({preventScroll:true});
+  const selection=window.getSelection();
+  if(selection){
+    const range=document.createRange();
+    range.selectNodeContents(body);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+  requestAnimationFrame(()=>{
+    let clearTop=12;
+    const header=document.querySelector('.top');
+    if(header)clearTop=Math.max(clearTop,header.getBoundingClientRect().bottom+12);
+    const sidebar=heading.closest('.screen')?.querySelector('.side');
+    if(sidebar){
+      const style=window.getComputedStyle(sidebar);
+      if(style.position==='sticky'||style.position==='fixed'){
+        const stickyTop=parseFloat(style.top);
+        if(Number.isFinite(stickyTop))clearTop=Math.max(clearTop,stickyTop+sidebar.getBoundingClientRect().height+12);
+      }
+    }
+    const top=Math.max(0,window.scrollY+heading.getBoundingClientRect().top-clearTop);
+    window.scrollTo({top,behavior:'instant'});
+    queueTypewriterCaret();
+  });
+}
+
 function createNextEpisode(){
   if(!String(currentBookData()?.title||'').trim()){
     toast('먼저 책을 등록해 주세요.');
@@ -6748,7 +6777,7 @@ function createNextEpisode(){
   episodes.push(ep);
   persistEpisodes();
   openEpisode(nextNo,false);
-  episodeTitleInput.focus();
+  focusNewEpisodeWriting();
   toast(`${nextNo}화를 새로 열었습니다. 제목과 본문을 이어서 작성해 보세요.`);
 }
 function deleteCurrentEpisode(){
