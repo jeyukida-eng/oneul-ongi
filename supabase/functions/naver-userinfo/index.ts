@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
   try{
    const upstream=await fetch("https://nid.naver.com/oauth2.0/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body,redirect:"error",signal:AbortSignal.timeout(8000)});
    const data=await upstream.json();
-   if(!upstream.ok||typeof data.access_token!=="string")return error(400,typeof data.error==="string"?data.error:"invalid_grant");
+   if(!upstream.ok||typeof data.access_token!=="string"){const message=String(data.error_description||"");const reason=/client id|client secret/i.test(message)?"invalid_client_credentials":/state/i.test(message)?"invalid_state":/code/i.test(message)?"invalid_code":"invalid_request";return new Response(JSON.stringify({error:typeof data.error==="string"?data.error:"invalid_grant",error_description:reason}),{status:400,headers});}
    return new Response(JSON.stringify(data),{headers});
   }catch{return error(502,"identity_provider_unavailable");}
  }
