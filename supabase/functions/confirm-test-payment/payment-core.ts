@@ -3,6 +3,13 @@ const cors = {"Access-Control-Allow-Origin":"https://jeyukida-eng.github.io","Ac
 const demos = {"사는 게 익숙해질 줄 알았다":4900,"문 앞에 두고 갑니다":5900,"바람이 기억한 이름":3900,"작은 가게의 큰 하루":4500,"서랍 속 여름":4900,"밤의 우체국":5500,"돌담 너머의 편지":4900,"새벽 세 시의 세탁소":5200};
 const summary = row => ({orderId:row.order_id,productName:row.product_name,amount:row.amount,status:row.status,method:row.method,approvedAt:row.approved_at,createdAt:row.created_at,environment:row.environment});
 const json = (body,status=200) => new Response(JSON.stringify(body),{status,headers:{...cors,"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"}});
+async function adultAccess(admin,book,user){
+ if(book.age_rating!=='19')return true;
+ if(user?.id===book.owner_id||user?.app_metadata?.pyeoda_admin===true)return true;
+ if(!user||user.is_anonymous||book.adult_review_status!=='approved')return false;
+ const {data,error}=await admin.from('adult_verifications').select('expires_at,revoked_at').eq('user_id',user.id).maybeSingle();
+ return !error&&!!data&&!data.revoked_at&&Date.parse(data.expires_at)>Date.now();
+}
 export async function handle(req,mode){
  if(req.method==='OPTIONS')return new Response('ok',{headers:cors});
  if(req.method!=='POST')return json({ok:false,message:'POST only'},405);
@@ -33,8 +40,9 @@ export async function handle(req,mode){
    }else if(input.type==='test'){
     amount=1000;name='펴다 테스트 결제';productKey='demo:checkout';
    }else if(input.bookId){
-    const {data:book,error}=await admin.from('books').select('id,title,price,published,owner_id').eq('id',input.bookId).maybeSingle();
+    const {data:book,error}=await admin.from('books').select('id,title,price,published,owner_id,age_rating,adult_review_status').eq('id',input.bookId).maybeSingle();
     if(error||!book||(!book.published&&book.owner_id!==uid))return json({ok:false,message:'테스트할 작품을 찾지 못했습니다.'},404);
+    if(!await adultAccess(admin,book,auth.user))return json({ok:false,code:'ADULT_ACCESS_REQUIRED',message:'성인인증 및 작품 심사 승인이 필요합니다.'},403);
     bookId=book.id;
     if(input.type==='episode'){
      const no=Number(input.episodeNo);
@@ -67,6 +75,7 @@ export async function handle(req,mode){
   const amount=Number(input.amount),paymentKey=String(input.paymentKey||'');
   if(!paymentKey||paymentKey.length>200||!Number.isSafeInteger(amount)||order.amount!==amount)return json({ok:false,code:'AMOUNT_MISMATCH',message:'주문 금액 또는 승인 정보가 일치하지 않습니다.'},400);
   if(order.payment_key&&order.payment_key!==paymentKey)return json({ok:false,code:'PAYMENT_KEY_MISMATCH',message:'다른 결제 정보로 승인할 수 없습니다.'},409);
+  if(order.book_id){const {data:book}=await admin.from('books').select('owner_id,age_rating,adult_review_status').eq('id',order.book_id).maybeSingle();if(!book||!await adultAccess(admin,book,auth.user))return json({ok:false,code:'ADULT_ACCESS_REQUIRED',message:'성인인증 및 작품 심사 승인이 필요합니다.'},403);}
   if(order.status==='confirmed')return json({ok:true,testMode:true,alreadyConfirmed:true,order:summary(order)});
   if(order.status!=='pending')return json({ok:false,code:'ORDER_CLOSED',message:'종료된 주문입니다. 다시 결제를 시작해 주세요.'},409);
   if(!ready)return json({ok:false,code:'TEST_KEYS_REQUIRED',message:'테스트 키 연결이 필요합니다. 결제는 승인되지 않았습니다.'},503);

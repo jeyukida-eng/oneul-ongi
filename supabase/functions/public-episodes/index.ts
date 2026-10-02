@@ -1,6 +1,13 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 const cors={'Access-Control-Allow-Origin':'https://jeyukida-eng.github.io','Access-Control-Allow-Headers':'authorization,x-client-info,apikey,content-type','Access-Control-Allow-Methods':'GET,POST,OPTIONS'};
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,'Content-Type':'application/json','Cache-Control':'private, no-store','Vary':'Authorization'}});
+async function adultAccess(admin,book,user){
+ if(book.age_rating!=='19')return true;
+ if(user?.id===book.owner_id||user?.app_metadata?.pyeoda_admin===true)return true;
+ if(!user||user.is_anonymous||book.adult_review_status!=='approved')return false;
+ const {data,error}=await admin.from('adult_verifications').select('expires_at,revoked_at').eq('user_id',user.id).maybeSingle();
+ return !error&&!!data&&!data.revoked_at&&Date.parse(data.expires_at)>Date.now();
+}
 export async function handle(req){
  if(req.method==='OPTIONS')return new Response('ok',{headers:cors});
  if(!['GET','POST'].includes(req.method))return json({ok:false,message:'GET or POST only'},405);
@@ -12,9 +19,10 @@ export async function handle(req){
   const token=(req.headers.get('Authorization')||'').replace(/^Bearer\s+/i,'');
   let user=null;
   if(token){const {data}=await admin.auth.getUser(token);if(data?.user&&!data.user.is_anonymous)user=data.user;}
-  const {data:book,error:bookError}=await admin.from('books').select('id,published,owner_id').eq('id',bookId).maybeSingle();
+  const {data:book,error:bookError}=await admin.from('books').select('id,published,owner_id,age_rating,adult_review_status').eq('id',bookId).maybeSingle();
   if(bookError)throw bookError;
   if(!book||(!book.published&&book.owner_id!==user?.id))return json({ok:false,message:'공개 작품을 찾지 못했습니다.'},404);
+  if(!await adultAccess(admin,book,user))return json({ok:false,code:'ADULT_ACCESS_REQUIRED',message:'성인인증 및 작품 심사 승인이 필요합니다.'},403);
   const {data:episodes,error}=await admin.from('episodes').select('id,episode_no,title,price,body,body_html,published,created_at,updated_at').eq('book_id',bookId).eq('published',true).order('episode_no',{ascending:true});
   if(error)throw error;
   const owner=user?.id===book.owner_id;
