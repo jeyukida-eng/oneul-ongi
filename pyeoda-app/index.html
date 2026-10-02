@@ -2572,6 +2572,18 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
   .reader-auth-modal{align-items:flex-end;padding:0}
   .reader-auth-card{width:100%;border-radius:24px 24px 0 0;padding:22px 17px 26px}
 }
+
+/* Explicit manuscript save actions */
+.editor-action-draft{
+  background:#fffdf8;border-color:rgba(105,113,88,.38);color:#596148;
+}
+.editor-action-save{
+  background:#e4e8db;border-color:#c7d0b9;color:#4f5941;
+}
+.editor-actions .editor-action:disabled{
+  opacity:.55;cursor:wait;transform:none;box-shadow:none;
+}
+
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2879,7 +2891,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
     <div class='editor-guide-external'><b>적용 순서</b><span id='editorGuideExternal'>공통 원칙 → 장르별 규칙 → 작품별 설정 → 출판처 기준</span></div>
   </div>
 </details>
-<div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button class='editor-action editor-action-delete' id='deleteEpisode'>회차 삭제</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button><button class='editor-action editor-action-complete' id='completeBook'>책 완결</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
+<div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-draft' id='draftEpisodeBtn' title='현재 기기에 원고를 임시 저장합니다.'>임시 저장</button><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-delete' id='deleteEpisode'>회차 삭제</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button><button class='editor-action editor-action-complete' id='completeBook'>책 완결</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
 
 <section id='publishing' class='screen'>
   <div class='publish-center-shell'>
@@ -6782,6 +6794,72 @@ function autosaveEpisode(){
   if(!ep.published) editorStatus.textContent=PYEODA_SERVER.authorReady?'자동 저장됨 · 서버 동기화 중':'자동 저장됨 · 공개 전';
 }
 
+
+let manualEpisodeSaveBusy=false;
+async function saveEpisodeOnRequest(toServer=false){
+  if(manualEpisodeSaveBusy)return;
+  const book=currentBookData();
+  if(!String(book?.title||'').trim()||!currentEpisodeNo){
+    toast('먼저 책을 등록하고 저장할 회차를 선택해 주세요.');
+    return;
+  }
+  clearTimeout(draftServerTimer);
+  const buttons=[...document.querySelectorAll('.editor-actions button')];
+  const disabledStates=buttons.map(button=>button.disabled);
+  manualEpisodeSaveBusy=true;
+  buttons.forEach(button=>button.disabled=true);
+  const saveButton=document.getElementById('saveEpisodeBtn');
+  try{
+    if(!saveCurrentEpisode())return;
+    const ep=findEpisode(currentEpisodeNo);
+    if(!ep)throw new Error('저장할 회차를 찾을 수 없습니다.');
+    const snapshot={...ep};
+    const label=`${snapshot.no}화`;
+    const visibility=snapshot.published?'공개 상태 유지':'공개 전';
+    const isStillCurrent=()=>currentEpisodeNo===snapshot.no &&
+      currentBookData().title===book.title &&
+      (!book.serverId||currentBookData().serverId===book.serverId);
+    if(!toServer){
+      editorStatus.textContent=`임시 저장됨 · 이 기기 · ${visibility}`;
+      toast(`${label}를 이 기기에 임시 저장했습니다.`);
+      return;
+    }
+    if(!PYEODA_SERVER.connected||!PYEODA_SERVER.client||!PYEODA_SERVER.authorReady){
+      editorStatus.textContent=`이 기기에 저장됨 · 서버 저장 대기 · ${visibility}`;
+      toast('이 기기에 저장했습니다. 서버 저장은 작가 로그인과 서버 연결 후 다시 눌러 주세요.');
+      return;
+    }
+    saveButton.textContent='저장 중…';
+    editorStatus.textContent='서버에 저장 중…';
+    try{
+      const saved=await syncDraftEpisodeToServer(snapshot);
+      if(!saved)throw new Error('서버 저장을 완료하지 못했습니다.');
+      // Book creation during saving can assign a new server ID.
+      const current=currentBookData();
+      if(currentEpisodeNo===snapshot.no && current.title===book.title &&
+        (!book.serverId||current.serverId===book.serverId)){
+        const changed=episodeTitleInput.value.trim()!==snapshot.title ||
+          (body.innerText||'').replace(/\u00a0/g,' ')!==snapshot.body;
+        editorStatus.textContent=changed?'저장 후 수정됨 · 자동 저장 중':
+          `서버에 저장됨 · ${visibility}`;
+      }
+      toast(`${label}를 서버에 저장했습니다.`);
+    }catch(err){
+      console.error('manual episode server save failed',err);
+      if(isStillCurrent())editorStatus.textContent='이 기기에 저장됨 · 서버 저장 실패';
+      toast('원고는 이 기기에 보관했습니다. 서버 저장에 실패했으니 연결을 확인하고 다시 저장해 주세요.');
+    }
+  }catch(err){
+    console.error('manual episode local save failed',err);
+    editorStatus.textContent='저장 실패 · 원고를 복사해 보관해 주세요';
+    toast('이 기기에 저장하지 못했습니다. 원고를 복사해 보관한 뒤 다시 시도해 주세요.');
+  }finally{
+    manualEpisodeSaveBusy=false;
+    buttons.forEach((button,index)=>button.disabled=disabledStates[index]);
+    if(saveButton)saveButton.textContent='저장';
+  }
+}
+
 function bodyText(){return (body.innerText||'').replace(/\u00a0/g,' ')}
 function wc(){count.textContent=`${bodyText().length.toLocaleString()}자 · 초안`;try{updateEditorWritingGuide()}catch(e){}}
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -6955,6 +7033,8 @@ ignoreProof.onclick=()=>{
 };
 wc();
 function toast(s){let t=document.getElementById('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+document.getElementById('draftEpisodeBtn').onclick=()=>saveEpisodeOnRequest(false);
+document.getElementById('saveEpisodeBtn').onclick=()=>saveEpisodeOnRequest(true);
 document.getElementById('aiBtn').onclick=applyProofreading;
 document.getElementById('deleteEpisode').onclick=deleteCurrentEpisode;
 const nextEpisodeBtn=document.getElementById('nextEpisodeBtn');
