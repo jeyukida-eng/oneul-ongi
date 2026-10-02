@@ -3531,6 +3531,7 @@ async function connectPyeodaServer({silent=false}={}){
     bindPyeodaAuthListener();
     await applyAuthorSession(session,{silent:true});
     await refreshServerLibrary({silent:true});
+    resumeReaderPurchaseAfterLogin();
     subscribeServerBooks();
 
     if(!silent)toast(PYEODA_SERVER.authorReady?'작가 계정과 서버를 연결했습니다.':'공개 작품 서버에 연결했습니다.');
@@ -4375,7 +4376,11 @@ function setReaderAuthMessage(message='',kind=''){
   el.classList.toggle('error',kind==='error');
 }
 function openReaderAuthModal(intent={}){
-  READER_AUTH_INTENT={...intent};
+  READER_AUTH_INTENT={...intent,
+    returnScreen:document.querySelector('.screen.active')?.id||'home',
+    returnScroll:window.scrollY,
+    createdAt:Date.now()
+  };
   try{sessionStorage.setItem(PYEODA_READER_AUTH_INTENT_KEY,JSON.stringify(READER_AUTH_INTENT))}catch(e){}
   const modal=document.getElementById('readerAuthModal');
   const subtitle=document.getElementById('readerAuthSubtitle');
@@ -4392,7 +4397,12 @@ function openReaderAuthModal(intent={}){
   if(modal)modal.hidden=false;
   document.body.style.overflow='hidden';
 }
+function clearReaderAuthIntent(){
+  READER_AUTH_INTENT=null;
+  try{sessionStorage.removeItem(PYEODA_READER_AUTH_INTENT_KEY)}catch(e){}
+}
 function closeReaderAuthModal(){
+  clearReaderAuthIntent();
   const modal=document.getElementById('readerAuthModal');
   if(modal)modal.hidden=true;
   document.body.style.overflow='';
@@ -4411,7 +4421,8 @@ async function signInReaderWithOAuth(provider){
     setReaderAuthMessage(provider==='kakao'?'카카오 로그인 화면으로 이동합니다…':'Google 로그인 화면으로 이동합니다…');
     const options={redirectTo:readerAuthRedirectUrl()};
     if(provider==='google')options.queryParams={prompt:'select_account'};
-    const {error}=await PYEODA_SERVER.client.auth.signInWithOAuth({provider,options});
+    const authProvider=provider==='kakao'?'custom:kakao':provider;
+    const {error}=await PYEODA_SERVER.client.auth.signInWithOAuth({provider:authProvider,options});
     if(error)throw error;
   }catch(err){
     console.error('reader oauth failed',err);
@@ -4425,13 +4436,28 @@ function resumeReaderPurchaseAfterLogin(){
     try{intent=JSON.parse(sessionStorage.getItem(PYEODA_READER_AUTH_INTENT_KEY)||'null')}catch(e){}
   }
   if(!intent)return;
-  READER_AUTH_INTENT=intent;
-  try{sessionStorage.removeItem(PYEODA_READER_AUTH_INTENT_KEY)}catch(e){}
+  // Only restore a recent, explicit purchase request. Login never confirms a payment.
+  if(!intent.createdAt || Date.now()-intent.createdAt>30*60*1000 ||
+     !['book','episode','points','subscription'].includes(intent.type)){
+    clearReaderAuthIntent();
+    return;
+  }
   closeReaderAuthModal();
-  const label=intent.type==='episode'
-    ? `${intent.episodeNo||''}화`
-    : (intent.title||'작품');
-  toast(`로그인 완료 · ${label} 결제를 계속할 수 있습니다.`);
+  const screen=['home','discover','reader'].includes(intent.returnScreen)?intent.returnScreen:'home';
+  if(document.getElementById(screen))go(screen==='reader'?'home':screen);
+  requestAnimationFrame(()=>{
+    window.scrollTo(0,Number(intent.returnScroll)||0);
+    const buttons=[...document.querySelectorAll('.screen.active .buy-book, .screen.active .read')];
+    const button=buttons.find(btn=>intent.serverId
+      ? btn.dataset.serverId===intent.serverId
+      : btn.dataset.title===intent.title && btn.dataset.author===intent.author);
+    if(button){button.scrollIntoView({block:'center'});button.focus({preventScroll:true});}
+    window.dispatchEvent(new CustomEvent('pyeoda:purchase-login-ready',{detail:intent}));
+  });
+  const label=intent.type==='episode'?`${intent.episodeNo||''}화`:
+    intent.type==='points'?'포인트 충전':
+    intent.type==='subscription'?'구독':(intent.title||'작품');
+  toast(`로그인 완료 · ${label} 구매를 선택한 화면으로 돌아왔습니다.`);
 }
 function requireReaderLoginForPurchase(intent={}){
   if(readerIsSignedIn())return true;
