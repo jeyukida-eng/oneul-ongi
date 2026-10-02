@@ -3943,14 +3943,17 @@ async function refreshServerLibrary({silent=false}={}){
 }
 async function refreshMyServerBooks(){
   if(!PYEODA_SERVER.client||!PYEODA_SERVER.user)return;
+  const ownerId=PYEODA_SERVER.user.id;
   const {data,error}=await PYEODA_SERVER.client
     .from('books')
-    .select('id,title,pen_name,genre,category,completed,published,episode_count,cover_url,price,default_episode_price,updated_at')
-    .eq('owner_id',PYEODA_SERVER.user.id)
+    .select('id,owner_id,title,pen_name,genre,category,completed,published,episode_count,cover_url,price,default_episode_price,views,updated_at')
+    .eq('owner_id',ownerId)
     .order('updated_at',{ascending:false});
+  if(PYEODA_SERVER.user?.id!==ownerId||!PYEODA_SERVER.authorReady)return;
   if(error){console.error(error);return}
   PYEODA_SERVER.myBooks=data||[];
   renderMyServerBooks();
+  refreshActualMetrics();
   try{renderRegisteredBookList()}catch(e){}
 }
 function currentRelevantServerBooks(){
@@ -4173,7 +4176,8 @@ async function syncPublishedEpisodeToServer(ep){
     published:true,
     episode_count:publishedCount,
     completed:!!book.completed,
-    completed_at:book.completedAt||null
+    completed_at:book.completedAt||null,
+    default_episode_price:normalizeEpisodePrice(book.defaultEpisodePrice)
   };
   if(book.serverCoverUrl)update.cover_url=book.serverCoverUrl;
   const result=await PYEODA_SERVER.client.from('books').update(update).eq('id',book.serverId);
@@ -4251,16 +4255,20 @@ async function loadServerBookForEditing(bookId,{navigate='editor',silent=false}=
   }
 }
 async function incrementServerBookView(book){
-  if(!PYEODA_SERVER.client||!book?.serverId)return;
+  if(!PYEODA_SERVER.client||!book?.serverId)return false;
   try{
     const {data,error}=await PYEODA_SERVER.client.rpc('increment_book_view',{p_book_id:book.serverId});
-    if(!error){
-      book.views=Number(data)||Number(book.views||0)+1;
-    }else{
-      console.warn(error);
-      book.views=Number(book.views||0)+1;
-    }
-  }catch(e){book.views=Number(book.views||0)+1}
+    if(error){console.warn('view count update failed',error);return false;}
+    const count=Number(data);
+    if(!Number.isFinite(count)||count<0)return false;
+    book.views=count;
+    for(const row of PYEODA_SERVER.publicBooks||[])if(String(row.serverId)===String(book.serverId))row.views=count;
+    for(const row of PYEODA_SERVER.myBooks||[])if(String(row.id)===String(book.serverId))row.views=count;
+    refreshActualMetrics();
+    renderShelf(document.querySelector('.tab.active')?.dataset.shelf||'popular');
+    renderDiscover(activeDiscoverCategory,activeDiscoverSubcategory);
+    return true;
+  }catch(error){console.warn('view count update failed',error);return false;}
 }
 async function autoConnectPyeodaServer(){
   serverFormFromConfig();
@@ -5403,7 +5411,7 @@ function bindMobilePageNavigation(){
   restoreMobileScreenAfterReload();
 }
 
-function showMobileScreen(id){if(AUTHOR_SCREENS.has(id)&&!PYEODA_SERVER.authorReady){openAuthorAuthModal('login',id);toast('작가 기능은 로그인 후 사용할 수 있습니다.');return;}document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.go===id));if(id==='publish'){try{saveCurrentEpisode()}catch(e){};try{renderEpubPreview()}catch(e){console.error(e)}}if(id==='paper'){try{saveCurrentEpisode()}catch(e){};try{restorePaperOptions()}catch(e){console.error(e)}}if(id==='revenue'||id==='studio'){try{refreshActualMetrics()}catch(e){};if(id==='studio'){try{syncStudioManagementUI()}catch(e){console.error(e)}}if(id==='revenue'){try{syncRevenueBookUI()}catch(e){console.error(e)}}}if(id==='global'){try{syncLocalizedUI()}catch(e){console.error(e)}}if(id==='books'){try{renderRegisteredBookList()}catch(e){console.error(e)}}if((id==='home'||id==='discover')&&PYEODA_SERVER.connected){refreshServerLibrary({silent:true}).catch(console.error)}scrollTo(0,0)}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+function showMobileScreen(id){if(AUTHOR_SCREENS.has(id)&&!PYEODA_SERVER.authorReady){openAuthorAuthModal('login',id);toast('작가 기능은 로그인 후 사용할 수 있습니다.');return;}document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.go===id));if(id==='publish'){try{saveCurrentEpisode()}catch(e){};try{renderEpubPreview()}catch(e){console.error(e)}}if(id==='paper'){try{saveCurrentEpisode()}catch(e){};try{restorePaperOptions()}catch(e){console.error(e)}}if(id==='revenue'||id==='studio'){try{refreshActualMetrics()}catch(e){};if(id==='studio'){try{syncStudioManagementUI()}catch(e){console.error(e)}refreshMyServerBooks().catch(console.error);}if(id==='revenue'){try{syncRevenueBookUI()}catch(e){console.error(e)}}}if(id==='global'){try{syncLocalizedUI()}catch(e){console.error(e)}}if(id==='books'){try{renderRegisteredBookList()}catch(e){console.error(e)}}if((id==='home'||id==='discover')&&PYEODA_SERVER.connected){refreshServerLibrary({silent:true}).catch(console.error)}scrollTo(0,0)}document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
 document.querySelectorAll('[data-publish-target]').forEach(btn=>{
   btn.addEventListener('click',()=>{
     if(!isBookCompleted()){
@@ -7437,6 +7445,21 @@ function effectiveEpisodePrice(ep){
   if(!ep||Number(ep.no??ep.episode_no)<=5)return 0;
   return normalizeEpisodePrice(ep.price);
 }
+function preferredPaidEpisodePrice(){
+  const remembered=normalizeEpisodePrice(currentBookData().defaultEpisodePrice);
+  if(remembered>0)return remembered;
+  const previous=[...episodes].filter(ep=>Number(ep.no)>5&&effectiveEpisodePrice(ep)>0).sort((a,b)=>Number(b.no)-Number(a.no))[0];
+  return previous?effectiveEpisodePrice(previous):0;
+}
+function rememberPaidEpisodePrice(ep){
+  const amount=effectiveEpisodePrice(ep);if(amount<=0)return;
+  const book=currentBookData();
+  if(normalizeEpisodePrice(book.defaultEpisodePrice)===amount)return;
+  book.defaultEpisodePrice=amount;
+  saveCurrentBookData(book);
+  rememberRegisteredBook(book);
+}
+
 function updateEpisodePricingUI(){
   const ep=findEpisode(currentEpisodeNo);
   const fixed=!ep||Number(ep.no)<=5;
@@ -7474,7 +7497,8 @@ function bindEpisodePricing(){
     if(Number(ep.no)<=5){updateEpisodePricingUI();return;}
     const paid=mode.value==='paid';
     input.disabled=!paid;
-    input.value=paid?(effectiveEpisodePrice(ep)>0?String(effectiveEpisodePrice(ep)):''):'0';
+    const remembered=effectiveEpisodePrice(ep)||preferredPaidEpisodePrice();
+    input.value=paid?(remembered>0?String(remembered):''):'0';
     document.getElementById('episodePriceNotice').textContent=paid?
       '유료 회차 가격을 입력해 주세요.':'무료 · 가격은 0원으로 고정됩니다.';
     if(paid)input.focus();
@@ -7521,6 +7545,7 @@ function saveCurrentEpisode(){
   ep.body=(body.innerText||'').replace(/\u00a0/g,' ');
   ep.bodyHtml=captureManuscriptHTML();
   persistEpisodes();
+  rememberPaidEpisodePrice(ep);
   renderEpisodeTabs();
   return true;
 }
@@ -7651,7 +7676,7 @@ function createNextEpisode(){
   }
   if(!saveCurrentEpisode())return;
   const nextNo=(episodes.length?Math.max(...episodes.map(ep=>Number(ep.no)||0)):0)+1;
-  const ep={no:nextNo,title:'',body:'',published:false,price:0};
+  const ep={no:nextNo,title:'',body:'',published:false,price:nextNo<=5?0:preferredPaidEpisodePrice()};
   episodes.push(ep);
   persistEpisodes();
   openEpisode(nextNo,false);
@@ -9062,12 +9087,11 @@ function saveSalesLedger(rows){
   try{localStorage.setItem(SALES_LEDGER_KEY,JSON.stringify(Array.isArray(rows)?rows:[]))}catch(e){}
 }
 function loadPerformance(){
-  try{
-    const data=JSON.parse(localStorage.getItem(PERFORMANCE_KEY)||'{}')||{};
-    return {
-      views:Math.max(0,Number(data.views)||0),
-      subscribers:Math.max(0,Number(data.subscribers)||0)
-    };  }catch(e){return {views:0,subscribers:0}}
+  const ownerId=PYEODA_SERVER.authorReady?PYEODA_SERVER.user?.id:null;
+  const views=ownerId?(PYEODA_SERVER.myBooks||[]).filter(row=>String(row.owner_id)===String(ownerId)).reduce((sum,row)=>sum+Math.max(0,Number(row.views)||0),0):0;
+  let subscribers=0;
+  try{const data=JSON.parse(localStorage.getItem(PERFORMANCE_KEY)||'{}')||{};subscribers=Math.max(0,Number(data.subscribers)||0);}catch(_){}
+  return {views,subscribers};
 }
 function completedSales(rows=loadSalesLedger()){
   return rows.filter(r=>r && r.status==='paid' && Number(r.amount)>0);
