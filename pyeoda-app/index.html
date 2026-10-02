@@ -2616,6 +2616,18 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 .episode-pricing p{font-size:12px;line-height:1.7;margin:10px 0 0;color:#68705e}.episode-pricing details{margin-top:12px;border-top:1px solid #dedfd2;padding-top:10px}.episode-pricing summary{font-size:13px;cursor:pointer}.episode-default-label{margin-top:12px;flex-wrap:wrap;font-size:13px}
 .reader-episode-price{font-size:13px;line-height:1.6;color:#68705e;margin:8px 0 16px}
 @media(max-width:480px){.episode-pricing{padding:12px}.episode-pricing-main{gap:8px}.episode-pricing-main strong{flex-basis:100%}.episode-pricing input{width:105px}}
+
+/* Choose an episode price at the publication step */
+.episode-price-dialog{border:1px solid #d6dacb;border-radius:18px;padding:0;width:min(420px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;background:#fffdf8;color:#414938;box-shadow:0 18px 70px #0003;box-sizing:border-box}
+.episode-price-dialog::backdrop{background:rgba(25,30,23,.48)}
+.episode-price-dialog-card{padding:22px;font-family:system-ui,-apple-system,'Noto Sans KR',sans-serif;word-break:keep-all;overflow-wrap:break-word}
+.episode-price-dialog h2{margin:0 0 10px;font-size:21px;line-height:1.45}.episode-price-dialog p{font-size:13px;line-height:1.7;margin:8px 0 16px}
+.episode-price-dialog fieldset{border:0;padding:0;margin:18px 0;display:flex;flex-wrap:wrap;gap:10px}
+.episode-price-dialog legend{font-size:13px;font-weight:700;margin-bottom:10px}.episode-price-dialog fieldset label{flex:1;min-width:120px;display:flex;align-items:center;gap:8px;padding:12px;border:1px solid #cbd0bf;border-radius:10px;font-size:14px;cursor:pointer}
+.episode-price-dialog input[type=radio]{accent-color:#697158}.episode-price-dialog-amount{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;flex-wrap:wrap}
+.episode-price-dialog-amount input{width:140px;max-width:100%;min-height:44px;padding:8px 10px;border:1px solid #cbd0bf;border-radius:8px;font:inherit;box-sizing:border-box}
+.episode-price-dialog [hidden]{display:none!important}.episode-price-dialog-error{color:#a34534;min-height:0}.episode-price-dialog-error:empty{display:none}
+.episode-price-dialog-actions{display:flex;gap:10px;margin-top:18px}.episode-price-dialog-actions button{min-height:46px;flex:1;padding:10px;border:1px solid #cbd0bf;border-radius:10px;font:inherit;font-size:14px;background:#fffdf8;color:#414938;cursor:pointer}.episode-price-dialog-actions #episodePublishPriceConfirm{background:#697158;color:white;border-color:#697158}
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -4846,7 +4858,8 @@ function epubPreviewCss(){
   `;
 }
 function makePreviewDocument(title,body){
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${epubPreviewCss()}</style></head><body>${body}</body></html>`;
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${epubPreviewCss()}</style></head><body>${body}<dialog id='episodePublishPriceDialog' class='episode-price-dialog' aria-labelledby='episodePublishPriceTitle'><div class='episode-price-dialog-card'><h2 id='episodePublishPriceTitle'>회차 공개 설정</h2><p>6화부터는 무료 공개 또는 유료 가격 설정을 선택할 수 있습니다.</p><fieldset><legend>공개 방식</legend><label><input type='radio' name='episodePublishPriceChoice' value='free' checked> 무료 공개</label><label><input type='radio' name='episodePublishPriceChoice' value='paid'> 유료 가격 설정</label></fieldset><label id='episodePublishPriceField' class='episode-price-dialog-amount' hidden>회차 가격 <span><input id='episodePublishPriceInput' type='number' min='1' max='2147483647' step='1' inputmode='numeric' placeholder='가격 입력' aria-label='공개할 회차 가격'> 원</span></label><p id='episodePublishPriceHint'>로그인 없이 읽을 수 있는 무료 회차로 공개합니다.</p><p id='episodePublishPriceError' class='episode-price-dialog-error' role='alert'></p><div class='episode-price-dialog-actions'><button type='button' id='episodePublishPriceCancel'>취소</button><button type='button' id='episodePublishPriceConfirm'>무료로 공개</button></div></div></dialog>
+</body></html>`;
 }
 function buildEpubPreviewSections(){
   const book=currentBookData();
@@ -7274,8 +7287,65 @@ document.querySelectorAll('[data-studio-step]').forEach(btn=>{
 });
 
 bindEpisodePricing();
+function needsEpisodePublicationPrice(book,ep){
+  return !!ep&&Number(ep.no)>5&&String(book?.format||'회차 연재').includes('연재');
+}
+function requestEpisodePublicationPrice(ep){
+  const dialog=document.getElementById('episodePublishPriceDialog');
+  const input=document.getElementById('episodePublishPriceInput');
+  const confirm=document.getElementById('episodePublishPriceConfirm');
+  const error=document.getElementById('episodePublishPriceError');
+  const radios=[...dialog.querySelectorAll('[name="episodePublishPriceChoice"]')];
+  const initial=effectiveEpisodePrice(ep);
+  document.getElementById('episodePublishPriceTitle').textContent=`${ep.no}화 공개 설정`;
+  input.value=String(initial||normalizeEpisodePrice(currentBookData().defaultEpisodePrice)||'');
+  error.textContent='';
+  radios.forEach(r=>r.checked=r.value===(initial>0?'paid':'free'));
+  const refresh=()=>{
+    const paid=radios.some(r=>r.checked&&r.value==='paid');
+    document.getElementById('episodePublishPriceField').hidden=!paid;
+    input.disabled=!paid;
+    confirm.textContent=paid?'가격 저장':'무료로 공개';
+    document.getElementById('episodePublishPriceHint').textContent=paid?
+      '가격과 원고를 저장합니다. 유료 공개·판매는 결제 오픈 후 가능합니다.':
+      '로그인 없이 읽을 수 있는 무료 회차로 공개합니다.';
+    error.textContent='';
+  };
+  refresh();
+  return new Promise(resolve=>{
+    let result=null;
+    dialog.onclose=()=>resolve(result);
+    radios.forEach(r=>r.onchange=()=>{refresh();if(!input.disabled)input.focus();});
+    document.getElementById('episodePublishPriceCancel').onclick=()=>dialog.close();
+    confirm.onclick=()=>{
+      const paid=radios.some(r=>r.checked&&r.value==='paid');
+      const amount=paid?Number(input.value):0;
+      if(paid&&(!input.value.trim()||!Number.isInteger(amount)||amount<1||amount>2147483647)){
+        error.textContent='가격을 1원 이상의 정수로 입력해 주세요.';input.focus();return;
+      }
+      if(paid&&ep.published){
+        error.textContent='현재 공개된 회차의 유료 전환은 결제 오픈 후 가능합니다.';return;
+      }
+      result={price:amount};dialog.close();
+    };
+    dialog.showModal();
+  });
+}
+let episodePublicationBusy=false;
 document.getElementById('publishEpisode').onclick=async()=>{
-  if(!saveCurrentEpisode())return;
+  if(episodePublicationBusy)return;
+  episodePublicationBusy=true;
+  const publishButton=document.getElementById('publishEpisode');
+  publishButton.disabled=true;
+  try{
+    const selected=findEpisode(currentEpisodeNo);
+    if(needsEpisodePublicationPrice(currentBookData(),selected)){
+      const choice=await requestEpisodePublicationPrice(selected);
+      if(!choice)return;
+      document.getElementById('episodeSaleMode').value=choice.price>0?'paid':'free';
+      document.getElementById('episodeSalePrice').value=choice.price>0?String(choice.price):'';
+    }
+    if(!saveCurrentEpisode())return;
   const ep=findEpisode(currentEpisodeNo);
   if(ep){
     if(effectiveEpisodePrice(ep)>0){
@@ -7304,6 +7374,13 @@ document.getElementById('publishEpisode').onclick=async()=>{
       editorStatus.textContent='공개됨 · 로컬 모드';
       toast(`${currentEpisodeNo}화가 현재 브라우저에서 공개 처리되었습니다. 서버를 연결하면 모든 방문자에게 공개됩니다.`);
     }
+  }
+  }catch(err){
+    console.error('episode publication failed',err);
+    toast('회차 공개를 완료하지 못했습니다. 원고를 저장한 뒤 다시 시도해 주세요.');
+  }finally{
+    episodePublicationBusy=false;
+    publishButton.disabled=false;
   }
 };
 const TRANSLATION_JOB_KEY='pyeoda-translated-books-v3';
