@@ -3691,7 +3691,7 @@ async function connectPyeodaServer({silent=false}={}){
 
     bindPyeodaAuthListener();
     await applyAuthorSession(session,{silent:true});
-    resumeTestPaymentReturn();
+    if(typeof resumeTestPaymentReturn==='function')resumeTestPaymentReturn();
     await refreshServerLibrary({silent:true});
     resumeReaderPurchaseAfterLogin();
     await disconnectPublicLibraryRealtime();
