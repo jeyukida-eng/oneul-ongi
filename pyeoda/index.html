@@ -2346,6 +2346,43 @@ html,body{max-width:100%;overflow-x:clip}
   .cover-tool-buttons{grid-template-columns:1fr!important;width:100%!important}
   .cover-tool-btn{width:100%!important;max-width:100%!important;min-width:0!important;white-space:normal!important;overflow:visible!important;font-size:14px!important;line-height:1.35!important}
 }
+
+/* PYEODA_READER_AUTH_V1 — 결제가 필요한 순간에만 간편 로그인 */
+.reader-auth-modal[hidden]{display:none!important}
+.reader-auth-modal{
+  position:fixed;inset:0;z-index:5100;
+  display:flex;align-items:center;justify-content:center;
+  padding:18px;background:rgba(47,43,36,.46);backdrop-filter:blur(8px)
+}
+.reader-auth-card{
+  width:min(430px,100%);padding:25px;
+  border:1px solid rgba(108,99,84,.20);border-radius:24px;
+  background:#fffdf8;box-shadow:0 24px 70px rgba(42,35,26,.24)
+}
+.reader-auth-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:18px}
+.reader-auth-head h2{margin:0 0 7px;font-size:24px;letter-spacing:-.7px}
+.reader-auth-head p{margin:0;color:#746d62;font-size:12.5px;line-height:1.65;word-break:keep-all}
+.reader-auth-close{width:38px;height:38px;flex:0 0 auto;border:0;border-radius:50%;background:#f1ede4;cursor:pointer;font-size:18px}
+.reader-auth-providers{display:grid;gap:10px}
+.reader-auth-provider{
+  width:100%;min-height:52px;border-radius:14px;border:1px solid rgba(108,99,84,.20);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;font-size:14px;font-weight:850;
+  cursor:pointer;transition:.16s ease
+}
+.reader-auth-provider:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(65,52,34,.08)}
+.reader-auth-provider.kakao{background:#fee500;border-color:#ead500;color:#191919}
+.reader-auth-provider.google{background:#fff;border-color:#dadce0;color:#3c4043}
+.reader-auth-provider.naver{background:#03c75a;border-color:#03b653;color:#fff}
+.reader-auth-provider .provider-mark{width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;font-weight:900}
+.reader-auth-provider.google .provider-mark{border:1px solid #dadce0;background:#fff}
+.reader-auth-copy{margin:14px 2px 0;color:#7e766a;font-size:11.5px;line-height:1.65;word-break:keep-all}
+.reader-auth-message{min-height:19px;margin:10px 2px 0;color:#697158;font-size:12px;line-height:1.55}
+.reader-auth-message.error{color:#9a5146}
+@media(max-width:760px){
+  .reader-auth-modal{align-items:flex-end;padding:0}
+  .reader-auth-card{width:100%;border-radius:24px 24px 0 0;padding:22px 17px 26px}
+}
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2388,6 +2425,24 @@ html,body{max-width:100%;overflow-x:clip}
       <p class='author-auth-auto'>PC와 모바일에서 이 이메일로 로그인하면 서버에 저장된 같은 작품과 회차를 불러옵니다.</p>
       <button type='button' class='author-auth-logout' id='authorLogoutBtn'>로그아웃</button>
     </div>
+  </div>
+</div>
+<div class='reader-auth-modal' id='readerAuthModal' hidden>
+  <div class='reader-auth-card' role='dialog' aria-modal='true' aria-labelledby='readerAuthTitle'>
+    <div class='reader-auth-head'>
+      <div>
+        <h2 id='readerAuthTitle'>구매하려면 로그인</h2>
+        <p id='readerAuthSubtitle'>구매한 회차와 소장 작품을 웹·모바일에서 안전하게 이어보기 위해 간편 로그인이 필요합니다.</p>
+      </div>
+      <button type='button' class='reader-auth-close' id='readerAuthClose' aria-label='닫기'>×</button>
+    </div>
+    <div class='reader-auth-providers'>
+      <button type='button' class='reader-auth-provider kakao' data-reader-provider='kakao'><span class='provider-mark'>K</span>카카오로 계속하기</button>
+      <button type='button' class='reader-auth-provider google' data-reader-provider='google'><span class='provider-mark'>G</span>Google로 계속하기</button>
+      <button type='button' class='reader-auth-provider naver' data-reader-provider='naver'><span class='provider-mark'>N</span>네이버로 계속하기</button>
+    </div>
+    <p class='reader-auth-copy'>무료 작품과 무료 회차는 로그인 없이 계속 읽을 수 있습니다. 로그인은 포인트 충전·유료 회차·전체 소장 구매 때만 필요합니다.</p>
+    <p class='reader-auth-message' id='readerAuthMessage'></p>
   </div>
 </div>
 <main>
@@ -3085,6 +3140,7 @@ const PYEODA_SERVER_CONFIG_KEY='pyeoda-supabase-config';
 const PYEODA_SERVER={
   client:null,
   user:null,
+  authUser:null,
   connected:false,
   authorReady:false,
   publicBooks:[],
@@ -3241,6 +3297,7 @@ function closeAuthorAuthModal(){
 }
 async function applyAuthorSession(session,{silent=false}={}){
   const user=session?.user||null;
+  PYEODA_SERVER.authUser=(user && !user.is_anonymous)?user:null;
   PYEODA_SERVER.user=isPermanentAuthor(user)?user:null;
   PYEODA_SERVER.authorReady=!!PYEODA_SERVER.user;
   syncAuthorAuthUI();
@@ -3260,7 +3317,7 @@ function bindPyeodaAuthListener(){
   try{PYEODA_SERVER.authSubscription?.unsubscribe?.()}catch(e){}
   const result=PYEODA_SERVER.client.auth.onAuthStateChange((event,session)=>{
     setTimeout(()=>{
-      applyAuthorSession(session,{silent:true}).catch(console.error);
+      applyAuthorSession(session,{silent:true}).then(()=>{try{resumeReaderPurchaseAfterLogin()}catch(e){}}).catch(console.error);
       if(event==='PASSWORD_RECOVERY')handlePasswordRecoverySession().catch(console.error);
     },0);
   });
@@ -3483,6 +3540,7 @@ async function connectPyeodaServer({silent=false}={}){
     PYEODA_SERVER.connected=false;
     PYEODA_SERVER.authorReady=false;
     PYEODA_SERVER.user=null;
+    PYEODA_SERVER.authUser=null;
     syncAuthorAuthUI();
     serverStatus('연결 실패','error',`서버 연결 실패: ${err.message||'설정을 확인해 주세요.'}`);
     return false;
@@ -4297,11 +4355,108 @@ function refreshReadingCards(){
   renderShelf(document.querySelector('.tab.active')?.dataset.shelf||'popular');
   renderDiscover();
 }
+
+const PYEODA_READER_AUTH_INTENT_KEY='pyeoda-reader-auth-intent';
+let READER_AUTH_INTENT=null;
+
+function readerIsSignedIn(){
+  return !!(PYEODA_SERVER.authUser && !PYEODA_SERVER.authUser.is_anonymous);
+}
+function readerAuthRedirectUrl(){
+  const url=new URL(window.location.href);
+  url.hash='';
+  url.search='';
+  return url.toString();
+}
+function setReaderAuthMessage(message='',kind=''){
+  const el=document.getElementById('readerAuthMessage');
+  if(!el)return;
+  el.textContent=message;
+  el.classList.toggle('error',kind==='error');
+}
+function openReaderAuthModal(intent={}){
+  READER_AUTH_INTENT={...intent};
+  try{sessionStorage.setItem(PYEODA_READER_AUTH_INTENT_KEY,JSON.stringify(READER_AUTH_INTENT))}catch(e){}
+  const modal=document.getElementById('readerAuthModal');
+  const subtitle=document.getElementById('readerAuthSubtitle');
+  if(subtitle){
+    if(intent.type==='book'){
+      subtitle.textContent=`${intent.title||'이 작품'}을 소장하고 구매내역을 웹·모바일에서 이어보려면 간편 로그인이 필요합니다.`;
+    }else if(intent.type==='episode'){
+      subtitle.textContent=`${intent.episodeNo||''}화 유료 회차를 구매하고 다른 기기에서도 이어보려면 간편 로그인이 필요합니다.`;
+    }else{
+      subtitle.textContent='구매한 회차와 소장 작품을 웹·모바일에서 안전하게 이어보기 위해 간편 로그인이 필요합니다.';
+    }
+  }
+  setReaderAuthMessage('');
+  if(modal)modal.hidden=false;
+  document.body.style.overflow='hidden';
+}
+function closeReaderAuthModal(){
+  const modal=document.getElementById('readerAuthModal');
+  if(modal)modal.hidden=true;
+  document.body.style.overflow='';
+  setReaderAuthMessage('');
+}
+async function signInReaderWithOAuth(provider){
+  if(!PYEODA_SERVER.client){
+    setReaderAuthMessage('서버 연결 후 다시 시도해 주세요.','error');
+    return;
+  }
+  if(provider==='naver'){
+    setReaderAuthMessage('네이버 로그인은 네이버 개발자 Client ID·Secret을 연결한 뒤 활성화됩니다. 버튼과 결제 로그인 흐름은 준비해 두었습니다.','error');
+    return;
+  }
+  try{
+    setReaderAuthMessage(provider==='kakao'?'카카오 로그인 화면으로 이동합니다…':'Google 로그인 화면으로 이동합니다…');
+    const options={redirectTo:readerAuthRedirectUrl()};
+    if(provider==='google')options.queryParams={prompt:'select_account'};
+    const {error}=await PYEODA_SERVER.client.auth.signInWithOAuth({provider,options});
+    if(error)throw error;
+  }catch(err){
+    console.error('reader oauth failed',err);
+    setReaderAuthMessage(err?.message||'간편 로그인을 시작하지 못했습니다.','error');
+  }
+}
+function resumeReaderPurchaseAfterLogin(){
+  if(!readerIsSignedIn())return;
+  let intent=READER_AUTH_INTENT;
+  if(!intent){
+    try{intent=JSON.parse(sessionStorage.getItem(PYEODA_READER_AUTH_INTENT_KEY)||'null')}catch(e){}
+  }
+  if(!intent)return;
+  READER_AUTH_INTENT=intent;
+  try{sessionStorage.removeItem(PYEODA_READER_AUTH_INTENT_KEY)}catch(e){}
+  closeReaderAuthModal();
+  const label=intent.type==='episode'
+    ? `${intent.episodeNo||''}화`
+    : (intent.title||'작품');
+  toast(`로그인 완료 · ${label} 결제를 계속할 수 있습니다.`);
+}
+function requireReaderLoginForPurchase(intent={}){
+  if(readerIsSignedIn())return true;
+  openReaderAuthModal(intent);
+  return false;
+}
+function bindReaderAuthUI(){
+  document.getElementById('readerAuthClose')?.addEventListener('click',closeReaderAuthModal);
+  document.getElementById('readerAuthModal')?.addEventListener('click',e=>{if(e.target?.id==='readerAuthModal')closeReaderAuthModal()});
+  document.querySelectorAll('[data-reader-provider]').forEach(btn=>{
+    btn.addEventListener('click',()=>signInReaderWithOAuth(btn.dataset.readerProvider||''));
+  });
+  resumeReaderPurchaseAfterLogin();
+}
+document.addEventListener('DOMContentLoaded',bindReaderAuthUI,{once:true});
+
 function bindReads(){
   document.querySelectorAll('.read').forEach(btn=>btn.onclick=async()=>{
     const b=findBookFromButton(btn);
     if(!b){toast('작품 정보를 찾지 못했습니다.');return}
-    if(b.price){toast('소장 결제 화면은 실제 결제 연동 단계에서 연결합니다.');return}
+    if(b.price){
+      if(!requireReaderLoginForPurchase({type:'book',title:b.title,author:b.author,price:b.price,serverId:b.serverId||''}))return;
+      toast(`로그인 확인 완료 · ${b.price} 소장 결제는 다음 포인트 결제 단계에서 연결합니다.`);
+      return;
+    }
     await openReader(b,readingStateFor(b));
   });
   document.querySelectorAll('.read-first').forEach(btn=>btn.onclick=async()=>{
@@ -4314,11 +4469,13 @@ function bindReads(){
     const author=btn.dataset.author||'';
     const price=btn.dataset.price||'';
     const owned=shelves.owned.items.find(x=>x.title===title&&x.author===author);
-    if(owned){
-      toast(`${price||owned.price||''} 소장 구매 화면은 실제 결제 연동 단계에서 연결합니다.`.trim());
-    }else{
+    if(!owned){
       toast('이 작품의 소장용 전자책 구매 화면은 판매 등록 후 연결됩니다.');
+      return;
     }
+    const displayPrice=price||owned.price||'';
+    if(!requireReaderLoginForPurchase({type:'book',title,author,price:displayPrice,serverId:btn.dataset.serverId||''}))return;
+    toast(`로그인 확인 완료 · ${displayPrice} 소장 결제는 다음 포인트 결제 단계에서 연결합니다.`.trim());
   });
 }
 document.getElementById('readerBack').onclick=()=>{refreshReadingCards();go(readerReturnScreen||'home')};
