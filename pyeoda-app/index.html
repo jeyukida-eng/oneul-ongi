@@ -2645,6 +2645,10 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
  .episode-pricing-main #episodePriceAmount{flex:1 1 120px;min-width:110px;width:auto}
  .episode-pricing-main>button{width:100%;flex-basis:100%}
 }
+
+/* A free episode has a visibly disabled zero-price field. */
+.episode-pricing-main input:disabled{background:#eeeee7!important;color:#8b9082!important;border-color:#d8dbd0!important;cursor:not-allowed}
+.episode-pricing[hidden]{display:none!important}
 </style><link rel="manifest" href="./manifest.webmanifest?v=2">
 <meta name="theme-color" content="#697158">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2952,7 +2956,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
     <div class='editor-guide-external'><b>적용 순서</b><span id='editorGuideExternal'>공통 원칙 → 장르별 규칙 → 작품별 설정 → 출판처 기준</span></div>
   </div>
 </details>
-<div class='editor-episode-tools'><nav class='editor-episode-navigation' aria-label='집필 회차 이동'><button type='button' id='editorPrevEpisode' aria-label='이전 회차' title='이전 회차' disabled>←</button><span id='editorEpisodePosition' aria-live='polite'>회차 선택</span><button type='button' id='editorNextEpisode' aria-label='다음 회차' title='다음 회차' disabled>→</button></nav><div class='editor-book-tools'><button type='button' class='editor-action editor-action-delete editor-top-action' id='deleteEpisode'>회차 삭제</button><button type='button' class='editor-action editor-action-complete editor-top-action' id='completeBook'>책 완결</button></div></div><div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><section class='episode-pricing' aria-label='회차 가격 설정'><div class='episode-pricing-main'><strong>회차 가격</strong><select id='episodeSaleMode' aria-label='회차 무료 또는 유료'><option value='free'>무료</option><option value='paid'>유료</option></select><label id='episodePriceAmount' hidden><input id='episodeSalePrice' type='number' min='1' max='2147483647' step='1' inputmode='numeric' placeholder='가격 입력' aria-label='이 회차 가격'><span>원</span></label><button type='button' id='useDefaultEpisodePrice'>기본 가격 적용</button></div><p id='episodePriceNotice'>1~5화는 무료로 고정됩니다.</p><details><summary>작품의 기본 회차 가격</summary><label class='episode-default-label'>6화 이후 새 회차 <input id='defaultEpisodePrice' type='number' min='0' max='2147483647' step='1' value='0' inputmode='numeric' aria-label='새 회차 기본 가격'><span>원</span></label><p>0원은 무료입니다. 새 회차에 적용하며, 기존 회차 가격은 바뀌지 않습니다. 전체 소장 가격과 별도입니다.</p></details></section><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-draft' id='draftEpisodeBtn' title='현재 기기에 원고를 임시 저장합니다.'>임시 저장</button><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
+<div class='editor-episode-tools'><nav class='editor-episode-navigation' aria-label='집필 회차 이동'><button type='button' id='editorPrevEpisode' aria-label='이전 회차' title='이전 회차' disabled>←</button><span id='editorEpisodePosition' aria-live='polite'>회차 선택</span><button type='button' id='editorNextEpisode' aria-label='다음 회차' title='다음 회차' disabled>→</button></nav><div class='editor-book-tools'><button type='button' class='editor-action editor-action-delete editor-top-action' id='deleteEpisode'>회차 삭제</button><button type='button' class='editor-action editor-action-complete editor-top-action' id='completeBook'>책 완결</button></div></div><div class='episode-list' id='episodeList'><button class='active'>1화</button><button>2화</button><button>3화</button><button>31화</button><button>32화</button><button id='addEpisode'>＋ 회차 추가</button></div><div class='panel editor' style='padding:20px'><div class='meta' id='editorStatus'>자동 저장됨 · 공개 전</div><div class='episode-head'><input id='episodeNo' value='32화' aria-label='회차'><input id='title' value='젖은 짚신' aria-label='회차 제목'></div><div id='body' class='body-editor' contenteditable='true' spellcheck='false' title='타자기 커서로 집필합니다' data-placeholder='이 회차의 본문을 작성하세요.'>밤 열한 시가 넘자 빌라 복도에서 다시 발자국 소리가 났다.<br><br>그런데 이번에는 위층이 아니었다.<br><br>엘리베이터 문이 열리자 아무도 없는 복도 한가운데 젖은 짚신 한 켤레가 놓여 있었다.<br><br>나는 그제야 302호 할머니가 했던 말을 떠올렸다.<br><br>“여기 사는 사람들, 다 사람이 아니야.”<br><br>뭐에 애뉴오리는 없다.</div><div class='proof-panel' id='proofPanel'><div class='proof-copy'><span class='proof-type spell' id='proofType'>맞춤법</span><span class='proof-original' id='proofOriginal'></span><span class='proof-arrow'>→</span><span class='proof-suggestion' id='proofSuggestion'></span></div><div class='proof-actions'><button id='ignoreProof'>무시</button><button class='apply' id='applyProof'>수정</button></div></div><section class='episode-pricing' aria-label='회차 가격 설정'><div class='episode-pricing-main'><strong>회차 가격</strong><select id='episodeSaleMode' aria-label='회차 무료 또는 유료'><option value='free'>무료</option><option value='paid'>유료</option></select><label id='episodePriceAmount'><input id='episodeSalePrice' type='number' min='1' max='2147483647' step='1' inputmode='numeric' value='0' disabled placeholder='가격 입력' aria-label='이 회차 가격'><span>원</span></label></div><p id='episodePriceNotice'>1~5화는 무료로 고정됩니다.</p></section><div class='editorbar'><span><span id='count' class='meta'></span> <span id='proofStatus' class='proof-status'></span><span class='proof-legend'><span><i class='proof-dot spell'></i>맞춤법</span><span><i class='proof-dot awkward'></i>문장</span><span><i class='proof-dot repeat'></i>반복</span></span></span><div class='editor-actions'><button type='button' class='editor-action editor-action-draft' id='draftEpisodeBtn' title='현재 기기에 원고를 임시 저장합니다.'>임시 저장</button><button type='button' class='editor-action editor-action-save' id='saveEpisodeBtn' title='원고를 서버에 저장합니다. 공개 상태는 바뀌지 않습니다.'>저장</button><button class='editor-action editor-action-ai' id='aiBtn' title='맞춤법 · 문장 문맥 · 반복 표현을 함께 검사합니다'>AI 원고 검사</button><button class='editor-action editor-action-publish' id='publishEpisode'>이 회차 공개</button><button class='editor-action editor-action-next' id='nextEpisodeBtn'>다음 회차 작성</button></div></div><div class='completion-next' id='completionNext'><div class='completion-copy'><p><b>작품이 완결되었습니다.</b><br>공개 취소 · 완결 취소 · 완결 작품 삭제는 작가 스튜디오에서 관리합니다.</p></div><div class='completion-actions'><button class='completion-action completion-action-primary' data-go='studio'>작가 스튜디오</button><button class='completion-action' data-go='publishing'>출판 센터</button></div></div></div></div></div></section>
 
 <section id='publishing' class='screen'>
   <div class='publish-center-shell'>
@@ -4875,7 +4879,7 @@ function epubPreviewCss(){
   `;
 }
 function makePreviewDocument(title,body){
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${epubPreviewCss()}</style></head><body>${body}<dialog id='episodePublishPriceDialog' class='episode-price-dialog' aria-labelledby='episodePublishPriceTitle'><div class='episode-price-dialog-card'><h2 id='episodePublishPriceTitle'>회차 공개 설정</h2><p>6화부터는 무료 공개 또는 유료 가격 설정을 선택할 수 있습니다.</p><fieldset><legend>공개 방식</legend><label><input type='radio' name='episodePublishPriceChoice' value='free' checked> 무료 공개</label><label><input type='radio' name='episodePublishPriceChoice' value='paid'> 유료 가격 설정</label></fieldset><label id='episodePublishPriceField' class='episode-price-dialog-amount' hidden>회차 가격 <span><input id='episodePublishPriceInput' type='number' min='1' max='2147483647' step='1' inputmode='numeric' placeholder='가격 입력' aria-label='공개할 회차 가격'> 원</span></label><p id='episodePublishPriceHint'>로그인 없이 읽을 수 있는 무료 회차로 공개합니다.</p><p id='episodePublishPriceError' class='episode-price-dialog-error' role='alert'></p><div class='episode-price-dialog-actions'><button type='button' id='episodePublishPriceCancel'>취소</button><button type='button' id='episodePublishPriceConfirm'>무료로 공개</button></div></div></dialog>
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${epubPreviewCss()}</style></head><body>${body}
 </body></html>`;
 }
 function buildEpubPreviewSections(){
@@ -6751,14 +6755,12 @@ function updateEpisodePricingUI(){
   const input=document.getElementById('episodeSalePrice');
   const wrap=document.getElementById('episodePriceAmount');
   mode.value=amount>0?'paid':'free';mode.disabled=fixed;
-  input.value=amount>0?String(amount):'';input.disabled=fixed||amount===0;
-  wrap.hidden=fixed||amount===0;
+  input.value=amount>0?String(amount):'0';input.disabled=fixed||amount===0;
+  wrap.hidden=false;
+  document.querySelector('.episode-pricing').hidden=fixed||!String(currentBookData().format||'회차 연재').includes('연재');
   document.getElementById('episodePriceNotice').textContent=fixed?
     '1~5화는 누구나 로그인 없이 읽을 수 있는 무료 회차입니다.':
-    amount>0?'유료 가격과 원고를 저장할 수 있습니다. 유료 공개·판매는 결제 오픈 후 가능합니다.':
-    '무료 회차는 로그인 없이 읽을 수 있습니다. 유료로 선택하면 회차 가격을 입력해 주세요.';
-  document.getElementById('defaultEpisodePrice').value=String(normalizeEpisodePrice(currentBookData().defaultEpisodePrice));
-  document.getElementById('useDefaultEpisodePrice').disabled=fixed;
+    amount>0?'유료 회차 가격이 설정되었습니다.':'무료 · 가격은 0원으로 고정됩니다.';
 }
 function readEpisodePricing(ep){
   const mode=document.getElementById('episodeSaleMode');
@@ -6787,36 +6789,14 @@ function bindEpisodePricing(){
       toast('공개된 회차의 유료 전환은 결제 오픈 후 가능합니다.');updateEpisodePricingUI();return;
     }
     const paid=mode.value==='paid';
-    input.disabled=!paid;document.getElementById('episodePriceAmount').hidden=!paid;
+    input.disabled=!paid;
+    input.value=paid?(effectiveEpisodePrice(ep)>0?String(effectiveEpisodePrice(ep)):''):'0';
     document.getElementById('episodePriceNotice').textContent=paid?
-      '가격 입력 후 저장해 주세요. 유료 공개·판매는 결제 오픈 후 가능합니다.':
-      '무료 회차는 로그인 없이 읽을 수 있습니다.';
-    if(paid){input.value=String(effectiveEpisodePrice(ep)||normalizeEpisodePrice(currentBookData().defaultEpisodePrice)||'');input.focus();}
+      '유료 회차 가격을 입력해 주세요.':'무료 · 가격은 0원으로 고정됩니다.';
+    if(paid)input.focus();
     else if(saveCurrentEpisode())scheduleDraftServerSave(findEpisode(currentEpisodeNo));
   };
   input.onchange=()=>{if(saveCurrentEpisode())scheduleDraftServerSave(findEpisode(currentEpisodeNo));};
-  document.getElementById('defaultEpisodePrice').onchange=async event=>{
-    const raw=event.target.value.trim(),amount=Number(raw);
-    if(!raw||!Number.isInteger(amount)||amount<0||amount>2147483647){
-      toast('기본 회차 가격은 0원 이상의 정수로 입력해 주세요.');event.target.value=String(normalizeEpisodePrice(currentBookData().defaultEpisodePrice));return;
-    }
-    const book=currentBookData();if(!book.title){toast('먼저 책을 등록해 주세요.');return;}
-    try{
-      book.defaultEpisodePrice=amount;saveCurrentBookData(book);rememberRegisteredBook(book);
-      if(book.serverId&&PYEODA_SERVER.authorReady){
-        const result=await PYEODA_SERVER.client.from('books').update({default_episode_price:amount}).eq('id',book.serverId);
-        if(result.error)throw result.error;
-        toast('기본 회차 가격을 서버에 저장했습니다.');
-      }else toast('기본 회차 가격을 이 기기에 저장했습니다.');
-    }catch(err){console.error(err);toast('기본 가격의 서버 저장에 실패했습니다. 저장 버튼으로 다시 시도해 주세요.');}
-  };
-  document.getElementById('useDefaultEpisodePrice').onclick=()=>{
-    const ep=findEpisode(currentEpisodeNo);if(!ep||Number(ep.no)<=5)return;
-    const amount=normalizeEpisodePrice(currentBookData().defaultEpisodePrice);
-    if(ep.published&&amount>0){toast('공개된 회차의 유료 전환은 결제 오픈 후 가능합니다.');return;}
-    mode.value=amount>0?'paid':'free';input.value=amount>0?String(amount):'';
-    if(saveCurrentEpisode()){updateEpisodePricingUI();scheduleDraftServerSave(findEpisode(currentEpisodeNo));}
-  };
 }
 
 function parseEpisodeNumber(value){
@@ -6992,7 +6972,7 @@ function createNextEpisode(){
   }
   if(!saveCurrentEpisode())return;
   const nextNo=(episodes.length?Math.max(...episodes.map(ep=>Number(ep.no)||0)):0)+1;
-  const ep={no:nextNo,title:'',body:'',published:false,price:nextNo<=5?0:normalizeEpisodePrice(currentBookData().defaultEpisodePrice)};
+  const ep={no:nextNo,title:'',body:'',published:false,price:0};
   episodes.push(ep);
   persistEpisodes();
   openEpisode(nextNo,false);
@@ -7307,47 +7287,6 @@ bindEpisodePricing();
 function needsEpisodePublicationPrice(book,ep){
   return !!ep&&Number(ep.no)>5&&String(book?.format||'회차 연재').includes('연재');
 }
-function requestEpisodePublicationPrice(ep){
-  const dialog=document.getElementById('episodePublishPriceDialog');
-  const input=document.getElementById('episodePublishPriceInput');
-  const confirm=document.getElementById('episodePublishPriceConfirm');
-  const error=document.getElementById('episodePublishPriceError');
-  const radios=[...dialog.querySelectorAll('[name="episodePublishPriceChoice"]')];
-  const initial=effectiveEpisodePrice(ep);
-  document.getElementById('episodePublishPriceTitle').textContent=`${ep.no}화 공개 설정`;
-  input.value=String(initial||normalizeEpisodePrice(currentBookData().defaultEpisodePrice)||'');
-  error.textContent='';
-  radios.forEach(r=>r.checked=r.value===(initial>0?'paid':'free'));
-  const refresh=()=>{
-    const paid=radios.some(r=>r.checked&&r.value==='paid');
-    document.getElementById('episodePublishPriceField').hidden=!paid;
-    input.disabled=!paid;
-    confirm.textContent=paid?'가격 저장':'무료로 공개';
-    document.getElementById('episodePublishPriceHint').textContent=paid?
-      '가격과 원고를 저장합니다. 유료 공개·판매는 결제 오픈 후 가능합니다.':
-      '로그인 없이 읽을 수 있는 무료 회차로 공개합니다.';
-    error.textContent='';
-  };
-  refresh();
-  return new Promise(resolve=>{
-    let result=null;
-    dialog.onclose=()=>resolve(result);
-    radios.forEach(r=>r.onchange=()=>{refresh();if(!input.disabled)input.focus();});
-    document.getElementById('episodePublishPriceCancel').onclick=()=>dialog.close();
-    confirm.onclick=()=>{
-      const paid=radios.some(r=>r.checked&&r.value==='paid');
-      const amount=paid?Number(input.value):0;
-      if(paid&&(!input.value.trim()||!Number.isInteger(amount)||amount<1||amount>2147483647)){
-        error.textContent='가격을 1원 이상의 정수로 입력해 주세요.';input.focus();return;
-      }
-      if(paid&&ep.published){
-        error.textContent='현재 공개된 회차의 유료 전환은 결제 오픈 후 가능합니다.';return;
-      }
-      result={price:amount};dialog.close();
-    };
-    dialog.showModal();
-  });
-}
 let episodePublicationBusy=false;
 document.getElementById('publishEpisode').onclick=async()=>{
   if(episodePublicationBusy)return;
@@ -7357,10 +7296,7 @@ document.getElementById('publishEpisode').onclick=async()=>{
   try{
     const selected=findEpisode(currentEpisodeNo);
     if(needsEpisodePublicationPrice(currentBookData(),selected)){
-      const choice=await requestEpisodePublicationPrice(selected);
-      if(!choice)return;
-      document.getElementById('episodeSaleMode').value=choice.price>0?'paid':'free';
-      document.getElementById('episodeSalePrice').value=choice.price>0?String(choice.price):'';
+      window.alert('회차 연재는 1~5화까지 무료이며, 6화부터 가격을 설정할 수 있습니다. 무료를 선택하면 가격은 0원으로 고정됩니다.');
     }
     if(!saveCurrentEpisode())return;
   const ep=findEpisode(currentEpisodeNo);
