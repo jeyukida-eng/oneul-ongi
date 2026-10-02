@@ -2802,7 +2802,14 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 .book-image-layout select{min-height:40px;margin-left:8px;padding:6px 10px;border:1px solid #d5d0c5;border-radius:10px;background:#fffdf8;font:13px system-ui}
 .book-image-layout p{margin:0;font:12px/1.5 system-ui;color:#766f63}
 @media(max-width:760px){.reader-shell{padding-top:14px}.reader-book-head{grid-template-columns:32px minmax(0,1fr);gap:8px}.reader-cover{width:32px}.reader-book-head h2{font-size:16px}.reader-book-head p{font-size:10px}.reader-progress-bar{margin:10px 0 14px}.reader-top{margin-bottom:10px}.reader-episode h1{font-size:24px}.book-image-layout{gap:8px}.book-image-layout label{width:100%}}
-</style><style>.mobilebar{grid-template-columns:repeat(4,1fr)}</style></head><body class='mobile-build'><button type='button' id='pyeodaMobileInstall'>앱 설치</button><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='mobilePageBack' aria-label='이전 화면' title='이전 화면' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M19 12H5m7-7-7 7 7 7'/></svg><span>이전</span></button><button type='button' id='mobilePageRefresh' aria-label='새로고침' title='새로고침'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 7v5h-5M20 12a8 8 0 1 1-2.35-5.65L20 9'/></svg><span>새로고침</span></button><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
+</style><style>.mobilebar{grid-template-columns:repeat(4,1fr)}</style><style>
+.author-auth-providers{margin:16px 0 8px}
+.author-social-note{margin:0 0 14px;font:12px/1.6 system-ui;color:var(--muted);word-break:keep-all}
+.author-auth-divider{display:flex;align-items:center;gap:10px;margin:18px 0;font:12px system-ui;color:var(--muted)}
+.author-auth-divider:before,.author-auth-divider:after{content:'';height:1px;background:var(--line);flex:1}
+.author-auth-card{max-height:calc(100dvh - 32px);overflow-y:auto}
+.author-auth-providers button:disabled{opacity:.6;cursor:wait}
+</style></head><body class='mobile-build'><button type='button' id='pyeodaMobileInstall'>앱 설치</button><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='mobilePageBack' aria-label='이전 화면' title='이전 화면' disabled><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M19 12H5m7-7-7 7 7 7'/></svg><span>이전</span></button><button type='button' id='mobilePageRefresh' aria-label='새로고침' title='새로고침'><svg viewBox='0 0 24 24' aria-hidden='true'><path d='M20 7v5h-5M20 12a8 8 0 1 1-2.35-5.65L20 9'/></svg><span>새로고침</span></button><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
 <div class='author-auth-modal' id='authorAuthModal' hidden>
   <div class='author-auth-card' role='dialog' aria-modal='true' aria-labelledby='authorAuthTitle'>
     <div class='author-auth-head'>
@@ -2814,6 +2821,13 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
         <button type='button' class='author-auth-tab active' data-auth-mode='login'>로그인</button>
         <button type='button' class='author-auth-tab' data-auth-mode='signup'>회원가입</button>
       </div>
+      <div class='reader-auth-providers author-auth-providers' aria-label='작가 간편 로그인'>
+        <button type='button' class='reader-auth-provider google' data-author-provider='google'><span class='provider-mark'>G</span>Google로 계속하기</button>
+        <button type='button' class='reader-auth-provider naver' data-author-provider='naver'><span class='provider-mark'>N</span>네이버로 계속하기</button>
+        <button type='button' class='reader-auth-provider kakao' data-author-provider='kakao'><span class='provider-mark'>K</span>카카오로 계속하기</button>
+      </div>
+      <p class='author-social-note'>처음 로그인하면 작가 계정이 만들어집니다. 가입과 로그인에 같은 버튼을 사용하세요.</p>
+      <div class='author-auth-divider'><span>또는 이메일로 계속하기</span></div>
       <label class='author-auth-field'>이메일
         <input type='email' id='authorAuthEmail' autocomplete='email' placeholder='name@example.com'>
       </label>
@@ -2833,7 +2847,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
     </div>
     <div id='authorAuthAccount' hidden>
       <div class='author-auth-account'><small>로그인한 작가 계정</small><b id='authorAuthAccountEmail'></b></div>
-      <p class='author-auth-auto'>PC와 모바일에서 이 이메일로 로그인하면 서버에 저장된 같은 작품과 회차를 불러옵니다.</p>
+      <p class='author-auth-auto'>PC와 모바일에서 같은 이메일 또는 같은 간편 로그인 계정을 사용하면 저장된 작품과 회차를 불러옵니다.</p>
       <button type='button' class='author-auth-logout' id='authorLogoutBtn'>로그아웃</button>
     </div>
   </div>
@@ -3652,8 +3666,44 @@ const PYEODA_AUTH_REDIRECT_URL='https://jeyukida-eng.github.io/oneul-ongi/pyeoda
 function authorAuthRedirectUrl(){return PYEODA_AUTH_REDIRECT_URL;}
 
 function isPermanentAuthor(user){
-  return !!(user && !user.is_anonymous && user.email);
+  return !!(user && user.id && !user.is_anonymous);
 }
+/* PYEODA_AUTHOR_SOCIAL_AUTH */
+const PYEODA_AUTHOR_OAUTH_INTENT_KEY='pyeoda-author-oauth-intent-v1';
+let authorOAuthBusy=false;
+function clearAuthorOAuthIntent(){try{sessionStorage.removeItem(PYEODA_AUTHOR_OAUTH_INTENT_KEY)}catch(e){}}
+function authorOAuthPath(path){return String(path||'').replace(/index\.html$/,'').replace(/\/$/,'');}
+function authorAccountLabel(user){return user?.email||user?.user_metadata?.full_name||user?.user_metadata?.name||'간편 로그인 계정';}
+async function signInAuthorWithOAuth(provider){
+ if(!['google','naver','kakao'].includes(provider)||authorOAuthBusy)return;
+ if(!PYEODA_SERVER.client){setAuthorAuthMessage('서버 연결 후 다시 시도해 주세요.','error');return;}
+ authorOAuthBusy=true;const buttons=[...document.querySelectorAll('[data-author-provider]')];buttons.forEach(button=>button.disabled=true);
+ try{
+  const target=AUTHOR_SCREENS.has(AUTHOR_AUTH_AFTER_LOGIN)?AUTHOR_AUTH_AFTER_LOGIN:'studio';
+  const intent={target,mode:AUTHOR_AUTH_MODE,createdAt:Date.now(),path:new URL(authorAuthRedirectUrl()).pathname};
+  sessionStorage.setItem(PYEODA_AUTHOR_OAUTH_INTENT_KEY,JSON.stringify(intent));
+  clearReaderAuthIntent();
+  const label={google:'Google',naver:'네이버',kakao:'카카오'}[provider];
+  setAuthorAuthMessage(label+' 로그인 화면으로 이동합니다…');
+  const options={redirectTo:authorAuthRedirectUrl()};if(provider==='google')options.queryParams={prompt:'select_account'};
+  const {error}=await PYEODA_SERVER.client.auth.signInWithOAuth({provider:provider==='google'?'google':'custom:'+provider,options});
+  if(error)throw error;
+ }catch(error){clearAuthorOAuthIntent();console.error('author oauth failed',error);setAuthorAuthMessage(error?.message||'간편 로그인을 시작하지 못했습니다.','error');}
+ finally{authorOAuthBusy=false;buttons.forEach(button=>button.disabled=false);}
+}
+function resumeAuthorAfterOAuth(){
+ if(!PYEODA_SERVER.authorReady)return false;
+ let intent;try{intent=JSON.parse(sessionStorage.getItem(PYEODA_AUTHOR_OAUTH_INTENT_KEY)||'null');}catch(e){clearAuthorOAuthIntent();return false;}
+ if(!intent)return false;
+ if(!Number.isFinite(intent.createdAt)||Date.now()-intent.createdAt>30*60*1000||intent.createdAt>Date.now()+60000||!AUTHOR_SCREENS.has(intent.target)||authorOAuthPath(intent.path)!==authorOAuthPath(location.pathname)){clearAuthorOAuthIntent();return false;}
+ clearAuthorOAuthIntent();clearReaderAuthIntent();try{sessionStorage.removeItem('pyeoda-mobile-reload-screen')}catch(e){}
+ AUTHOR_AUTH_AFTER_LOGIN='';closeAuthorAuthModal();go(intent.target);
+ toast('간편 로그인 완료 · 작가 화면으로 돌아왔습니다.');return true;
+}
+function bindAuthorOAuthUI(){document.querySelectorAll('[data-author-provider]').forEach(button=>button.addEventListener('click',()=>signInAuthorWithOAuth(button.dataset.authorProvider)));}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindAuthorOAuthUI,{once:true});else bindAuthorOAuthUI();
+
+
 function setAuthorAuthMessage(message='',kind=''){
   const el=document.getElementById('authorAuthMessage');
   if(el){el.textContent=message;el.dataset.kind=kind||''}
@@ -3677,14 +3727,14 @@ function syncAuthorAuthUI(){
   if(btn){
     btn.textContent=signed?'내 계정':'작가 로그인';
     btn.classList.toggle('signed',signed);
-    btn.title=signed?(PYEODA_SERVER.user.email||'로그인됨'):'PC·모바일 이어쓰기를 위한 작가 로그인';
+    btn.title=signed?authorAccountLabel(PYEODA_SERVER.user):'PC·모바일 이어쓰기를 위한 작가 로그인';
   }
   const guest=document.getElementById('authorAuthGuest');
   const account=document.getElementById('authorAuthAccount');
   if(guest)guest.hidden=signed;
   if(account)account.hidden=!signed;
   const email=document.getElementById('authorAuthAccountEmail');
-  if(email)email.textContent=signed?(PYEODA_SERVER.user.email||''):'';
+  if(email)email.textContent=signed?authorAccountLabel(PYEODA_SERVER.user):'';
 }
 function openAuthorAuthModal(mode='login',after=''){
   if(after)AUTHOR_AUTH_AFTER_LOGIN=after;
@@ -3697,6 +3747,7 @@ function openAuthorAuthModal(mode='login',after=''){
   setTimeout(()=>document.getElementById('authorAuthEmail')?.focus(),40);
 }
 function closeAuthorAuthModal(){
+  clearAuthorOAuthIntent();
   const modal=document.getElementById('authorAuthModal');
   if(modal)modal.hidden=true;
   document.body.style.overflow='';
@@ -3710,7 +3761,7 @@ async function applyAuthorSession(session,{silent=false}={}){
   syncAuthorAuthUI();
 
   if(PYEODA_SERVER.authorReady){
-    serverStatus('작가 로그인됨','online',`${PYEODA_SERVER.user.email} · 로그아웃 전까지 자동 로그인됩니다.`);
+    serverStatus('작가 로그인됨','online',`${authorAccountLabel(PYEODA_SERVER.user)} · 로그아웃 전까지 자동 로그인됩니다.`);
     await refreshMyServerBooks();
     if(!silent)toast('작가 계정으로 로그인했습니다.');
   }else{
@@ -3724,7 +3775,7 @@ function bindPyeodaAuthListener(){
   try{PYEODA_SERVER.authSubscription?.unsubscribe?.()}catch(e){}
   const result=PYEODA_SERVER.client.auth.onAuthStateChange((event,session)=>{
     setTimeout(()=>{
-      applyAuthorSession(session,{silent:true}).then(()=>{try{resumeReaderPurchaseAfterLogin()}catch(e){}}).catch(console.error);
+      applyAuthorSession(session,{silent:true}).then(()=>{try{if(!resumeAuthorAfterOAuth())resumeReaderPurchaseAfterLogin()}catch(e){}}).catch(console.error);
       if(event==='PASSWORD_RECOVERY')handlePasswordRecoverySession().catch(console.error);
     },0);
   });
@@ -3876,6 +3927,7 @@ function handleAuthRedirectError(){
   const code=hash.get('error_code')||'';
   const desc=(hash.get('error_description')||'').replace(/\+/g,' ');
   if(!code&&!desc)return;
+  clearAuthorOAuthIntent();
   openAuthorAuthModal('login');
   if(code==='otp_expired'||/expired|invalid/i.test(desc)){
     setAuthorAuthMessage('인증 링크가 만료되었거나 이미 사용된 링크입니다. 이메일을 입력한 뒤 ‘인증 메일 다시 보내기’를 눌러 새 인증 메일을 받아 주세요.','confirm');
@@ -3939,9 +3991,10 @@ async function connectPyeodaServer({silent=false}={}){
     await applyAuthorSession(session,{silent:true});
     if(typeof resumeTestPaymentReturn==='function')resumeTestPaymentReturn();
     await refreshServerLibrary({silent:true});
-    resumeReaderPurchaseAfterLogin();
+    const resumedAuthor=resumeAuthorAfterOAuth();
+    if(!resumedAuthor)resumeReaderPurchaseAfterLogin();
     await disconnectPublicLibraryRealtime();
-    restoreMobileScreenAfterReload();
+    if(!resumedAuthor)restoreMobileScreenAfterReload();
 
     if(!silent)toast(PYEODA_SERVER.authorReady?'작가 계정과 서버를 연결했습니다.':'공개 작품 서버에 연결했습니다.');
     return true;
