@@ -5979,6 +5979,55 @@ function paginateParagraphsIntoPages(paragraphs,spec,pages,initialNodes=[]){
   page.remove();
 }
 
+
+function appendPrintContents(entries,spec,pages){
+  if(!entries.length)return [];
+  const indexes=[];
+  let page=null,rowCount=0;
+  function start(){
+    page=makeMeasurePage(spec,pages.length%2===0?'right':'left');
+    const heading=document.createElement('h2');
+    heading.textContent=indexes.length?'목차 (계속)':'목차';
+    heading.style.cssText=`font-size:${spec.chapterSize}px;line-height:1.45;margin:0 0 ${spec.chapterGap}px;font-weight:700`;
+    page.appendChild(heading);rowCount=0;
+  }
+  function commit(){
+    indexes.push(pages.length);
+    pages.push({...serializeMeasuredPage(page,true),kind:'contents'});
+    page.remove();
+  }
+  start();
+  entries.forEach((entry,index)=>{
+    const row=document.createElement('div');
+    row.style.cssText=`display:grid;grid-template-columns:minmax(0,1fr) 3em;column-gap:12px;align-items:end;font-size:${spec.fontSize}px;line-height:1.65;padding:0 0 9px;margin:0 0 11px;border-bottom:1px dotted #cfc4ae;break-inside:avoid`;
+    const label=document.createElement('span');
+    label.textContent=entry.label;
+    label.style.cssText='min-width:0;word-break:keep-all;overflow-wrap:anywhere';
+    const number=document.createElement('span');
+    number.dataset.printTocIndex=String(index);
+    number.textContent='0000';
+    number.style.cssText='text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums';
+    row.append(label,number);page.appendChild(row);
+    if(measureOverflow(page)&&rowCount){
+      row.remove();commit();start();page.appendChild(row);
+    }
+    rowCount++;
+  });
+  commit();
+  return indexes;
+}
+function fillPrintContentsPageNumbers(pages,indexes,entries){
+  for(const index of indexes){
+    const container=document.createElement('div');container.innerHTML=pages[index].html;
+    container.querySelectorAll('[data-print-toc-index]').forEach(number=>{
+      const entry=entries[Number(number.dataset.printTocIndex)];
+      number.textContent=String(entry?.page||'');
+      number.removeAttribute('data-print-toc-index');
+    });
+    pages[index].html=container.innerHTML;
+  }
+}
+
 function paginateInteriorOnce(opt,pageGuess){
   const spec=printTypographySpec(opt,pageGuess);
   const pages=[];
@@ -5999,8 +6048,15 @@ function paginateInteriorOnce(opt,pageGuess){
     pages.push(serializeMeasuredPage(p,false));p.remove();
   }
 
+  const printEpisodes=allPrintText();
+  const contentsEntries=[];
+  if((book.intro||'').trim())contentsEntries.push({label:'책 소개',type:'intro',page:0});
+  printEpisodes.forEach(ep=>contentsEntries.push({label:ep.title===`${ep.no}화`?`${ep.no}화`:`${ep.no}화 · ${ep.title||'제목 없음'}`,type:'episode',no:ep.no,page:0}));
+  const contentsIndexes=appendPrintContents(contentsEntries,spec,pages);
+
   // 2. Book introduction can flow across as many pages as actually needed.
   if((book.intro||'').trim()){
+    contentsEntries.find(entry=>entry.type==='intro').page=pages.length+1;
     const introParas=smartBookParagraphs(book.intro);
     const heading=document.createElement('div');
     heading.style.cssText=`margin:0 0 ${ptToCssPx(15)}px 0`;
@@ -6015,12 +6071,16 @@ function paginateInteriorOnce(opt,pageGuess){
   }
 
   // 3. Every episode begins on a fresh page, then overflows naturally.
-  allPrintText().forEach(ep=>{
+  printEpisodes.forEach(ep=>{
+    const entry=contentsEntries.find(entry=>entry.type==='episode'&&entry.no===ep.no);
+    if(entry)entry.page=pages.length+1;
     const paras=smartBookParagraphs(ep.body||'');
     const heading=headingNodes(ep.no,ep.title,spec);
     if(!paras.some(p=>p.trim()))paras.push('');
     paginateParagraphsIntoPages(paras,spec,pages,[heading]);
   });
+
+  fillPrintContentsPageNumbers(pages,contentsIndexes,contentsEntries);
 
   // Printed interiors need an even number of pages.
   if(pages.length%2!==0)pages.push({kind:'blank',html:'',showNumber:false});
@@ -6409,7 +6469,7 @@ async function svgMarkupToJpeg(svgMarkup,widthPx,heightPx,quality=.93){
   });
 }
 
-function xhtmlWrapForPrint(content,spec,side,opt){
+function xhtmlWrapForPrint(content,spec,side,opt,pageNo=null){
   const left=side==='left';
   const padTop=spec.top, padBottom=spec.bottom;
   const padLeft=left?spec.outer:spec.inner;
@@ -6417,7 +6477,7 @@ function xhtmlWrapForPrint(content,spec,side,opt){
   const bg=opt.paper==='cream'?'#f7f0df':'#fffefb';
   return `<div xmlns="http://www.w3.org/1999/xhtml" style="
     width:${spec.pageWidth}px;height:${spec.pageHeight}px;
-    box-sizing:border-box;overflow:hidden;background:${bg};color:#302b25;
+    position:relative;box-sizing:border-box;overflow:hidden;background:${bg};color:#302b25;
     padding:${padTop}px ${padRight}px ${padBottom}px ${padLeft}px;
     font-family:'Noto Serif KR','Batang',serif;font-size:${spec.fontSize}px;
     line-height:${spec.lineHeight};word-break:keep-all;overflow-wrap:break-word;
@@ -6430,6 +6490,7 @@ function xhtmlWrapForPrint(content,spec,side,opt){
       h1,h2{font-family:'Noto Serif KR','Batang',serif}
     </style>
     ${content||''}
+    ${pageNo?`<div style="position:absolute;bottom:${Math.max(8,spec.bottom*.4)}px;left:0;width:100%;text-align:center;font-family:serif;font-size:11px;line-height:1;color:#756d62">${pageNo}</div>`:''}
   </div>`;
 }
 async function measuredPageToJpeg(page,index,opt,spec,dpi=200){
@@ -6438,7 +6499,7 @@ async function measuredPageToJpeg(page,index,opt,spec,dpi=200){
   const heightPx=Math.max(1,Math.round(spec.pageHeight*scale));
   const side=index%2===0?'right':'left';
   const html=page&&page.kind!=='blank'?(page.html||''):'';
-  const wrapped=xhtmlWrapForPrint(html,spec,side,opt);
+  const wrapped=xhtmlWrapForPrint(html,spec,side,opt,page&&page.kind!=='blank'&&page.showNumber!==false?index+1:null);
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${widthPx}" height="${heightPx}" viewBox="0 0 ${spec.pageWidth} ${spec.pageHeight}">
     <foreignObject x="0" y="0" width="${spec.pageWidth}" height="${spec.pageHeight}">${wrapped}</foreignObject>
   </svg>`;
