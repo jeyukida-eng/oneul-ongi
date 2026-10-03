@@ -11,7 +11,8 @@ create table public.adult_verifications (
  revoked_at timestamptz, check(expires_at>verified_at)
 );
 alter table public.adult_verifications enable row level security;
-grant select on public.adult_verifications to authenticated;
+revoke all on public.adult_verifications from anon,authenticated;
+grant select on public.adult_verifications to anon,authenticated;
 revoke insert,update,delete on public.adult_verifications from anon,authenticated;
 create policy adult_verification_self_read on public.adult_verifications for select to authenticated using(user_id=(select auth.uid()));
 create table public.adult_review_history (
@@ -19,6 +20,8 @@ create table public.adult_review_history (
  actor_id uuid, old_status text, new_status text, note text, created_at timestamptz not null default now()
 );
 alter table public.adult_review_history enable row level security;
+revoke all on public.adult_review_history from anon,authenticated;
+revoke all on sequence public.adult_review_history_id_seq from anon,authenticated;
 grant select on public.adult_review_history to authenticated;
 create policy adult_history_admin_read on public.adult_review_history for select to authenticated using((select auth.jwt()->'app_metadata'->>'pyeoda_admin')='true');
 create table public.adult_reports (
@@ -27,6 +30,8 @@ create table public.adult_reports (
  status text not null default 'open' check(status in ('open','resolved')), created_at timestamptz not null default now()
 );
 alter table public.adult_reports enable row level security;
+revoke all on public.adult_reports from anon,authenticated;
+revoke all on sequence public.adult_reports_id_seq from anon,authenticated;
 grant select,insert,update on public.adult_reports to authenticated;
 grant usage on sequence public.adult_reports_id_seq to authenticated;
 create policy adult_report_insert on public.adult_reports for insert to authenticated with check(reporter_id=(select auth.uid()) and status='open' and exists(select 1 from public.books b where b.id=book_id and b.age_rating='19'));
