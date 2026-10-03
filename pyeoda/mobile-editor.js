@@ -38,6 +38,29 @@
  .mobile-writing-tools .editor-book-tools,.mobile-writing-tools .editor-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;width:100%!important}
  .mobile-writing-tools .editor-action{width:100%!important;min-height:38px!important;height:38px!important;font-size:13px!important;padding:4px 8px!important}
  .mobile-writing-tools .completion-next:not(.show){display:none}
+
+ .mobile-writing-tools{font:14px/1.55 system-ui,-apple-system,"Noto Sans KR",sans-serif;text-align:left}
+ .mobile-writing-tools *{box-sizing:border-box}
+ .mobile-writing-tools button,.mobile-writing-tools input,.mobile-writing-tools select,.mobile-writing-tools textarea{font-family:inherit!important;font-size:13px!important;line-height:1.4!important}
+ .mobile-writing-tools button{min-height:38px!important;padding:7px 12px!important;border:1px solid var(--line)!important;border-radius:12px!important;background:var(--paper)!important;color:var(--ink)!important;box-shadow:none!important;white-space:normal;cursor:pointer;font-weight:600!important}
+ .mobile-writing-tools button:disabled{opacity:.5;cursor:default}
+ .mobile-writing-tools button:focus-visible{outline:2px solid var(--olive,#59614c);outline-offset:2px}
+ .mobile-writing-tools button.active,.mobile-writing-tools button[aria-pressed="true"],.mobile-writing-tools #completeBook,.mobile-writing-tools #publishEpisode,.mobile-writing-tools #nextEpisodeBtn{background:var(--olive,#59614c)!important;color:#fffdf8!important;border-color:var(--olive,#59614c)!important}
+ .mobile-writing-tools #deleteEpisode{color:#985c48!important;border-color:#d8c6bb!important}
+ .mobile-writing-tools>header{position:sticky;top:-16px;z-index:1;background:var(--paper);padding:8px 0;border-bottom:1px solid var(--line)}
+ .mobile-writing-tools>header h2{font:600 17px/1.4 system-ui,-apple-system,"Noto Sans KR",sans-serif}
+ .mobile-writing-tools>button{width:100%;margin:0 0 8px}
+ .mobile-writing-tools .editor-writing-guide{padding:10px 12px!important;border-radius:12px!important;font:13px/1.5 system-ui,-apple-system,"Noto Sans KR",sans-serif!important}
+ .mobile-writing-tools .editor-writing-guide summary{font:inherit!important;display:flex;flex-wrap:wrap;gap:4px 10px}
+ .mobile-writing-tools .editor-writing-guide summary strong{font-size:13px!important}
+ .mobile-writing-tools .editor-writing-guide summary span{font-size:12px!important}
+ .mobile-writing-tools .episode-list{display:flex;flex-wrap:wrap;gap:6px!important}
+ .mobile-writing-tools .manuscript-file-tools{padding:10px!important;gap:10px!important;border-radius:12px!important}
+ .mobile-writing-tools .manuscript-file-tools button{width:100%}
+ .mobile-writing-tools .manuscript-file-tools span,.mobile-writing-tools .manuscript-viewbar p,.mobile-writing-tools .manuscript-toolbar p,.mobile-writing-tools .episode-pricing p{font:12px/1.6 system-ui,-apple-system,"Noto Sans KR",sans-serif!important}
+ .mobile-writing-tools .manuscript-view-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+ .mobile-writing-tools .manuscript-viewbar,.mobile-writing-tools .manuscript-toolbar{padding:10px!important;border:1px solid var(--line);border-radius:12px;background:#f4f4ec}
+ .mobile-writing-tools .manuscript-toolbar-row{gap:6px}
  `;document.head.append(styles);
  const dialog=document.createElement('dialog');dialog.className='mobile-writing-tools';dialog.setAttribute('aria-labelledby','mobileWritingToolsTitle');dialog.innerHTML='<header><h2 id="mobileWritingToolsTitle">집필 도구</h2><button type="button" class="secondary" id="mobileWritingClose">닫기</button></header>';document.body.append(dialog);
  const button=document.createElement('button');button.id='mobileWritingTools';button.type='button';button.className='secondary';button.textContent='도구';button.onclick=()=>dialog.showModal();
