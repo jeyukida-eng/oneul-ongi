@@ -10257,7 +10257,7 @@ function syncAdultRegistration(){
  .mobile-build #register #adultRegistrationRules label{font-size:13px}
  .mobile-build #register .mobile-step-progress{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;color:#68715a;font-size:12px}
  .mobile-step-progress progress{width:90px;height:5px;accent-color:#697158}
- .mobile-build #register .mobile-step-nav{display:grid;grid-template-columns:1fr 1.5fr;gap:10px;margin-top:18px;padding:10px 0 0;position:sticky;bottom:76px;background:#fffdf8;z-index:4}
+ .mobile-build #register .mobile-step-nav{display:grid;grid-template-columns:1fr 1.5fr;gap:10px;margin-top:18px;padding:10px 0 0;position:static;background:transparent;z-index:4}
  .mobile-build #register .mobile-step-nav button{min-height:46px;font:inherit;font-size:14px;border-radius:24px}
  .mobile-build #register .register-actions{margin-top:10px;padding:0;grid-template-columns:1fr!important}
  .mobile-build #register .register-actions>[data-go=studio]{display:none}
@@ -10288,6 +10288,10 @@ function syncAdultRegistration(){
  .mobile-build #register .mobile-cover-design .cover-style-wrap{margin-bottom:12px}
  .mobile-build #register .mobile-cover-design .reg-help{display:none}
  .mobile-build #register .mobile-cover-design #newCoverPrompt{height:clamp(90px,18dvh,150px)!important}
+ .mobile-build #register .mobile-step #newBookIntro{height:clamp(90px,calc(100dvh - 590px),140px)!important;min-height:90px!important}
+ .mobile-build #register .mobile-step .text-limit-row{margin-top:4px;gap:6px;line-height:1.4}
+ .mobile-build #register .mobile-cover-design .cover-prompt-help{font-size:11px;line-height:1.45;margin:6px 0 0}
+ .mobile-build #register .mobile-step-nav{align-items:center;padding-top:0;margin-top:14px;flex-shrink:0}
  .mobile-build #register .mobile-step-nav #startWriting{min-width:0!important;font-size:13px!important;padding:8px!important}
  @media(max-height:700px){.mobile-build #register .register-form{padding:12px!important}.mobile-build #register .mobile-step-progress{margin-bottom:10px}.mobile-build #register .mobile-step-fields{gap:9px}.mobile-build #register .mobile-step-nav{margin-top:12px}.mobile-build #register .register-cover-preview{width:78px!important;max-width:78px!important}}
  `;document.head.append(css);
@@ -10312,6 +10316,7 @@ function syncAdultRegistration(){
  prompt.querySelector('.cover-prompt-help').textContent='장소 · 분위기 · 핵심 사물을 적어 주세요. 제목과 필명은 앞에서 입력한 내용으로 표지에 들어갑니다.';
  step(cover,'표지 완성');
  for(const old of [...form.querySelectorAll(':scope > .form-section')])old.remove();
+ document.querySelector('#introCount').previousElementSibling.textContent='최대 1,000자';document.querySelector('#authorNoteCount').previousElementSibling.textContent='최대 500자';document.getElementById('newTags').nextElementSibling.textContent='핵심 태그 3~5개 · 선택';
  const actions=form.querySelector('.register-actions');form.prepend(progress);for(const s of steps)form.insertBefore(s.el,actions);
  const error=document.createElement('p');error.className='mobile-step-error';error.setAttribute('role','alert');error.hidden=true;form.insertBefore(error,actions);
  const nav=document.createElement('div');nav.className='mobile-step-nav';nav.innerHTML='<button type="button" class="secondary">이전</button><button type="button" class="primary">다음</button>';form.insertBefore(nav,actions);
