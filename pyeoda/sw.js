@@ -1,5 +1,5 @@
-const CACHE='pyeoda-mobile-fit-v6-20261003';
-const CORE=['../pyeoda/hero-sky.js?v=sky1','../pyeoda/adult-section.js?v=adult2','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'];
+const CACHE='pyeoda-mobile-cover-large-v8-20261003';
+const CORE=['../pyeoda/hero-sky.js?v=sky3','../pyeoda/adult-section.js?v=adult2','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
