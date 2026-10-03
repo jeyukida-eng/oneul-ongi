@@ -10316,7 +10316,7 @@ function syncAdultRegistration(){
  prompt.querySelector('.cover-prompt-help').textContent='장소 · 분위기 · 핵심 사물을 적어 주세요. 제목과 필명은 앞에서 입력한 내용으로 표지에 들어갑니다.';
  step(cover,'표지 완성');
  for(const old of [...form.querySelectorAll(':scope > .form-section')])old.remove();
- document.querySelector('#introCount').previousElementSibling.textContent='최대 1,000자';document.querySelector('#authorNoteCount').previousElementSibling.textContent='최대 500자';document.getElementById('newTags').nextElementSibling.textContent='핵심 태그 3~5개 · 선택';
+ steps[3].el.querySelector('#introCount').previousElementSibling.textContent='최대 1,000자';steps[4].el.querySelector('#authorNoteCount').previousElementSibling.textContent='최대 500자';steps[3].el.querySelector('#newTags').nextElementSibling.textContent='핵심 태그 3~5개 · 선택';
  const actions=form.querySelector('.register-actions');form.prepend(progress);for(const s of steps)form.insertBefore(s.el,actions);
  const error=document.createElement('p');error.className='mobile-step-error';error.setAttribute('role','alert');error.hidden=true;form.insertBefore(error,actions);
  const nav=document.createElement('div');nav.className='mobile-step-nav';nav.innerHTML='<button type="button" class="secondary">이전</button><button type="button" class="primary">다음</button>';form.insertBefore(nav,actions);
