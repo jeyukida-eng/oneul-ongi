@@ -4468,9 +4468,14 @@ function cardHTML(b,i,type){
   }else if(r?.state==='replay'){
     const purchasable=purchasableVersionFor(b);
     const buyPrice=purchasable?.price||'';
-    actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="replay">다시보기</button><button class='secondary buy-book' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-price="${buyPrice}">구매하기</button></div>`;
+    actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="replay">다시보기</button><button class='secondary buy-book' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-price="${buyPrice}">소장하기</button></div>`;
   }else{
-    actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}" data-read-state="${stateAttr}">${action}</button></div>`;
+    actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="${stateAttr}">${action}</button></div>`;
+  }
+  if(!b.price && r?.state!=='replay'){
+    const buyPrice=purchasableVersionFor(b)?.price||'';
+    const buyButton=`<button type="button" class='secondary buy-book' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-price="${buyPrice}">소장하기</button>`;
+    actionHtml=actionHtml.replace('</div>',buyButton+'</div>');
   }
   const rankHtml=type==='popular'?`<span class='rank'>${i+1}</span>`:'';
   return `<div class='card book-card'>${rankHtml}<div class='cover'>${coverMedia}</div><h3>${b.title}${b.serverId?'<span class="server-book-badge">공개</span>':''}</h3><p class='meta book-author'>${b.author} · ${b.meta}</p><p class='book-copy intro'><b>책 소개</b>${b.intro||''}</p><p class='book-copy note'><b>작가의 말</b>${b.note||''}</p><div class='book-foot'><div><p class='meta'>${type==='new'&&!b.serverId?b.metric:publicMetricForBook(b,type)}</p>${hint?`<div class='read-progress'>${hint}</div>`:''}</div><div class='book-actions'>${actionHtml}</div></div></div>`
@@ -5162,7 +5167,8 @@ function bindReads(){
     const title=btn.dataset.title||'';
     const author=btn.dataset.author||'';
     const price=btn.dataset.price||'';
-    const owned=shelves.owned.items.find(x=>x.title===title&&x.author===author);
+    const selected=findBookFromButton(btn);
+    const owned=selected?.serverId ? (selected.price?selected:null) : shelves.owned.items.find(x=>x.title===title&&x.author===author);
     if(!owned){
       toast('이 작품의 소장용 전자책 구매 화면은 판매 등록 후 연결됩니다.');
       return;
@@ -7485,9 +7491,18 @@ async function deleteWholeBook(sourceBtn=null){
 
     toast('작품 전체를 삭제했습니다.');
 
-    // Reload clears all stale in-memory shelf/editor references while keeping
-    // server connection settings intact.
-    setTimeout(()=>location.reload(),700);
+    // Refresh the current management view without losing its navigation or scroll.
+    const remainingScroll=window.scrollY;
+    openEpisode(1,false);
+    syncBookUI({});
+    const studioTitle=document.getElementById('studioBookTitle');
+    if(studioTitle)studioTitle.textContent='등록된 책 없음';
+    syncBookCompletionUI();
+    syncStudioManagementUI();
+    renderStudioBookLists();
+    renderRegisteredBookList();
+    if(btn){btn.disabled=false;btn.textContent=old}
+    requestAnimationFrame(()=>window.scrollTo(0,remainingScroll));
   }catch(err){
     console.error('whole book deletion failed',err);
     toast(err?.message||'작품을 삭제하지 못했습니다.');
