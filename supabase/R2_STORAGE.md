@@ -18,8 +18,9 @@
 - PC·모바일·다운로드용 미리보기: 기존 Base64와 새 파일 ID를 함께 읽는 코드 준비.
 - 서버 저장 시 그림 업로드를 먼저 완료하고, R2 HEAD로 크기와 SHA-256 메타데이터를 확인한 뒤 ID가 포함된 원고를 저장한다.
 - 실패하면 원래 기기 원고와 DB 원고를 덮어쓰지 않는다. 이미지 업로드만 성공하고 회차 저장에 실패한 경우에는 동일 해시 재시도로 같은 파일 ID를 사용한다.
-- 현재 프런트의 `r2ManuscriptAssets` 기본값은 false. 기존 저장 방식이 계속 작동한다.
-- R2 자격 증명/버킷 연결, 실제 업로드·기기 간 읽기·실제 R2 이미지 PDF/EPUB 검증은 아직 완료되지 않았다. 연결 확인 전 전환을 켜지 않는다.
+- PC·모바일·다운로드용 미리보기의 `r2ManuscriptAssets`를 true로 전환했다. 새 서버 동기화에서는 본문 그림을 R2에 저장하고 DB에는 파일 ID를 저장한다. 기존 Base64 원고도 계속 읽는다.
+- 비공개 버킷 연결과 실제 작가 토큰을 사용한 업로드·원본 바이트 재열람·중복 저장·비공개 접근 차단·형식 위장 거부·DB ready 메타데이터 검증을 완료했다. 임시 테스트 계정/작품/파일은 모두 삭제하고 테스트용 서버 경로도 제거했다.
+- 실제 브라우저에서 기기 간 이어쓰기와 PDF/EPUB 파일을 내려받아 확인하는 검증은 아직 미완료다. 서버 통합 검증과 구분한다.
 - R2 공개 표지 이전, 원본 PDF/EPUB 업로드는 다음 단계다. 기존 표지는 그대로 Supabase Storage에 둔다.
 
 ## 구조와 권한
@@ -49,7 +50,7 @@ PYEODA_R2_ACCOUNT_ID=<Cloudflare Account ID>
 PYEODA_R2_ACCESS_KEY_ID=<R2 S3 Access Key ID>
 PYEODA_R2_SECRET_ACCESS_KEY=<R2 S3 Secret Access Key>
 PYEODA_R2_PRIVATE_BUCKET=pyeoda-private
-PYEODA_R2_UPLOADS_ENABLED=false
+PYEODA_R2_UPLOADS_ENABLED=true
 ```
 
 계정 설정 상태: `GET /functions/v1/manuscript-assets?action=status`의 `configured`는 필수 값의 존재/형식만 검사한다. 실제 버킷 접근 성공을 보장하지 않는다.
@@ -77,7 +78,8 @@ PYEODA_R2_OWNER_LIMIT_BYTES=<작가별 신규 파일 예약량 상한>
 - `node --test tests/r2-*.test.mjs`: 권한, 성인인증, 테스트 구매, 업로드 크기·형식, 미연결/비활성 상태, R2 실패, 검증 후 참조 발급, 재시도 중복 방지 등 14개 테스트.
 - PC·모바일·미리보기 인라인 스크립트 문법 검사 및 diff 검사.
 - 실제 DB에서 RLS·쓰기/예약 권한과 기존 회차 보존 확인.
-- 브라우저 자동 검사 환경에는 실행 파일이 없어 로컬 런타임 검사 미완료. 운영 전환 전에 실제 계정으로 브라우저/R2 통합 검사를 반드시 완료한다.
+- 실제 Supabase/R2 통합 검사: 68바이트 PNG 업로드 후 바이트 일치, private/no-store, 비공개 원고의 비로그인 접근 403, 재시도 동일 ID, 위장된 SVG 업로드 400, ready 메타데이터 1개 확인. R2 삭제 후 HEAD 404와 임시 DB/계정 정리를 확인했다. 기존 회차 148개 유지.
+- 브라우저 자동 검사 환경에는 실행 파일이 없어 로컬 런타임 검사 미완료. 실제 브라우저에서 PDF/EPUB 결과와 기기 간 동작 확인은 남아 있다.
 
 공식 구현 참고:
 - https://developers.cloudflare.com/r2/examples/aws/aws4fetch/
