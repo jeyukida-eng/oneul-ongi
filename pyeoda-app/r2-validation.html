@@ -5368,43 +5368,7 @@ async function illustrationPageToJpeg(page,opt,dpi=200){
  }finally{canvas.width=canvas.height=1;}
 }
 function fixedEpubPage(title,html,spec){
- return `<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=${Math.round(spec.pageWidth)},height=${Math.round(spec.pageHeight)}"/><title>${xmlEscape(title)}</title><link rel="stylesheet" type="text/css" href="style.css"/></head><body style="width:${spec.pageWidth}px;height:${spec.pageHeight}px;margin:0;padding:${spec.top}px ${spec.outer}px ${spec.bottom}px ${spec.inner}px;box-sizing:border-box;overflow:hidden">${html}
-<section id="validation-panel" style="position:fixed;inset:0;z-index:2147483647;background:#f8f3e8;overflow:auto;padding:28px;color:#302b25;font:16px/1.8 system-ui">
-<h1>R2 · 그림책 내보내기 검증</h1><p id="validation-status">검증 시작</p><pre id="validation-result"></pre><div id="validation-downloads"></div>
-</section>
-<script>
-(async()=>{
- const status=document.getElementById('validation-status'),out=document.getElementById('validation-result'),downloads=document.getElementById('validation-downloads');
- const checks={},outputs=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
- function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});}
- try{
-  currentEpisodeNo=0;episodes=CHECK_FIXTURE.episodes.map(ep=>({...ep}));saveCurrentBookData({...CHECK_FIXTURE.book,cover:'',serverCoverUrl:''});
-  const originals=JSON.stringify(episodes),allImages=episodes.flatMap(exportEpisodeBlocks).filter(b=>b.type==='image');
-  assert(episodes.length===22&&allImages.length===22,'22개 회차·이미지 수');
-  status.textContent='R2 이미지 22장 읽기';await prepareExportImages();
-  const dimensions=allImages.map(img=>EXPORT_IMAGE_DIMENSIONS.get(img.src));assert(dimensions.every(d=>d&&d.width>1&&d.height>1),'실제 이미지 해상도');checks.imageCount=22;checks.dimensions=dimensions;
-  const host=document.createElement('div');host.innerHTML=episodes[0].bodyHtml;document.body.append(host);await PyeodaAssets.hydrate(host);const im=host.querySelector('img');await new Promise((resolve,reject)=>{if(im.complete&&im.naturalWidth>1)return resolve();im.onload=resolve;im.onerror=reject});assert(im.naturalWidth===dimensions[0].width,'R2 본문 표시');checks.hydration=true;host.remove();
-  const full=episodes.map(ep=>({...ep}));
-  async function build(mode,subset,label){
-   status.textContent=label+' PDF·EPUB 생성';episodes=subset.map(ep=>({...ep}));const b=currentBookData();b.imageLayout=mode;saveCurrentBookData(b);invalidatePrintLayout();
-   const epub=await buildEpubBlob();assert(epub.size>10000,'EPUB 크기');link(epub,label+'.epub');
-   const opt=paperCurrentOptions(),layout=computeMeasuredInteriorLayout(opt),images=[];
-   const illustrations=layout.pages.filter(p=>p.kind==='illustration');assert(illustrations.length===subset.length,'PDF 그림 누락');
-   if(mode==='single')assert(illustrations.every(p=>p.spec.layout==='single'),'한 페이지 배치');
-   if(mode==='spread')assert(illustrations.every(p=>p.spec.layout==='spread'),'펼침 배치');
-   for(let i=0;i<layout.pages.length;i++){status.textContent=label+' PDF '+(i+1)+'/'+layout.pages.length;images.push(await measuredPageToJpeg(layout.pages[i],i,opt,layout.spec,200));}
-   const pdf=buildJpegPdf(images,layout.spec.pageWidth*72/96,layout.spec.pageHeight*72/96);assert(pdf.size>10000,'PDF 크기');link(pdf,label+'.pdf');
-   checks[mode]={pages:layout.pages.length,illustrations:illustrations.length,layouts:illustrations.map(p=>p.spec.layout),imageOrder:illustrations.map(p=>p.image.src),imagePageWidths:illustrations.map(p=>p.spec.pageWidth)};
-  }
-  await build('auto',full,'그림책_22회차_R2_자동배치');
-  await build('single',full.slice(0,2),'그림책_R2_한페이지_검증');
-  await build('spread',full.slice(0,2),'그림책_R2_펼침_검증');
-  episodes=full;assert(JSON.stringify(episodes)===originals,'원고 변경');checks.originalFixtureUnchanged=true;
-  const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
- }catch(e){status.textContent='검증 실패';out.textContent=JSON.stringify({ok:false,error:e.message,stack:e.stack,checks,outputs},null,2);}
-})();
-</script>
-</body></html>`;
+ return `<?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=${Math.round(spec.pageWidth)},height=${Math.round(spec.pageHeight)}"/><title>${xmlEscape(title)}</title><link rel="stylesheet" type="text/css" href="style.css"/></head><body style="width:${spec.pageWidth}px;height:${spec.pageHeight}px;margin:0;padding:${spec.top}px ${spec.outer}px ${spec.bottom}px ${spec.inner}px;box-sizing:border-box;overflow:hidden">${html}</body></html>`;
 }
 async function buildPictureEpubBlob(){
  await prepareExportImages();const book=currentBookData(),eps=epubSortedEpisodes(),files=[{name:'mimetype',bytes:utf8('application/epub+zip')},{name:'META-INF/container.xml',bytes:utf8('<?xml version="1.0"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>')}];
@@ -5419,43 +5383,7 @@ async function buildPictureEpubBlob(){
  files.push({name:'OEBPS/style.css',bytes:utf8('body{font-family:serif;color:#302b25}*{box-sizing:border-box}img{object-fit:contain;max-width:100%;max-height:100%}h1,h2{line-height:1.4}p{line-height:1.88}nav li{margin:.6em 0}')});
  layout.pages.forEach((page,i)=>{const spec=page.spec||layout.spec,id='p'+(i+1),href='page-'+(i+1)+'.xhtml';files.push({name:'OEBPS/'+href,bytes:utf8(fixedEpubPage(book.title,assets.html(page.html||''),spec))});manifest+=`<item id="${id}" href="${href}" media-type="application/xhtml+xml"/>`;spine+=`<itemref idref="${id}" properties="rendition:page-spread-center"/>`;});
  const navItems=eps.map(ep=>{const index=layout.pages.findIndex(p=>p.episodeNo===Number(ep.no));return `<li><a href="page-${Math.max(0,index)+1}.xhtml">${Number(ep.no)}화 · ${xmlEscape(ep.title||'')}</a></li>`;}).join('');
- files.push({name:'OEBPS/nav.xhtml',bytes:utf8(`<?xml version="1.0"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko"><head><title>목차</title></head><body><nav epub:type="toc"><h1>목차</h1><ol>${navItems}</ol></nav>
-<section id="validation-panel" style="position:fixed;inset:0;z-index:2147483647;background:#f8f3e8;overflow:auto;padding:28px;color:#302b25;font:16px/1.8 system-ui">
-<h1>R2 · 그림책 내보내기 검증</h1><p id="validation-status">검증 시작</p><pre id="validation-result"></pre><div id="validation-downloads"></div>
-</section>
-<script>
-(async()=>{
- const status=document.getElementById('validation-status'),out=document.getElementById('validation-result'),downloads=document.getElementById('validation-downloads');
- const checks={},outputs=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
- function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});}
- try{
-  currentEpisodeNo=0;episodes=CHECK_FIXTURE.episodes.map(ep=>({...ep}));saveCurrentBookData({...CHECK_FIXTURE.book,cover:'',serverCoverUrl:''});
-  const originals=JSON.stringify(episodes),allImages=episodes.flatMap(exportEpisodeBlocks).filter(b=>b.type==='image');
-  assert(episodes.length===22&&allImages.length===22,'22개 회차·이미지 수');
-  status.textContent='R2 이미지 22장 읽기';await prepareExportImages();
-  const dimensions=allImages.map(img=>EXPORT_IMAGE_DIMENSIONS.get(img.src));assert(dimensions.every(d=>d&&d.width>1&&d.height>1),'실제 이미지 해상도');checks.imageCount=22;checks.dimensions=dimensions;
-  const host=document.createElement('div');host.innerHTML=episodes[0].bodyHtml;document.body.append(host);await PyeodaAssets.hydrate(host);const im=host.querySelector('img');await new Promise((resolve,reject)=>{if(im.complete&&im.naturalWidth>1)return resolve();im.onload=resolve;im.onerror=reject});assert(im.naturalWidth===dimensions[0].width,'R2 본문 표시');checks.hydration=true;host.remove();
-  const full=episodes.map(ep=>({...ep}));
-  async function build(mode,subset,label){
-   status.textContent=label+' PDF·EPUB 생성';episodes=subset.map(ep=>({...ep}));const b=currentBookData();b.imageLayout=mode;saveCurrentBookData(b);invalidatePrintLayout();
-   const epub=await buildEpubBlob();assert(epub.size>10000,'EPUB 크기');link(epub,label+'.epub');
-   const opt=paperCurrentOptions(),layout=computeMeasuredInteriorLayout(opt),images=[];
-   const illustrations=layout.pages.filter(p=>p.kind==='illustration');assert(illustrations.length===subset.length,'PDF 그림 누락');
-   if(mode==='single')assert(illustrations.every(p=>p.spec.layout==='single'),'한 페이지 배치');
-   if(mode==='spread')assert(illustrations.every(p=>p.spec.layout==='spread'),'펼침 배치');
-   for(let i=0;i<layout.pages.length;i++){status.textContent=label+' PDF '+(i+1)+'/'+layout.pages.length;images.push(await measuredPageToJpeg(layout.pages[i],i,opt,layout.spec,200));}
-   const pdf=buildJpegPdf(images,layout.spec.pageWidth*72/96,layout.spec.pageHeight*72/96);assert(pdf.size>10000,'PDF 크기');link(pdf,label+'.pdf');
-   checks[mode]={pages:layout.pages.length,illustrations:illustrations.length,layouts:illustrations.map(p=>p.spec.layout),imageOrder:illustrations.map(p=>p.image.src),imagePageWidths:illustrations.map(p=>p.spec.pageWidth)};
-  }
-  await build('auto',full,'그림책_22회차_R2_자동배치');
-  await build('single',full.slice(0,2),'그림책_R2_한페이지_검증');
-  await build('spread',full.slice(0,2),'그림책_R2_펼침_검증');
-  episodes=full;assert(JSON.stringify(episodes)===originals,'원고 변경');checks.originalFixtureUnchanged=true;
-  const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
- }catch(e){status.textContent='검증 실패';out.textContent=JSON.stringify({ok:false,error:e.message,stack:e.stack,checks,outputs},null,2);}
-})();
-</script>
-</body></html>`)});
+ files.push({name:'OEBPS/nav.xhtml',bytes:utf8(`<?xml version="1.0"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko"><head><title>목차</title></head><body><nav epub:type="toc"><h1>목차</h1><ol>${navItems}</ol></nav></body></html>`)});
  files.push({name:'OEBPS/content.opf',bytes:utf8(`<?xml version="1.0"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid" prefix="rendition: http://www.idpf.org/vocab/rendition/#"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bookid">urn:pyeoda:${Date.now()}</dc:identifier><dc:title>${xmlEscape(book.title||'제목 없는 책')}</dc:title><dc:creator>${xmlEscape(book.pen||'작가')}</dc:creator><dc:language>ko</dc:language><meta property="dcterms:modified">${new Date().toISOString().replace(/\.\d{3}Z$/,'Z')}</meta><meta property="rendition:layout">pre-paginated</meta><meta property="rendition:spread">none</meta></metadata><manifest><item id="css" href="style.css" media-type="text/css"/><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>${assets.manifest}${manifest}</manifest><spine page-progression-direction="ltr">${spine}</spine></package>`)});
  return new Blob([makeStoredZip(files)],{type:'application/epub+zip'});
 }
@@ -5502,42 +5430,6 @@ function epubPreviewCss(){
 }
 function makePreviewDocument(title,body){
   return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${epubPreviewCss()}</style></head><body>${body}
-
-<section id="validation-panel" style="position:fixed;inset:0;z-index:2147483647;background:#f8f3e8;overflow:auto;padding:28px;color:#302b25;font:16px/1.8 system-ui">
-<h1>R2 · 그림책 내보내기 검증</h1><p id="validation-status">검증 시작</p><pre id="validation-result"></pre><div id="validation-downloads"></div>
-</section>
-<script>
-(async()=>{
- const status=document.getElementById('validation-status'),out=document.getElementById('validation-result'),downloads=document.getElementById('validation-downloads');
- const checks={},outputs=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
- function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});}
- try{
-  currentEpisodeNo=0;episodes=CHECK_FIXTURE.episodes.map(ep=>({...ep}));saveCurrentBookData({...CHECK_FIXTURE.book,cover:'',serverCoverUrl:''});
-  const originals=JSON.stringify(episodes),allImages=episodes.flatMap(exportEpisodeBlocks).filter(b=>b.type==='image');
-  assert(episodes.length===22&&allImages.length===22,'22개 회차·이미지 수');
-  status.textContent='R2 이미지 22장 읽기';await prepareExportImages();
-  const dimensions=allImages.map(img=>EXPORT_IMAGE_DIMENSIONS.get(img.src));assert(dimensions.every(d=>d&&d.width>1&&d.height>1),'실제 이미지 해상도');checks.imageCount=22;checks.dimensions=dimensions;
-  const host=document.createElement('div');host.innerHTML=episodes[0].bodyHtml;document.body.append(host);await PyeodaAssets.hydrate(host);const im=host.querySelector('img');await new Promise((resolve,reject)=>{if(im.complete&&im.naturalWidth>1)return resolve();im.onload=resolve;im.onerror=reject});assert(im.naturalWidth===dimensions[0].width,'R2 본문 표시');checks.hydration=true;host.remove();
-  const full=episodes.map(ep=>({...ep}));
-  async function build(mode,subset,label){
-   status.textContent=label+' PDF·EPUB 생성';episodes=subset.map(ep=>({...ep}));const b=currentBookData();b.imageLayout=mode;saveCurrentBookData(b);invalidatePrintLayout();
-   const epub=await buildEpubBlob();assert(epub.size>10000,'EPUB 크기');link(epub,label+'.epub');
-   const opt=paperCurrentOptions(),layout=computeMeasuredInteriorLayout(opt),images=[];
-   const illustrations=layout.pages.filter(p=>p.kind==='illustration');assert(illustrations.length===subset.length,'PDF 그림 누락');
-   if(mode==='single')assert(illustrations.every(p=>p.spec.layout==='single'),'한 페이지 배치');
-   if(mode==='spread')assert(illustrations.every(p=>p.spec.layout==='spread'),'펼침 배치');
-   for(let i=0;i<layout.pages.length;i++){status.textContent=label+' PDF '+(i+1)+'/'+layout.pages.length;images.push(await measuredPageToJpeg(layout.pages[i],i,opt,layout.spec,200));}
-   const pdf=buildJpegPdf(images,layout.spec.pageWidth*72/96,layout.spec.pageHeight*72/96);assert(pdf.size>10000,'PDF 크기');link(pdf,label+'.pdf');
-   checks[mode]={pages:layout.pages.length,illustrations:illustrations.length,layouts:illustrations.map(p=>p.spec.layout),imageOrder:illustrations.map(p=>p.image.src),imagePageWidths:illustrations.map(p=>p.spec.pageWidth)};
-  }
-  await build('auto',full,'그림책_22회차_R2_자동배치');
-  await build('single',full.slice(0,2),'그림책_R2_한페이지_검증');
-  await build('spread',full.slice(0,2),'그림책_R2_펼침_검증');
-  episodes=full;assert(JSON.stringify(episodes)===originals,'원고 변경');checks.originalFixtureUnchanged=true;
-  const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
- }catch(e){status.textContent='검증 실패';out.textContent=JSON.stringify({ok:false,error:e.message,stack:e.stack,checks,outputs},null,2);}
-})();
-</script>
 </body></html>`;
 }
 function buildEpubPreviewSections(){
@@ -5693,43 +5585,7 @@ function xhtmlDoc(title,body,lang='ko'){
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="${lang}" xml:lang="${lang}">
 <head><meta charset="UTF-8"/><title>${xmlEscape(title)}</title><link rel="stylesheet" type="text/css" href="style.css"/></head>
-<body>${body}
-<section id="validation-panel" style="position:fixed;inset:0;z-index:2147483647;background:#f8f3e8;overflow:auto;padding:28px;color:#302b25;font:16px/1.8 system-ui">
-<h1>R2 · 그림책 내보내기 검증</h1><p id="validation-status">검증 시작</p><pre id="validation-result"></pre><div id="validation-downloads"></div>
-</section>
-<script>
-(async()=>{
- const status=document.getElementById('validation-status'),out=document.getElementById('validation-result'),downloads=document.getElementById('validation-downloads');
- const checks={},outputs=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
- function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});}
- try{
-  currentEpisodeNo=0;episodes=CHECK_FIXTURE.episodes.map(ep=>({...ep}));saveCurrentBookData({...CHECK_FIXTURE.book,cover:'',serverCoverUrl:''});
-  const originals=JSON.stringify(episodes),allImages=episodes.flatMap(exportEpisodeBlocks).filter(b=>b.type==='image');
-  assert(episodes.length===22&&allImages.length===22,'22개 회차·이미지 수');
-  status.textContent='R2 이미지 22장 읽기';await prepareExportImages();
-  const dimensions=allImages.map(img=>EXPORT_IMAGE_DIMENSIONS.get(img.src));assert(dimensions.every(d=>d&&d.width>1&&d.height>1),'실제 이미지 해상도');checks.imageCount=22;checks.dimensions=dimensions;
-  const host=document.createElement('div');host.innerHTML=episodes[0].bodyHtml;document.body.append(host);await PyeodaAssets.hydrate(host);const im=host.querySelector('img');await new Promise((resolve,reject)=>{if(im.complete&&im.naturalWidth>1)return resolve();im.onload=resolve;im.onerror=reject});assert(im.naturalWidth===dimensions[0].width,'R2 본문 표시');checks.hydration=true;host.remove();
-  const full=episodes.map(ep=>({...ep}));
-  async function build(mode,subset,label){
-   status.textContent=label+' PDF·EPUB 생성';episodes=subset.map(ep=>({...ep}));const b=currentBookData();b.imageLayout=mode;saveCurrentBookData(b);invalidatePrintLayout();
-   const epub=await buildEpubBlob();assert(epub.size>10000,'EPUB 크기');link(epub,label+'.epub');
-   const opt=paperCurrentOptions(),layout=computeMeasuredInteriorLayout(opt),images=[];
-   const illustrations=layout.pages.filter(p=>p.kind==='illustration');assert(illustrations.length===subset.length,'PDF 그림 누락');
-   if(mode==='single')assert(illustrations.every(p=>p.spec.layout==='single'),'한 페이지 배치');
-   if(mode==='spread')assert(illustrations.every(p=>p.spec.layout==='spread'),'펼침 배치');
-   for(let i=0;i<layout.pages.length;i++){status.textContent=label+' PDF '+(i+1)+'/'+layout.pages.length;images.push(await measuredPageToJpeg(layout.pages[i],i,opt,layout.spec,200));}
-   const pdf=buildJpegPdf(images,layout.spec.pageWidth*72/96,layout.spec.pageHeight*72/96);assert(pdf.size>10000,'PDF 크기');link(pdf,label+'.pdf');
-   checks[mode]={pages:layout.pages.length,illustrations:illustrations.length,layouts:illustrations.map(p=>p.spec.layout),imageOrder:illustrations.map(p=>p.image.src),imagePageWidths:illustrations.map(p=>p.spec.pageWidth)};
-  }
-  await build('auto',full,'그림책_22회차_R2_자동배치');
-  await build('single',full.slice(0,2),'그림책_R2_한페이지_검증');
-  await build('spread',full.slice(0,2),'그림책_R2_펼침_검증');
-  episodes=full;assert(JSON.stringify(episodes)===originals,'원고 변경');checks.originalFixtureUnchanged=true;
-  const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
- }catch(e){status.textContent='검증 실패';out.textContent=JSON.stringify({ok:false,error:e.message,stack:e.stack,checks,outputs},null,2);}
-})();
-</script>
-</body></html>`;
+<body>${body}</body></html>`;
 }
 async function buildEpubBlob(){
   if(isPictureBook())return await buildPictureEpubBlob();
@@ -5772,43 +5628,7 @@ async function buildEpubBlob(){
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko">
 <head><meta charset="UTF-8"/><title>목차</title><link rel="stylesheet" type="text/css" href="style.css"/></head>
-<body><nav epub:type="toc" id="toc"><h2>목차</h2><ol>${navItems}</ol></nav>
-<section id="validation-panel" style="position:fixed;inset:0;z-index:2147483647;background:#f8f3e8;overflow:auto;padding:28px;color:#302b25;font:16px/1.8 system-ui">
-<h1>R2 · 그림책 내보내기 검증</h1><p id="validation-status">검증 시작</p><pre id="validation-result"></pre><div id="validation-downloads"></div>
-</section>
-<script>
-(async()=>{
- const status=document.getElementById('validation-status'),out=document.getElementById('validation-result'),downloads=document.getElementById('validation-downloads');
- const checks={},outputs=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
- function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});}
- try{
-  currentEpisodeNo=0;episodes=CHECK_FIXTURE.episodes.map(ep=>({...ep}));saveCurrentBookData({...CHECK_FIXTURE.book,cover:'',serverCoverUrl:''});
-  const originals=JSON.stringify(episodes),allImages=episodes.flatMap(exportEpisodeBlocks).filter(b=>b.type==='image');
-  assert(episodes.length===22&&allImages.length===22,'22개 회차·이미지 수');
-  status.textContent='R2 이미지 22장 읽기';await prepareExportImages();
-  const dimensions=allImages.map(img=>EXPORT_IMAGE_DIMENSIONS.get(img.src));assert(dimensions.every(d=>d&&d.width>1&&d.height>1),'실제 이미지 해상도');checks.imageCount=22;checks.dimensions=dimensions;
-  const host=document.createElement('div');host.innerHTML=episodes[0].bodyHtml;document.body.append(host);await PyeodaAssets.hydrate(host);const im=host.querySelector('img');await new Promise((resolve,reject)=>{if(im.complete&&im.naturalWidth>1)return resolve();im.onload=resolve;im.onerror=reject});assert(im.naturalWidth===dimensions[0].width,'R2 본문 표시');checks.hydration=true;host.remove();
-  const full=episodes.map(ep=>({...ep}));
-  async function build(mode,subset,label){
-   status.textContent=label+' PDF·EPUB 생성';episodes=subset.map(ep=>({...ep}));const b=currentBookData();b.imageLayout=mode;saveCurrentBookData(b);invalidatePrintLayout();
-   const epub=await buildEpubBlob();assert(epub.size>10000,'EPUB 크기');link(epub,label+'.epub');
-   const opt=paperCurrentOptions(),layout=computeMeasuredInteriorLayout(opt),images=[];
-   const illustrations=layout.pages.filter(p=>p.kind==='illustration');assert(illustrations.length===subset.length,'PDF 그림 누락');
-   if(mode==='single')assert(illustrations.every(p=>p.spec.layout==='single'),'한 페이지 배치');
-   if(mode==='spread')assert(illustrations.every(p=>p.spec.layout==='spread'),'펼침 배치');
-   for(let i=0;i<layout.pages.length;i++){status.textContent=label+' PDF '+(i+1)+'/'+layout.pages.length;images.push(await measuredPageToJpeg(layout.pages[i],i,opt,layout.spec,200));}
-   const pdf=buildJpegPdf(images,layout.spec.pageWidth*72/96,layout.spec.pageHeight*72/96);assert(pdf.size>10000,'PDF 크기');link(pdf,label+'.pdf');
-   checks[mode]={pages:layout.pages.length,illustrations:illustrations.length,layouts:illustrations.map(p=>p.spec.layout),imageOrder:illustrations.map(p=>p.image.src),imagePageWidths:illustrations.map(p=>p.spec.pageWidth)};
-  }
-  await build('auto',full,'그림책_22회차_R2_자동배치');
-  await build('single',full.slice(0,2),'그림책_R2_한페이지_검증');
-  await build('spread',full.slice(0,2),'그림책_R2_펼침_검증');
-  episodes=full;assert(JSON.stringify(episodes)===originals,'원고 변경');checks.originalFixtureUnchanged=true;
-  const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
- }catch(e){status.textContent='검증 실패';out.textContent=JSON.stringify({ok:false,error:e.message,stack:e.stack,checks,outputs},null,2);}
-})();
-</script>
-</body></html>`)});
+<body><nav epub:type="toc" id="toc"><h2>목차</h2><ol>${navItems}</ol></nav></body></html>`)});
 
   eps.forEach((ep,i)=>{
     const no=Number(ep.no)||i+1;
@@ -8709,43 +8529,7 @@ function setTranslationBibleLanguage(lang){
 }
 function localParaHtml(paras){return (paras||[]).map(p=>`<p class="${p.type==='dialogue'?'dialogue':'narration'}">${htmlEscape(p.text||'')}</p>`).join('')}
 function localizedPreviewCss(lang){const cjk=lang==='ja'||lang==='zh';return `@page{margin:1.5em}html{background:#fffefa;color:#302b25}body{max-width:38em;margin:0 auto;padding:3.5em 3em 5em;font-family:${lang==='ja'?'"Yu Mincho","Hiragino Mincho ProN",serif':lang==='zh'?'"Noto Serif SC","Songti SC",serif':'Georgia,"Times New Roman",serif'};line-height:${cjk?'1.95':'1.8'};font-size:17px;word-break:${cjk?'normal':'normal'}}h1,h2{line-height:1.35;margin:0 0 1.1em}h1{font-size:2.1em;text-align:center}.author{text-align:center;color:#6d665c}.intro{margin:3em auto 0;padding-top:2em;border-top:1px solid #ddd4c6}.episode-meta{font-family:Arial,sans-serif;font-size:.75em;color:#8a8276;margin-bottom:1.1em}p{margin:0 0 1.15em}.narration{text-indent:1em}.dialogue{text-indent:0;margin-top:.25em;margin-bottom:1.25em}nav ol{padding-left:1.35em}nav li{margin:.55em 0}`}
-function localPreviewDoc(lang,title,body){return `<!doctype html><html lang="${TRANSLATION_LOCAL_RULES[lang].htmlLang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${localizedPreviewCss(lang)}</style></head><body>${body}
-<section id="validation-panel" style="position:fixed;inset:0;z-index:2147483647;background:#f8f3e8;overflow:auto;padding:28px;color:#302b25;font:16px/1.8 system-ui">
-<h1>R2 · 그림책 내보내기 검증</h1><p id="validation-status">검증 시작</p><pre id="validation-result"></pre><div id="validation-downloads"></div>
-</section>
-<script>
-(async()=>{
- const status=document.getElementById('validation-status'),out=document.getElementById('validation-result'),downloads=document.getElementById('validation-downloads');
- const checks={},outputs=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
- function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});}
- try{
-  currentEpisodeNo=0;episodes=CHECK_FIXTURE.episodes.map(ep=>({...ep}));saveCurrentBookData({...CHECK_FIXTURE.book,cover:'',serverCoverUrl:''});
-  const originals=JSON.stringify(episodes),allImages=episodes.flatMap(exportEpisodeBlocks).filter(b=>b.type==='image');
-  assert(episodes.length===22&&allImages.length===22,'22개 회차·이미지 수');
-  status.textContent='R2 이미지 22장 읽기';await prepareExportImages();
-  const dimensions=allImages.map(img=>EXPORT_IMAGE_DIMENSIONS.get(img.src));assert(dimensions.every(d=>d&&d.width>1&&d.height>1),'실제 이미지 해상도');checks.imageCount=22;checks.dimensions=dimensions;
-  const host=document.createElement('div');host.innerHTML=episodes[0].bodyHtml;document.body.append(host);await PyeodaAssets.hydrate(host);const im=host.querySelector('img');await new Promise((resolve,reject)=>{if(im.complete&&im.naturalWidth>1)return resolve();im.onload=resolve;im.onerror=reject});assert(im.naturalWidth===dimensions[0].width,'R2 본문 표시');checks.hydration=true;host.remove();
-  const full=episodes.map(ep=>({...ep}));
-  async function build(mode,subset,label){
-   status.textContent=label+' PDF·EPUB 생성';episodes=subset.map(ep=>({...ep}));const b=currentBookData();b.imageLayout=mode;saveCurrentBookData(b);invalidatePrintLayout();
-   const epub=await buildEpubBlob();assert(epub.size>10000,'EPUB 크기');link(epub,label+'.epub');
-   const opt=paperCurrentOptions(),layout=computeMeasuredInteriorLayout(opt),images=[];
-   const illustrations=layout.pages.filter(p=>p.kind==='illustration');assert(illustrations.length===subset.length,'PDF 그림 누락');
-   if(mode==='single')assert(illustrations.every(p=>p.spec.layout==='single'),'한 페이지 배치');
-   if(mode==='spread')assert(illustrations.every(p=>p.spec.layout==='spread'),'펼침 배치');
-   for(let i=0;i<layout.pages.length;i++){status.textContent=label+' PDF '+(i+1)+'/'+layout.pages.length;images.push(await measuredPageToJpeg(layout.pages[i],i,opt,layout.spec,200));}
-   const pdf=buildJpegPdf(images,layout.spec.pageWidth*72/96,layout.spec.pageHeight*72/96);assert(pdf.size>10000,'PDF 크기');link(pdf,label+'.pdf');
-   checks[mode]={pages:layout.pages.length,illustrations:illustrations.length,layouts:illustrations.map(p=>p.spec.layout),imageOrder:illustrations.map(p=>p.image.src),imagePageWidths:illustrations.map(p=>p.spec.pageWidth)};
-  }
-  await build('auto',full,'그림책_22회차_R2_자동배치');
-  await build('single',full.slice(0,2),'그림책_R2_한페이지_검증');
-  await build('spread',full.slice(0,2),'그림책_R2_펼침_검증');
-  episodes=full;assert(JSON.stringify(episodes)===originals,'원고 변경');checks.originalFixtureUnchanged=true;
-  const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
- }catch(e){status.textContent='검증 실패';out.textContent=JSON.stringify({ok:false,error:e.message,stack:e.stack,checks,outputs},null,2);}
-})();
-</script>
-</body></html>`}
+function localPreviewDoc(lang,title,body){return `<!doctype html><html lang="${TRANSLATION_LOCAL_RULES[lang].htmlLang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${htmlEscape(title)}</title><style>${localizedPreviewCss(lang)}</style></head><body>${body}</body></html>`}
 function buildLocalizedEpubSections(book,lang){
   const r=TRANSLATION_LOCAL_RULES[lang],s=[];s.push({label:book.title,html:localPreviewDoc(lang,book.title,`<h1>${htmlEscape(book.title)}</h1><div class="author">${htmlEscape(book.author||'')}</div>${book.introParagraphs?.length?`<div class="intro">${localParaHtml(book.introParagraphs)}</div>`:''}`)});
   const toc=(book.episodes||[]).map(ep=>`<li>${htmlEscape(r.chapter(ep.no))}${ep.title?` · ${htmlEscape(ep.title)}`:''}</li>`).join('');s.push({label:r.toc,html:localPreviewDoc(lang,r.toc,`<h2>${r.toc}</h2><nav><ol>${toc}</ol></nav>`)});
@@ -8773,43 +8557,7 @@ async function coverSourceToFile(source){if(!source)return null;if(source.starts
 async function buildLocalizedEpubBlob(book,lang){
   const r=TRANSLATION_LOCAL_RULES[lang],files=[];files.push({name:'mimetype',bytes:utf8('application/epub+zip')});files.push({name:'META-INF/container.xml',bytes:utf8(`<?xml version="1.0" encoding="UTF-8"?><container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container"><rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles></container>`)});const css=localizedPreviewCss(lang).replace(/body\{[^}]*max-width[^}]*\}/,'body{font-family:serif;line-height:1.85;margin:5%;color:#302b25}');files.push({name:'OEBPS/style.css',bytes:utf8(css)});
   let coverManifest='';const cover=await coverSourceToFile(book.cover);if(cover){const cn=`cover.${cover.ext}`;files.push({name:`OEBPS/${cn}`,bytes:cover.bytes});coverManifest=`<item id="cover-image" href="${cn}" media-type="${xmlEscape(cover.mime)}" properties="cover-image"/>`;files.push({name:'OEBPS/cover.xhtml',bytes:utf8(xhtmlDoc(book.title,`<div><img src="${cn}" alt="${xmlEscape(book.title)}" style="max-width:100%;height:auto"/></div>`,r.htmlLang))})}else files.push({name:'OEBPS/cover.xhtml',bytes:utf8(xhtmlDoc(book.title,`<h1>${xmlEscape(book.title)}</h1><p class="author">${xmlEscape(book.author||'')}</p>`,r.htmlLang))});
-  const titleBody=`<h1>${xmlEscape(book.title)}</h1><p class="author">${xmlEscape(book.author||'')}</p>${book.introParagraphs?.length?`<div class="intro">${localParaHtml(book.introParagraphs)}</div>`:''}`;files.push({name:'OEBPS/title.xhtml',bytes:utf8(xhtmlDoc(book.title,titleBody,r.htmlLang))});const navItems=(book.episodes||[]).map((ep,i)=>`<li><a href="chapter-${i+1}.xhtml">${xmlEscape(r.chapter(ep.no))}${ep.title?` · ${xmlEscape(ep.title)}`:''}</a></li>`).join('');files.push({name:'OEBPS/nav.xhtml',bytes:utf8(`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="${r.htmlLang}"><head><meta charset="UTF-8"/><title>${xmlEscape(r.toc)}</title><link rel="stylesheet" type="text/css" href="style.css"/></head><body><nav epub:type="toc" id="toc"><h2>${xmlEscape(r.toc)}</h2><ol>${navItems}</ol></nav>
-<section id="validation-panel" style="position:fixed;inset:0;z-index:2147483647;background:#f8f3e8;overflow:auto;padding:28px;color:#302b25;font:16px/1.8 system-ui">
-<h1>R2 · 그림책 내보내기 검증</h1><p id="validation-status">검증 시작</p><pre id="validation-result"></pre><div id="validation-downloads"></div>
-</section>
-<script>
-(async()=>{
- const status=document.getElementById('validation-status'),out=document.getElementById('validation-result'),downloads=document.getElementById('validation-downloads');
- const checks={},outputs=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
- function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});}
- try{
-  currentEpisodeNo=0;episodes=CHECK_FIXTURE.episodes.map(ep=>({...ep}));saveCurrentBookData({...CHECK_FIXTURE.book,cover:'',serverCoverUrl:''});
-  const originals=JSON.stringify(episodes),allImages=episodes.flatMap(exportEpisodeBlocks).filter(b=>b.type==='image');
-  assert(episodes.length===22&&allImages.length===22,'22개 회차·이미지 수');
-  status.textContent='R2 이미지 22장 읽기';await prepareExportImages();
-  const dimensions=allImages.map(img=>EXPORT_IMAGE_DIMENSIONS.get(img.src));assert(dimensions.every(d=>d&&d.width>1&&d.height>1),'실제 이미지 해상도');checks.imageCount=22;checks.dimensions=dimensions;
-  const host=document.createElement('div');host.innerHTML=episodes[0].bodyHtml;document.body.append(host);await PyeodaAssets.hydrate(host);const im=host.querySelector('img');await new Promise((resolve,reject)=>{if(im.complete&&im.naturalWidth>1)return resolve();im.onload=resolve;im.onerror=reject});assert(im.naturalWidth===dimensions[0].width,'R2 본문 표시');checks.hydration=true;host.remove();
-  const full=episodes.map(ep=>({...ep}));
-  async function build(mode,subset,label){
-   status.textContent=label+' PDF·EPUB 생성';episodes=subset.map(ep=>({...ep}));const b=currentBookData();b.imageLayout=mode;saveCurrentBookData(b);invalidatePrintLayout();
-   const epub=await buildEpubBlob();assert(epub.size>10000,'EPUB 크기');link(epub,label+'.epub');
-   const opt=paperCurrentOptions(),layout=computeMeasuredInteriorLayout(opt),images=[];
-   const illustrations=layout.pages.filter(p=>p.kind==='illustration');assert(illustrations.length===subset.length,'PDF 그림 누락');
-   if(mode==='single')assert(illustrations.every(p=>p.spec.layout==='single'),'한 페이지 배치');
-   if(mode==='spread')assert(illustrations.every(p=>p.spec.layout==='spread'),'펼침 배치');
-   for(let i=0;i<layout.pages.length;i++){status.textContent=label+' PDF '+(i+1)+'/'+layout.pages.length;images.push(await measuredPageToJpeg(layout.pages[i],i,opt,layout.spec,200));}
-   const pdf=buildJpegPdf(images,layout.spec.pageWidth*72/96,layout.spec.pageHeight*72/96);assert(pdf.size>10000,'PDF 크기');link(pdf,label+'.pdf');
-   checks[mode]={pages:layout.pages.length,illustrations:illustrations.length,layouts:illustrations.map(p=>p.spec.layout),imageOrder:illustrations.map(p=>p.image.src),imagePageWidths:illustrations.map(p=>p.spec.pageWidth)};
-  }
-  await build('auto',full,'그림책_22회차_R2_자동배치');
-  await build('single',full.slice(0,2),'그림책_R2_한페이지_검증');
-  await build('spread',full.slice(0,2),'그림책_R2_펼침_검증');
-  episodes=full;assert(JSON.stringify(episodes)===originals,'원고 변경');checks.originalFixtureUnchanged=true;
-  const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
- }catch(e){status.textContent='검증 실패';out.textContent=JSON.stringify({ok:false,error:e.message,stack:e.stack,checks,outputs},null,2);}
-})();
-</script>
-</body></html>`)});
+  const titleBody=`<h1>${xmlEscape(book.title)}</h1><p class="author">${xmlEscape(book.author||'')}</p>${book.introParagraphs?.length?`<div class="intro">${localParaHtml(book.introParagraphs)}</div>`:''}`;files.push({name:'OEBPS/title.xhtml',bytes:utf8(xhtmlDoc(book.title,titleBody,r.htmlLang))});const navItems=(book.episodes||[]).map((ep,i)=>`<li><a href="chapter-${i+1}.xhtml">${xmlEscape(r.chapter(ep.no))}${ep.title?` · ${xmlEscape(ep.title)}`:''}</a></li>`).join('');files.push({name:'OEBPS/nav.xhtml',bytes:utf8(`<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="${r.htmlLang}"><head><meta charset="UTF-8"/><title>${xmlEscape(r.toc)}</title><link rel="stylesheet" type="text/css" href="style.css"/></head><body><nav epub:type="toc" id="toc"><h2>${xmlEscape(r.toc)}</h2><ol>${navItems}</ol></nav></body></html>`)});
   (book.episodes||[]).forEach((ep,i)=>files.push({name:`OEBPS/chapter-${i+1}.xhtml`,bytes:utf8(xhtmlDoc(ep.title||r.chapter(ep.no),`<p class="episode-meta">${xmlEscape(r.chapter(ep.no))}</p><h2>${xmlEscape(ep.title||r.chapter(ep.no))}</h2>${localParaHtml(ep.paragraphs)}`,r.htmlLang))}));const manifest=(book.episodes||[]).map((_,i)=>`<item id="c${i+1}" href="chapter-${i+1}.xhtml" media-type="application/xhtml+xml"/>`).join('');const spine=(book.episodes||[]).map((_,i)=>`<itemref idref="c${i+1}"/>`).join('');const opf=`<?xml version="1.0" encoding="UTF-8"?><package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid" xml:lang="${r.htmlLang}"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bookid">urn:pyeoda:${lang}:${Date.now()}</dc:identifier><dc:title>${xmlEscape(book.title)}</dc:title><dc:creator>${xmlEscape(book.author||'')}</dc:creator><dc:language>${r.htmlLang}</dc:language><meta property="dcterms:modified">${new Date().toISOString().replace(/\.\d{3}Z$/,'Z')}</meta></metadata><manifest><item id="css" href="style.css" media-type="text/css"/><item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/><item id="cover-page" href="cover.xhtml" media-type="application/xhtml+xml"/>${coverManifest}<item id="title-page" href="title.xhtml" media-type="application/xhtml+xml"/>${manifest}</manifest><spine><itemref idref="cover-page"/><itemref idref="title-page"/>${spine}</spine></package>`;files.push({name:'OEBPS/content.opf',bytes:utf8(opf)});return new Blob([makeStoredZip(files)],{type:'application/epub+zip'})
 }
 function safeLocalizedFilename(book,lang,ext){const title=String(book.title||'book').replace(/[\\/:*?"<>|]+/g,'_').trim();return `${title}_${lang.toUpperCase()}.${ext}`}
