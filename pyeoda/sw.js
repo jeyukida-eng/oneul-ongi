@@ -1,4 +1,4 @@
-const CACHE='pyeoda-sky-v1-20261003';
+const CACHE='pyeoda-mobile-sky-v2-20261003';
 const CORE=['../pyeoda/hero-sky.js?v=sky1','../pyeoda/adult-section.js?v=adult2','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
