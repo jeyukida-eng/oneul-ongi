@@ -10188,13 +10188,36 @@ function syncAdultRegistration(){
   .mobile-build #home #shelfDesc{display:none}
   .mobile-build #home .tabs{gap:12px!important;padding:0!important}
   .mobile-build #home .tab{min-height:36px;padding:6px 10px;font-size:13px}
-  .mobile-build #home #bookGrid{display:flex!important;overflow-x:auto!important;scroll-snap-type:x mandatory;gap:12px!important;padding:0 0 8px!important;scrollbar-width:thin;scrollbar-color:#aeb69b transparent}
-  .mobile-build #home #bookGrid>.book-card{flex:0 0 calc(100% - 22px);scroll-snap-align:start;grid-template-columns:78px minmax(0,1fr)!important}
-  .mobile-build #home #bookGrid .cover{height:120px!important}
-  .mobile-build .home-swipe-hint{font-size:11px;color:#777d6c;margin:0 0 8px;text-align:right}
-  .mobile-build #home .pyeoda-sky{height:108px;bottom:auto}
-  .mobile-build .pyeoda-sky .sky-cloud{top:var(--my);left:var(--mx);width:calc(var(--size)*.68);opacity:.95;animation-name:mobile-sky-drift;animation-duration:calc(var(--duration)*.65)}
-  .mobile-build .pyeoda-sky .sky-star{top:var(--my);left:var(--mx);width:calc(var(--size)*1.2);height:calc(var(--size)*1.2);color:#657060}
+  .mobile-build #home #bookGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:clamp(72px,calc((100dvh - 420px)/4),92px);gap:7px!important;overflow:visible!important;padding:0!important;scroll-snap-type:none}
+  .mobile-build #home #bookGrid>.book-card{width:100%!important;min-width:0!important;min-height:0!important;height:100%!important;padding:6px!important;grid-template-columns:42px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr) 13px 24px!important;column-gap:6px!important;row-gap:2px;align-content:stretch;border-radius:10px}
+  .mobile-build #home #bookGrid .cover{grid-column:1;grid-row:1/4;height:100%!important;min-height:0;align-self:stretch;border-radius:4px}
+  .mobile-build #home #bookGrid h3{grid-column:2;grid-row:1;font-size:11px!important;line-height:1.25!important;margin:0!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;align-self:center;white-space:normal!important;word-break:keep-all;overflow-wrap:anywhere}
+  .mobile-build #home #bookGrid .book-author{grid-column:2;grid-row:2;font-size:9px!important;line-height:13px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0!important}
+  .mobile-build #home #bookGrid .book-copy,.mobile-build #home #bookGrid .server-book-badge,.mobile-build #home #bookGrid .book-foot>div:first-child,.mobile-build #home #bookGrid .price-tag,.mobile-build #home #bookGrid .read-progress{display:none!important}
+  .mobile-build #home #bookGrid .book-foot{grid-column:2;grid-row:3;margin:0!important;padding:0!important;display:block!important;min-width:0;border:0!important}
+  .mobile-build #home #bookGrid .book-actions,.mobile-build #home #bookGrid .read-buttons{display:block!important;margin:0!important}
+  .mobile-build #home #bookGrid .read-buttons>button:not(:first-child){display:none!important}
+  .mobile-build #home #bookGrid .read-buttons>button:first-child{width:100%;min-width:0!important;min-height:24px!important;height:24px!important;padding:2px 3px!important;font-size:9px!important;line-height:1.2;border-radius:12px}
+  .mobile-build #home #bookGrid .rank{width:17px;height:17px;font-size:10px;line-height:17px;top:3px;left:3px;border:1px solid #fffdf8}
+  .mobile-build #home #bookGrid .cover-placeholder{font-size:9px;line-height:1.3}
+  .mobile-build #home .home-swipe-hint{display:none}
+  .mobile-build #home .hero{padding:58px 14px 8px!important}
+  .mobile-build #home .hero>div:first-child{padding:0!important;max-width:100%!important;width:100%}
+  .mobile-build #home .hero h1{font-size:20px!important;line-height:1.2!important;margin-bottom:4px!important}
+  .mobile-build #home .hero .hero-copy{display:none}
+  .mobile-build #home .hero .cta{margin-top:8px!important;gap:7px!important}
+  .mobile-build #home .hero .cta button{min-height:34px!important;padding:6px 8px!important;font-size:12px!important}
+  .mobile-build .mobile-home-details{margin-top:4px;font-size:10px;line-height:1.3}
+  .mobile-build .mobile-home-details summary{min-height:22px;padding:4px 0}
+  .mobile-build #home .section{padding:10px 12px 8px!important}
+  .mobile-build #home .shelf-head{flex-direction:row!important;align-items:center!important;gap:6px!important;margin-bottom:8px!important;padding-bottom:6px!important}
+  .mobile-build #home .shelf-head h2{font-size:16px!important}
+  .mobile-build #home .tabs{width:auto!important;gap:3px!important;flex-shrink:0}
+  .mobile-build #home .tab{min-height:30px;padding:4px 6px;font-size:11px}
+  .mobile-build #home .tab.active:after{bottom:-7px}
+  .mobile-build #home .pyeoda-sky{height:58px;bottom:auto}
+  .mobile-build .pyeoda-sky .sky-cloud{top:calc(var(--my)*.45);left:var(--mx);width:calc(var(--size)*.44);opacity:.95;animation-name:mobile-sky-drift;animation-duration:calc(var(--duration)*.65)}
+  .mobile-build .pyeoda-sky .sky-star{top:calc(var(--my)*.5);left:var(--mx);width:calc(var(--size)*.85);height:calc(var(--size)*.85);color:#657060}
   @keyframes mobile-sky-drift{0%,100%{transform:translate3d(-12px,4px,0) rotate(-2deg)}50%{transform:translate3d(18px,-7px,0) rotate(2deg)}}
   @media(prefers-reduced-motion:reduce){.mobile-build .pyeoda-sky .sky-cloud{animation:none}}
   `;
@@ -10205,8 +10228,7 @@ function syncAdultRegistration(){
   const fullCopy=document.createElement('p');fullCopy.textContent=copy.innerText||copy.textContent;
   details.append(summary,fullCopy);copy.textContent='쓰고, 연재하고, 나만의 책으로 만드세요.';
   hero.querySelector('.cta').after(details);
-  const hint=document.createElement('p');hint.className='home-swipe-hint';hint.textContent='옆으로 넘겨 작품을 만나보세요 →';
-  document.getElementById('bookGrid').before(hint);
+
  }
  const sky=document.createElement('div');sky.className='pyeoda-sky';sky.setAttribute('aria-hidden','true');
  const outline='M19 53C8 53 5 44 10 37C14 31 20 30 27 31C27 20 36 12 47 14C53 3 72 2 80 14C93 11 107 20 107 32C119 30 130 37 130 45C130 53 122 57 113 56L23 56Z';
