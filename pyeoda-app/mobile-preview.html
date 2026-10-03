@@ -10250,9 +10250,10 @@ function syncAdultRegistration(){
    for(const card of grid.querySelectorAll('.book-card')){
     const heading=card.querySelector('h3'),read=card.querySelector('.read');
     if(heading&&read&&!heading.querySelector('.book-title-link')){
-     const titleButton=document.createElement('button');titleButton.type='button';titleButton.className='book-title-link';titleButton.setAttribute('aria-label',(read.dataset.title||heading.textContent)+' 첫 페이지 읽기');titleButton.append(...heading.childNodes);heading.append(titleButton);
-     titleButton.onclick=async()=>{const book=findBookFromButton(read);if(!book){toast('작품 정보를 찾지 못했습니다.');return;}if(book.price){read.click();return;}titleButton.disabled=true;try{await openReader(book,{state:'first',lastEpisode:0,totalEpisodes:inferTotalEpisodes(book)});}finally{titleButton.disabled=false;}};
+     const titleButton=document.createElement('button');titleButton.type='button';titleButton.className='book-title-link';titleButton.setAttribute('aria-label',(read.dataset.title||heading.textContent)+' '+(read.dataset.readState==='resume'?'이어읽기':'읽기'));titleButton.append(...heading.childNodes);heading.append(titleButton);
+     titleButton.onclick=()=>read.click();
     }
+    if(read&&!card.dataset.mobileReadingCard){card.dataset.mobileReadingCard='true';card.style.cursor='pointer';card.addEventListener('click',e=>{if(e.target.closest('button,a,input,textarea,select,.mobile-book-description'))return;if(window.getSelection()?.toString())return;read.click();});}
     if(grid.id==='discoverGrid'&&!card.querySelector('.mobile-book-description')){
      const intro=card.querySelector('.book-copy.intro'),note=card.querySelector('.book-copy.note');if(!intro&&!note)continue;
      const description=document.createElement('div');description.className='mobile-book-description';description.tabIndex=0;description.setAttribute('role','region');description.setAttribute('aria-label',(read?.dataset.title||'작품')+' 책 소개와 작가의 말');
