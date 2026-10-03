@@ -3515,11 +3515,94 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 </section>
 </main></div><div class='mobilebar'><button data-go='home'>홈</button><button data-go='discover'>발견</button><button class='plus' data-go='register' data-register-mode='new'>＋ 쓰기</button><button data-go='studio'>스튜디오</button></div><div class='toast' id='toast'></div>
 <script>window.PYEODA_SERVER_CONFIG = {
+  r2ManuscriptAssets: false,
   url: "https://chnlljbmatsawxrrsany.supabase.co",
   anonKey: "sb_publishable_5GSQmJ7eFEKFuPmL6dxpxA_fKct9Zdn"
 };
 <\/script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>
+<script>/* Private raster assets. Persist IDs, never blob URLs or signed URLs. */
+(() => {
+ 'use strict';
+ const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+ const PLACEHOLDER='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGBgAAAABQABpfZFQAAAAABJRU5ErkJggg==';
+ const inFlight=new Map();let epoch=0;
+ function server(){return typeof PYEODA_SERVER==='undefined'?null:PYEODA_SERVER;}
+ function reference(id){if(!UUID.test(id||''))throw new Error('그림 식별자가 올바르지 않습니다.');return 'pyeoda-asset:'+id.toLowerCase();}
+ function idFromSource(source){const match=/^pyeoda-asset:([a-f0-9-]{36})$/i.exec(source||'');return match&&UUID.test(match[1])?match[1].toLowerCase():null;}
+ function source(img){const id=img.getAttribute('data-pyeoda-asset');return UUID.test(id||'')?reference(id):img.getAttribute('src')||'';}
+ function endpoint(params){const url=server()?.client?.supabaseUrl||window.PYEODA_SERVER_CONFIG?.url;if(!url)throw new Error('서버 연결을 확인해 주세요.');return url.replace(/\/$/,'')+'/functions/v1/manuscript-assets?'+new URLSearchParams(params);}
+ async function headers(){
+  const client=server()?.client;let token='';
+  if(client){const {data,error}=await client.auth.getSession();if(error)throw error;token=data?.session?.access_token||'';}
+  const key=client?.supabaseKey||window.PYEODA_SERVER_CONFIG?.anonKey||'';
+  return {...(token?{Authorization:'Bearer '+token}:{}),...(key?{apikey:key}:{})};
+ }
+ async function request(params,options={}){
+  const result=await fetch(endpoint(params),{...options,headers:{...await headers(),...options.headers},cache:'no-store',signal:AbortSignal.timeout(45000)});
+  if(!result.ok){let error;try{error=await result.json();}catch(_){}throw new Error(error?.message||'그림을 불러오지 못했습니다. 연결을 확인해 주세요.');}
+  return result;
+ }
+ async function dataSource(src){
+  const id=idFromSource(src);if(!id)return src;
+  // In-flight coalescing only. Every later read rechecks access; no long-lived
+  // cross-account blob/data cache is kept here.
+  const started=epoch,scope=server()?.authUser?.id||server()?.user?.id||'guest',key=scope+':'+id;
+  if(inFlight.has(key))return inFlight.get(key);
+  const pending=(async()=>{
+   const response=await request({action:'read',id}),blob=await response.blob();
+   if(!['image/png','image/jpeg','image/webp'].includes(blob.type)||blob.size>10*1024*1024)throw new Error('그림 파일 형식을 확인하지 못했습니다.');
+   return await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('그림을 읽지 못했습니다.'));reader.readAsDataURL(blob);});
+  })();inFlight.set(key,pending);try{const result=await pending;if(started!==epoch)throw new Error('로그인 상태가 변경되었습니다. 그림을 다시 열어 주세요.');return result;}finally{if(inFlight.get(key)===pending)inFlight.delete(key);}
+ }
+ function canonicalize(img){
+  const id=img.getAttribute('data-pyeoda-asset');if(!UUID.test(id||''))return false;
+  img.setAttribute('data-pyeoda-asset',id.toLowerCase());img.setAttribute('src',PLACEHOLDER);return true;
+ }
+ async function hydrate(root){
+  const images=[...(root?.matches?.('img[data-pyeoda-asset]')?[root]:[]),...(root?.querySelectorAll?.('img[data-pyeoda-asset]')||[])];
+  await Promise.all(images.map(async img=>{
+   if(img.dataset.pyeodaLoading==='true'||img.dataset.pyeodaLoaded==='true')return;
+   const original=source(img);if(!idFromSource(original))return;
+   img.dataset.pyeodaLoading='true';
+   try{const src=await dataSource(original);if(source(img)!==original||!img.isConnected)return;img.src=src;img.dataset.pyeodaLoaded='true';img.removeAttribute('data-pyeoda-error');}
+   catch(_){img.setAttribute('data-pyeoda-error','true');img.title='그림을 불러오지 못했습니다. 연결 후 다시 열어 주세요.';}
+   finally{delete img.dataset.pyeodaLoading;}
+  }));
+ }
+ async function forServer(html,bookId,episodeNo){
+  if(window.PYEODA_SERVER_CONFIG?.r2ManuscriptAssets!==true)return html;
+  const root=new DOMParser().parseFromString(html,'text/html').body;
+  for(const img of root.querySelectorAll('img')){
+   if(canonicalize(img))continue;
+   const src=img.getAttribute('src')||'';if(!/^data:image\/(?:png|jpeg|webp);base64,/.test(src))throw new Error('본문 그림의 저장 형식을 확인해 주세요.');
+   const blob=await (await fetch(src)).blob();
+   const response=await request({action:'upload',bookId,episodeNo:String(episodeNo)},{method:'POST',headers:{'Content-Type':blob.type},body:blob});
+   const result=await response.json();if(!result.ok||!UUID.test(result.assetId||''))throw new Error('그림 저장을 확인하지 못했습니다. 기존 원고는 유지됩니다.');
+   img.setAttribute('data-pyeoda-asset',result.assetId);canonicalize(img);
+  }
+  return root.innerHTML;
+ }
+ async function inlineHTML(html){
+  const parsed=new DOMParser().parseFromString(html,'text/html');
+  if(!parsed.querySelector('img[data-pyeoda-asset]'))return html;
+  for(const img of parsed.querySelectorAll('img[data-pyeoda-asset]')){img.src=await dataSource(source(img));img.removeAttribute('data-pyeoda-asset');}
+  return /^\s*<!doctype|^\s*<html/i.test(html)?'<!doctype html>'+parsed.documentElement.outerHTML:parsed.body.innerHTML;
+ }
+ function clear(){
+  epoch++;inFlight.clear();
+  for(const img of document.querySelectorAll('img[data-pyeoda-asset]')){img.src=PLACEHOLDER;delete img.dataset.pyeodaLoaded;delete img.dataset.pyeodaLoading;}
+  document.querySelectorAll('iframe[data-pyeoda-asset-preview="true"]').forEach(frame=>{frame.dataset.assetPreviewToken=String(Number(frame.dataset.assetPreviewToken||0)+1);frame.srcdoc='';});
+  if(typeof EXPORT_IMAGE_CACHE!=='undefined')EXPORT_IMAGE_CACHE.clear();
+  if(typeof EXPORT_IMAGE_DIMENSIONS!=='undefined')EXPORT_IMAGE_DIMENSIONS.clear();
+ }
+ window.PyeodaAssets={UUID,PLACEHOLDER,reference,idFromSource,source,canonicalize,dataSource,hydrate,forServer,inlineHTML,clear};
+ // Authoritative markup retains the asset ID; changing rendered src never
+ // changes what captureManuscriptHTML persists.
+ const start=()=>{new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType===1)hydrate(node);}}).observe(document.body,{childList:true,subtree:true});hydrate(document.body);};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+<\/script>
 <script>
 const shelves={
  popular:{title:'지금 인기 있는 작품',desc:'표지부터 책 소개, 작가의 말까지 한 장에서 빠르게 살펴보세요.',items:[
@@ -3783,6 +3866,7 @@ function bindPyeodaAuthListener(){
   if(!PYEODA_SERVER.client)return;
   try{PYEODA_SERVER.authSubscription?.unsubscribe?.()}catch(e){}
   const result=PYEODA_SERVER.client.auth.onAuthStateChange((event,session)=>{
+    if(['SIGNED_IN','SIGNED_OUT','USER_UPDATED'].includes(event))PyeodaAssets.clear();
     setTimeout(()=>{
       applyAuthorSession(session,{silent:true}).then(()=>{try{if(!resumeAuthorAfterOAuth())resumeReaderPurchaseAfterLogin()}catch(e){}}).catch(console.error);
       if(event==='PASSWORD_RECOVERY')handlePasswordRecoverySession().catch(console.error);
@@ -4231,7 +4315,7 @@ async function syncDraftEpisodeToServer(ep){
     episode_no:Number(ep.no),
     title:ep.title||'',
     body:ep.body||'',
-    body_html:sanitizeManuscriptHTML(ep.bodyHtml||''),
+    body_html:await PyeodaAssets.forServer(sanitizeManuscriptHTML(ep.bodyHtml||''),book.serverId,Number(ep.no)),
     published:!!ep.published,
     price:effectiveEpisodePrice(ep)
   };
@@ -4266,7 +4350,7 @@ async function syncPublishedEpisodeToServer(ep){
     episode_no:Number(ep.no),
     title:ep.title||'',
     body:ep.body||'',
-    body_html:sanitizeManuscriptHTML(ep.bodyHtml||''),
+    body_html:await PyeodaAssets.forServer(sanitizeManuscriptHTML(ep.bodyHtml||''),book.serverId,Number(ep.no)),
     published:true,
     price:effectiveEpisodePrice(ep)
   };
@@ -5272,7 +5356,7 @@ function exportEpisodeBlocks(ep){
  function walk(node){
   if(node.nodeType===3){text+=node.textContent;return;}
   if(node.nodeType!==1)return;
-  if(node.tagName==='IMG'){flush();const src=node.getAttribute('src'),known=EXPORT_IMAGE_DIMENSIONS.get(src);blocks.push({type:'image',src,alt:node.getAttribute('alt')||'그림',width:known?.width||Number(node.getAttribute('width'))||0,height:known?.height||Number(node.getAttribute('height'))||0});return;}
+  if(node.tagName==='IMG'){flush();const src=PyeodaAssets.source(node),known=EXPORT_IMAGE_DIMENSIONS.get(src);blocks.push({type:'image',src,alt:node.getAttribute('alt')||'그림',width:known?.width||Number(node.getAttribute('width'))||0,height:known?.height||Number(node.getAttribute('height'))||0});return;}
   if(node.tagName==='BR'){text+='\n';return;}
   const block=/^(P|DIV|LI|UL|OL|BLOCKQUOTE)$/.test(node.tagName);if(block)flush();
   for(const child of node.childNodes)walk(child);if(block)flush();
@@ -5284,11 +5368,13 @@ function illustrationLayout(image,book=currentBookData()){
  return image.width>0&&image.height>0&&image.width/image.height>=1.25?'spread':'single';
 }
 async function loadExportImage(src){
- const cached=EXPORT_IMAGE_CACHE.get(src);if(cached)return cached;
+ const isAsset=!!PyeodaAssets.idFromSource(src);
+ const cached=EXPORT_IMAGE_CACHE.get(src);if(cached&&!isAsset)return cached;
+ const resolved=await PyeodaAssets.dataSource(src);
  const result=await new Promise((resolve,reject)=>{
   const image=new Image(),timer=setTimeout(()=>{image.onload=image.onerror=null;reject(new Error('본문 그림을 불러오는 시간이 초과됐습니다.'));},15000);
   image.onload=()=>{clearTimeout(timer);if(!image.naturalWidth||!image.naturalHeight)return reject(new Error('본문 그림 크기를 확인하지 못했습니다.'));resolve({image,width:image.naturalWidth,height:image.naturalHeight});};
-  image.onerror=()=>{clearTimeout(timer);reject(new Error('본문 그림을 불러오지 못했습니다. 그림 파일을 다시 저장해 주세요.'));};image.src=src;
+  image.onerror=()=>{clearTimeout(timer);reject(new Error('본문 그림을 불러오지 못했습니다. 그림 파일을 다시 저장해 주세요.'));};image.src=resolved;
  });EXPORT_IMAGE_DIMENSIONS.set(src,{width:result.width,height:result.height});EXPORT_IMAGE_CACHE.set(src,result);
  while(EXPORT_IMAGE_CACHE.size>3)EXPORT_IMAGE_CACHE.delete(EXPORT_IMAGE_CACHE.keys().next().value);
  return result;
@@ -5318,7 +5404,7 @@ async function packageEpisodeImages(eps,files,extraImages=[]){
    const id='illustration-'+(assets.size+1),href='images/'+id+'.png';files.push({name:'OEBPS/'+href,bytes:bytesFromDataUrl(png)});assets.set(block.src,href);manifest+=`<item id="${id}" href="${href}" media-type="image/png"${block.cover?' properties="cover-image"':''}/>`;
   }finally{canvas.width=canvas.height=1;}
  }
- return {manifest,html(html){const root=new DOMParser().parseFromString(html,'text/html').body;for(const img of root.querySelectorAll('img')){const href=assets.get(img.getAttribute('src'));if(!href)throw new Error('EPUB 그림 리소스가 누락됐습니다.');img.setAttribute('src',href);img.removeAttribute('draggable');}return xhtmlExportBody(root.innerHTML);}};
+ return {manifest,html(html){const root=new DOMParser().parseFromString(html,'text/html').body;for(const img of root.querySelectorAll('img')){const href=assets.get(PyeodaAssets.source(img));if(!href)throw new Error('EPUB 그림 리소스가 누락됐습니다.');img.setAttribute('src',href);img.removeAttribute('draggable');img.removeAttribute('data-pyeoda-asset');}return xhtmlExportBody(root.innerHTML);}};
 }
 function imagePageSpec(image,spec,book=currentBookData()){
  const spread=isPictureBook(book)&&illustrationLayout(image,book)==='spread';
@@ -5327,7 +5413,7 @@ function imagePageSpec(image,spec,book=currentBookData()){
 function illustrationPage(image,spec){
  const w=spec.pageWidth-spec.inner-spec.outer,h=spec.pageHeight-spec.top-spec.bottom;
  const dimensions=image.width&&image.height?`width:${image.width}px;height:${image.height}px;`:'';
- return {kind:'illustration',image,spec,units:spec.layout==='spread'?2:1,showNumber:false,html:`<div style="width:${w}px;height:${h}px;display:flex;align-items:center;justify-content:center"><img src="${htmlEscape(image.src)}" alt="${htmlEscape(image.alt)}" style="display:block;${dimensions}max-width:100%;max-height:100%;object-fit:contain" /></div>`};
+ return {kind:'illustration',image,spec,units:spec.layout==='spread'?2:1,showNumber:false,html:`<div style="width:${w}px;height:${h}px;display:flex;align-items:center;justify-content:center"><img src="${htmlEscape(EXPORT_IMAGE_CACHE.get(image.src)?.image?.src||image.src)}"${PyeodaAssets.idFromSource(image.src)?` data-pyeoda-asset="${PyeodaAssets.idFromSource(image.src)}"`:''} alt="${htmlEscape(image.alt)}" style="display:block;${dimensions}max-width:100%;max-height:100%;object-fit:contain" /></div>`};
 }
 function paginateIllustratedEpisode(ep,spec,pages){
  const blocks=exportEpisodeBlocks(ep),picture=isPictureBook();let group=[],heading=[headingNodes(ep.no,ep.title,spec)];
@@ -5501,7 +5587,9 @@ function renderEpubPreview(){
   }
 
   const current=EPUB_PREVIEW.sections[EPUB_PREVIEW.index];
-  if(frame && current){frame.srcdoc=current.html;frame.parentElement.style.height=current.spec?'auto':'';frame.parentElement.style.aspectRatio=current.spec?current.spec.pageWidth+'/'+current.spec.pageHeight:'';}
+  if(frame && current){frame.dataset.pyeodaAssetPreview=String(current.html.includes('data-pyeoda-asset='));
+    const previewToken=(frame.dataset.assetPreviewToken=String(Number(frame.dataset.assetPreviewToken||0)+1));
+    PyeodaAssets.inlineHTML(current.html).then(html=>{if(frame.dataset.assetPreviewToken===previewToken)frame.srcdoc=html;}).catch(error=>toast(error.message));frame.parentElement.style.height=current.spec?'auto':'';frame.parentElement.style.aspectRatio=current.spec?current.spec.pageWidth+'/'+current.spec.pageHeight:'';}
   if(prev)prev.disabled=EPUB_PREVIEW.index<=0;
   if(next)next.disabled=EPUB_PREVIEW.index>=EPUB_PREVIEW.sections.length-1;
 }
@@ -7148,6 +7236,7 @@ function downloadBlobFile(blob,filename){
 }
 
 async function inlinePdfImage(source){
+  source=await PyeodaAssets.dataSource(source);
   if(/^data:image\/(?:png|jpeg|jpg|webp|gif);/i.test(source))return source;
   return new Promise((resolve,reject)=>{
     const image=new Image();
@@ -7180,7 +7269,7 @@ async function preparePdfSvg(svgMarkup){
   for(const element of [svg,...svg.querySelectorAll('[xmlns]')])element.removeAttribute('xmlns');
   const images=[...svg.querySelectorAll('img,image')];
   for(const image of images){
-    const source=image.getAttribute('src')||image.getAttribute('href')||image.getAttribute('xlink:href');
+    const source=image.localName==='img'?PyeodaAssets.source(image):(image.getAttribute('href')||image.getAttribute('xlink:href'));
     if(!source)continue;
     const embedded=await inlinePdfImage(source);
     if(image.localName==='img')image.setAttribute('src',embedded);
@@ -7623,11 +7712,13 @@ function sanitizeManuscriptHTML(html){
   for(const el of [...parsed.body.querySelectorAll('*')]){
     if(!allowed.has(el.tagName)){el.replaceWith(...el.childNodes);continue;}
     if(el.tagName==='IMG'){
-      const src=el.getAttribute('src')||'',alt=(el.getAttribute('alt')||'그림').slice(0,160);
-      if(src.length>600000||!/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src)){el.remove();continue;}
+      const assetId=el.getAttribute('data-pyeoda-asset')||'',isAsset=PyeodaAssets.UUID.test(assetId);
+      const src=isAsset?PyeodaAssets.PLACEHOLDER:(el.getAttribute('src')||''),alt=(el.getAttribute('alt')||'그림').slice(0,160);
+      if(!isAsset&&(src.length>600000||!/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src))){el.remove();continue;}
       const width=Number(el.getAttribute('width')),height=Number(el.getAttribute('height'));
       for(const attr of [...el.attributes])el.removeAttribute(attr.name);
       el.setAttribute('src',src);el.setAttribute('alt',alt);
+      if(isAsset)el.setAttribute('data-pyeoda-asset',assetId.toLowerCase());
       if(Number.isInteger(width)&&width>0&&width<=2000)el.setAttribute('width',String(width));
       if(Number.isInteger(height)&&height>0&&height<=2000)el.setAttribute('height',String(height));
       el.setAttribute('draggable','false');continue;
