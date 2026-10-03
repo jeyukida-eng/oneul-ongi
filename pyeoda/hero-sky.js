@@ -314,19 +314,33 @@
 (()=>{
  if(document.body.classList.contains('mobile-build'))return;
  const style=document.createElement('style');style.textContent=`
- body:not(.mobile-build) :is(#home #bookGrid,#discover #discoverGrid){grid-template-rows:none!important;grid-auto-rows:310px;gap:14px}
- body:not(.mobile-build) :is(#home,#discover) .book-card{height:310px!important;min-height:310px!important;padding:12px!important;grid-template-columns:104px minmax(0,1fr)!important;grid-template-rows:auto auto minmax(0,1fr) auto!important;gap:6px 12px;align-content:stretch}
- body:not(.mobile-build) :is(#home,#discover) .book-card h3{font-size:17px!important;line-height:1.4!important;margin:0!important}
- body:not(.mobile-build) :is(#home,#discover) .book-author{font-size:13px!important;line-height:1.5!important;margin:0!important}
- body:not(.mobile-build) .web-book-description{grid-column:2;grid-row:3;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-gutter:stable;padding-right:4px}
- body:not(.mobile-build) :is(#home,#discover) .web-book-description .book-copy{display:block!important;-webkit-line-clamp:unset!important;height:auto!important;max-height:none!important;overflow:visible!important;font-size:14px!important;line-height:1.65!important;white-space:pre-wrap;margin:0 0 12px!important;overflow-wrap:anywhere}
- body:not(.mobile-build) :is(#home,#discover) .web-book-description .book-copy b{font-size:13px!important;margin-bottom:3px}
- body:not(.mobile-build) :is(#home,#discover) .book-card .cover{grid-row:1/5!important;height:100%!important;align-self:stretch}
- body:not(.mobile-build) :is(#home,#discover) .book-foot{grid-column:2;grid-row:4;min-height:0;margin:0!important;padding:0!important}
- .web-book-description:focus-visible{outline:2px solid var(--accent-deep);outline-offset:-2px}
- @media(min-width:1051px){body:not(.mobile-build) :is(#home #bookGrid,#discover #discoverGrid){grid-template-columns:repeat(3,minmax(0,1fr))!important}}
- @media(max-width:760px){body:not(.mobile-build) :is(#home #bookGrid,#discover #discoverGrid){grid-template-columns:1fr!important}}
+ .web-book-description{grid-column:2;grid-row:3;min-width:0;min-height:0;max-height:100px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-right:3px}
+ body:not(.mobile-build) :is(#home,#discover) .web-book-description .book-copy{display:block!important;-webkit-line-clamp:unset!important;max-height:none!important;height:auto!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;margin:0 0 8px!important;overflow-wrap:anywhere}
+ body:not(.mobile-build) :is(#home,#discover) .book-foot{grid-row:4;min-height:0}
+ body:not(.mobile-build) #home .web-book-description{max-height:none}
+ .web-book-description:focus-visible{outline:1px solid var(--accent-deep);outline-offset:-1px}
+ @media(min-width:1051px){
+ body:not(.mobile-build) .app:has(#home.active){padding-bottom:0!important}
+ body:not(.mobile-build) #home.active{height:var(--web-home-height,calc(100dvh - 118px));min-height:0!important;display:flex;flex-direction:column;overflow:hidden}
+ body:not(.mobile-build) #home .hero{height:clamp(180px,calc(var(--web-home-height,calc(100dvh - 118px)) - 420px),430px)!important;min-height:0!important;flex-shrink:0}
+ body:not(.mobile-build) #home>.section{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:10px;padding-bottom:12px}
+ body:not(.mobile-build) #home .shelf-head{flex-shrink:0;margin-bottom:8px;padding-bottom:5px}
+ body:not(.mobile-build) #home #bookGrid{flex:1;min-height:0;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr))!important;gap:8px 10px}
+ body:not(.mobile-build) #home .book-card{height:100%!important;min-height:0!important;padding:9px;grid-template-columns:88px minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;gap:0 10px}
+ body:not(.mobile-build) #home .book-card>*{min-height:0;min-width:0}
+ body:not(.mobile-build) #home .cover{height:100%!important;grid-row:1/5;align-self:stretch}
+ body:not(.mobile-build) #home .cover img{object-fit:contain!important;background:var(--paper-2)}
+ body:not(.mobile-build) #home .book-card h3{font-size:14px;line-height:1.25;margin:0 0 2px}
+ body:not(.mobile-build) #home .book-author{font-size:11px;line-height:1.3;margin:0 0 3px}
+ body:not(.mobile-build) #home .web-book-description .book-copy{font-size:11px;line-height:1.4}
+ body:not(.mobile-build) #home .book-foot{margin:0;padding-top:2px}
+ body:not(.mobile-build) #home .book-actions{margin-top:2px;gap:4px}
+ body:not(.mobile-build) #home .book-actions button{font-size:10px;padding:5px 8px;min-height:28px;white-space:nowrap}
+ }
+
  `;document.head.append(style);
+ function fitHome(){document.documentElement.style.setProperty('--web-home-height',Math.max(300,window.innerHeight-document.querySelector('header.top').getBoundingClientRect().height)+'px');}
+ window.addEventListener('resize',fitHome);new ResizeObserver(fitHome).observe(document.querySelector('header.top'));fitHome();
  function enhance(grid){for(const card of grid.querySelectorAll('.book-card')){
   if(card.querySelector('.web-book-description'))continue;
   const intro=card.querySelector('.book-copy.intro'),note=card.querySelector('.book-copy.note');if(!intro&&!note)continue;

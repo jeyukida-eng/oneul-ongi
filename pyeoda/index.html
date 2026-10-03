@@ -1,4 +1,4 @@
-<!doctype html><html lang='ko'><head><meta name="pyeoda-security-policy" http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js https://js.tosspayments.com 'sha256-GU49IltZUtmivVx7bY2dlDt09ud1yCRgdNOQ4lX2zaU=' 'sha256-hYmPOR8F9cQ7uJSgnHEtNzeLK9Hr5cvWYt8DH+UDRAk=' 'sha256-n0X+yZZdzr7ORPjm5MZwR0qaG0APqMRodwIv+/XoteM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://chnlljbmatsawxrrsany.supabase.co wss://chnlljbmatsawxrrsany.supabase.co https://*.tosspayments.com https://*.toss.im; frame-src 'self' blob: https://*.tosspayments.com https://*.toss.im; object-src 'none'; base-uri 'none'; form-action 'self' https://*.tosspayments.com https://*.toss.im"><meta name="referrer" content="strict-origin-when-cross-origin"><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PYEODA</title><style>
+<!doctype html><html lang='ko'><head><meta name="pyeoda-security-policy" http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js https://js.tosspayments.com 'sha256-GU49IltZUtmivVx7bY2dlDt09ud1yCRgdNOQ4lX2zaU=' 'sha256-kUMXzRnOVfg2GYegmqzZNV2iv6m4z4Xr70SNXPIZ4ag=' 'sha256-n0X+yZZdzr7ORPjm5MZwR0qaG0APqMRodwIv+/XoteM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://chnlljbmatsawxrrsany.supabase.co wss://chnlljbmatsawxrrsany.supabase.co https://*.tosspayments.com https://*.toss.im; frame-src 'self' blob: https://*.tosspayments.com https://*.toss.im; object-src 'none'; base-uri 'none'; form-action 'self' https://*.tosspayments.com https://*.toss.im"><meta name="referrer" content="strict-origin-when-cross-origin"><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PYEODA</title><style>
 :root{
   --ink:#2f2b24;
   --muted:#7b7468;
@@ -3940,8 +3940,13 @@ function renderMyServerBooks(){
 }
 
 async function dataUrlBlob(dataUrl){
-  const res=await fetch(dataUrl);
-  return await res.blob();
+  // Decode locally: fetch(data:) is blocked by the app's connection policy.
+  const match=String(dataUrl||'').match(/^data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/=\s]+)$/i);
+  if(!match)throw new Error('표지는 PNG, JPG, WEBP 형식으로 저장해 주세요.');
+  if(match[2].length>13981100)throw new Error('표지는 10MB 이하로 선택해 주세요.');
+  const decoded=atob(match[2].replace(/\s/g,''));
+  if(decoded.length>10485760)throw new Error('표지는 10MB 이하로 선택해 주세요.');
+  return new Blob([Uint8Array.from(decoded,char=>char.charCodeAt(0))],{type:match[1].toLowerCase()});
 }
 async function uploadBookCoverToServer(bookId,coverSource){
   if(!PYEODA_SERVER.client||!PYEODA_SERVER.user||!coverSource)return '';
@@ -3956,7 +3961,7 @@ async function uploadBookCoverToServer(bookId,coverSource){
     .upload(path,blob,{upsert:true,contentType:mime,cacheControl:'3600'});
   if(error)throw error;
   const publicUrl=PYEODA_SERVER.client.storage.from('book-covers').getPublicUrl(path).data?.publicUrl||'';
-  return publicUrl;
+  return publicUrl?(publicUrl+'?v='+Date.now()):'';
 }
 function serverBookPayload(data){
   let price=Math.max(0,Number(data?.salePrice)||0);
@@ -4008,6 +4013,7 @@ async function syncBookToServer(data,{forceNew=false}={}){
   }
   if(error)throw error;
   let coverUrl=row.cover_url||data.serverCoverUrl||'';
+  data.serverCoverUploadError='';
   const coverSource=activeCoverSource(data);
   if(coverSource && data.ageRating!=='19'){
     try{
@@ -4016,7 +4022,10 @@ async function syncBookToServer(data,{forceNew=false}={}){
         const u=await PYEODA_SERVER.client.from('books').update({cover_url:coverUrl}).eq('id',row.id);
         if(u.error)throw u.error;
       }
-    }catch(e){console.warn('cover upload failed',e)}
+    }catch(e){
+      data.serverCoverUploadError=e?.message||'표지 서버 저장에 실패했습니다.';
+      console.warn('cover upload failed',e);
+    }
   }
   data.serverId=row.id;
   data.serverCoverUrl=coverUrl;
@@ -8731,10 +8740,10 @@ if(newCoverFile){newCoverFile.addEventListener('change',async e=>{
     paintRegisterCover(pendingNewCover);
     try{localStorage.setItem('pyeoda-demo-cover',pendingNewCover)}catch(e){}
     try{publishingBookSummary()}catch(e){}
-    toast('표지를 등록했습니다.');
+    toast('표지 미리보기를 적용했습니다. 책 정보를 저장하면 공개 카드에도 반영됩니다.');
   }catch(err){
     console.error(err);
-    toast('표지 이미지를 처리하지 못했습니다. 다른 JPG 또는 PNG 파일을 선택해 주세요.');
+    toast(err?.message||'표지 이미지를 처리하지 못했습니다. PNG, JPG, WEBP 파일을 선택해 주세요.');
   }
 })}
 
@@ -9209,7 +9218,9 @@ async function applyBookRegistration(){
   syncBookCompletionUI();
   renderRegisteredBookList();
   registrationMode='edit';
-  if(saved.coverStored){
+  if(data.serverCoverUploadError){
+    toast('책 정보는 저장했지만 표지 서버 저장에 실패했습니다. '+data.serverCoverUploadError+' 책 정보 수정에서 다시 저장해 주세요.');
+  }else if(saved.coverStored){
     toast('책이 등록되었습니다. 첫 회차를 작성해 보세요.');
   }else if(pendingNewCover){
     toast('책이 등록되었습니다. 표지 파일이 커서 현재 화면에서만 유지됩니다.');
@@ -9815,4 +9826,4 @@ function bindMarkdownManuscriptImport(){
  updateManuscriptImportRestore();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindMarkdownManuscriptImport,{once:true});else bindMarkdownManuscriptImport();
-</script><script src='../pyeoda/adult-section.js?v=adult4'></script><script src='../pyeoda/hero-sky.js?v=sky10'></script><script src="./mobile-editor.js?v=write5"></script></body></html>
+</script><script src='../pyeoda/adult-section.js?v=adult4'></script><script src='../pyeoda/hero-sky.js?v=sky11'></script><script src="./mobile-editor.js?v=write5"></script></body></html>
