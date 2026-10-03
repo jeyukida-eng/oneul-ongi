@@ -10336,7 +10336,7 @@ function syncAdultRegistration(){
  const billing=tools.querySelector(':scope > .cover-prompt-help');billing.classList.add('mobile-cover-help');billing.textContent='직접 올리기 무료 · 책마다 첫 AI 생성 1회 무료. 두 번째부터 비용이 발생합니다.';
  prompt.querySelector('.cover-prompt-help').textContent='제목과 필명은 자동으로 들어갑니다.';
  step(cover,'표지 만들기');
- const preview=document.getElementById('newCoverPreview');preview.setAttribute('role','button');preview.tabIndex=0;preview.setAttribute('aria-label','표지 미리보기 크게 보기');preview.setAttribute('aria-haspopup','dialog');
+ const preview=cover.querySelector('#newCoverPreview');preview.setAttribute('role','button');preview.tabIndex=0;preview.setAttribute('aria-label','표지 미리보기 크게 보기');preview.setAttribute('aria-haspopup','dialog');
  const dialog=document.createElement('dialog');dialog.className='mobile-cover-dialog';dialog.setAttribute('aria-label','표지 크게 보기');
  const dialogHead=document.createElement('header'),dialogLabel=document.createElement('span'),close=document.createElement('button');dialogLabel.textContent='표지 미리보기';close.type='button';close.textContent='닫기';close.onclick=()=>dialog.close();dialogHead.append(dialogLabel,close);dialog.append(dialogHead);document.body.append(dialog);
  function openPreview(){dialog.querySelector('.register-cover-preview')?.remove();const large=preview.cloneNode(true);large.removeAttribute('id');large.removeAttribute('role');large.removeAttribute('tabindex');large.removeAttribute('aria-label');large.removeAttribute('aria-haspopup');dialog.append(large);dialog.showModal();}
