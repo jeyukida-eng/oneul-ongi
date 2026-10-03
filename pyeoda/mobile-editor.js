@@ -1,6 +1,5 @@
-/* Mobile writing uses the visible viewport; extra tools retain their original handlers. */
+/* Writing stays within the visible viewport; tools retain their original handlers. */
 (()=>{
- if(!document.body.classList.contains('mobile-build'))return;
  const editor=document.getElementById('editor');if(!editor)return;
  const styles=document.createElement('style');styles.textContent=`
  body.mobile-writing{height:100dvh;overflow:hidden!important}
@@ -39,6 +38,19 @@
  .mobile-writing-tools .editor-action{width:100%!important;min-height:38px!important;height:38px!important;font-size:13px!important;padding:4px 8px!important}
  .mobile-writing-tools .completion-next:not(.show){display:none}
 
+ @media(min-width:761px){
+ body:not(.mobile-build).mobile-writing #editor>.section{max-width:1460px;margin:auto;padding:12px 24px!important}
+ body:not(.mobile-build).mobile-writing #editor .current-book{flex-basis:38px;height:38px}
+ body:not(.mobile-build).mobile-writing #editor .current-book-info>b{font-size:18px}
+ body:not(.mobile-build).mobile-writing #editor .panel.editor{padding:10px 16px!important;gap:8px}
+ body:not(.mobile-build).mobile-writing #editor .episode-head{flex-basis:40px}
+ body:not(.mobile-build).mobile-writing #editor #title{height:40px;font-size:20px!important}
+ body:not(.mobile-build).mobile-writing #editor #body{padding:12px 16px!important;font-size:18px!important;line-height:1.9!important;scrollbar-gutter:stable}
+ body:not(.mobile-build).mobile-writing #editor .editorbar{flex-basis:44px}
+ body:not(.mobile-build).mobile-writing #editor #saveEpisodeBtn{height:38px!important;min-height:38px!important;padding:6px 24px!important;font-size:14px!important}
+ body:not(.mobile-build) .mobile-writing-tools{width:min(760px,calc(100% - 32px))}
+ body:not(.mobile-build) .mobile-writing-tools .writer-cheatsheet{display:block!important}
+ }
  .mobile-writing-tools{font:14px/1.55 system-ui,-apple-system,"Noto Sans KR",sans-serif;text-align:left}
  .mobile-writing-tools *{box-sizing:border-box}
  .mobile-writing-tools button,.mobile-writing-tools input,.mobile-writing-tools select,.mobile-writing-tools textarea{font-family:inherit!important;font-size:13px!important;line-height:1.4!important}
@@ -77,7 +89,7 @@
   const bottom=(view?.offsetTop||0)+(view?.height||window.innerHeight),start=Math.max(top.bottom,view?.offsetTop||0);
   editor.style.setProperty('--writing-left',app.left+'px');editor.style.setProperty('--writing-width',app.width+'px');editor.style.setProperty('--writing-top',start+'px');editor.style.setProperty('--writing-height',Math.max(160,bottom-start)+'px');
  }
- function active(){const on=editor.classList.contains('active');document.body.classList.toggle('mobile-writing',on);if(!on&&dialog.open)dialog.close();if(on)requestAnimationFrame(viewport);}
+ function active(){const on=editor.classList.contains('active');document.body.classList.toggle('mobile-writing',on);if(!on&&dialog.open)dialog.close();if(on){window.scrollTo({top:0,behavior:'instant'});requestAnimationFrame(viewport);}}
  new MutationObserver(active).observe(editor,{attributes:true,attributeFilter:['class']});
  window.addEventListener('resize',viewport);window.visualViewport?.addEventListener('resize',viewport);window.visualViewport?.addEventListener('scroll',viewport);active();
 })();

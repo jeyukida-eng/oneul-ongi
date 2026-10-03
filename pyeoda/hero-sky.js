@@ -309,3 +309,29 @@
  for(const b of document.querySelectorAll('[data-register-mode],#registeredNewBookBtn'))b.addEventListener('click',()=>show(0,false));
  show(0,false);
 })();
+
+/* Web catalog: descriptions scroll while reading and purchase actions stay visible. */
+(()=>{
+ if(document.body.classList.contains('mobile-build'))return;
+ const style=document.createElement('style');style.textContent=`
+ body:not(.mobile-build) :is(#home #bookGrid,#discover #discoverGrid){grid-template-rows:none!important;grid-auto-rows:310px;gap:14px}
+ body:not(.mobile-build) :is(#home,#discover) .book-card{height:310px!important;min-height:310px!important;padding:12px!important;grid-template-columns:104px minmax(0,1fr)!important;grid-template-rows:auto auto minmax(0,1fr) auto!important;gap:6px 12px;align-content:stretch}
+ body:not(.mobile-build) :is(#home,#discover) .book-card h3{font-size:17px!important;line-height:1.4!important;margin:0!important}
+ body:not(.mobile-build) :is(#home,#discover) .book-author{font-size:13px!important;line-height:1.5!important;margin:0!important}
+ body:not(.mobile-build) .web-book-description{grid-column:2;grid-row:3;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-gutter:stable;padding-right:4px}
+ body:not(.mobile-build) :is(#home,#discover) .web-book-description .book-copy{display:block!important;-webkit-line-clamp:unset!important;height:auto!important;max-height:none!important;overflow:visible!important;font-size:14px!important;line-height:1.65!important;white-space:pre-wrap;margin:0 0 12px!important;overflow-wrap:anywhere}
+ body:not(.mobile-build) :is(#home,#discover) .web-book-description .book-copy b{font-size:13px!important;margin-bottom:3px}
+ body:not(.mobile-build) :is(#home,#discover) .book-card .cover{grid-row:1/5!important;height:100%!important;align-self:stretch}
+ body:not(.mobile-build) :is(#home,#discover) .book-foot{grid-column:2;grid-row:4;min-height:0;margin:0!important;padding:0!important}
+ .web-book-description:focus-visible{outline:2px solid var(--accent-deep);outline-offset:-2px}
+ @media(min-width:1051px){body:not(.mobile-build) :is(#home #bookGrid,#discover #discoverGrid){grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+ @media(max-width:760px){body:not(.mobile-build) :is(#home #bookGrid,#discover #discoverGrid){grid-template-columns:1fr!important}}
+ `;document.head.append(style);
+ function enhance(grid){for(const card of grid.querySelectorAll('.book-card')){
+  if(card.querySelector('.web-book-description'))continue;
+  const intro=card.querySelector('.book-copy.intro'),note=card.querySelector('.book-copy.note');if(!intro&&!note)continue;
+  const description=document.createElement('div');description.className='web-book-description';description.tabIndex=0;description.setAttribute('role','region');description.setAttribute('aria-label',(card.querySelector('h3')?.textContent||'작품')+' 책 소개와 작가의 말');
+  if(intro)description.append(intro);if(note)description.append(note);card.insertBefore(description,card.querySelector('.book-foot'));
+ }}
+ for(const id of ['bookGrid','discoverGrid']){const grid=document.getElementById(id);if(!grid)continue;enhance(grid);new MutationObserver(()=>enhance(grid)).observe(grid,{childList:true});}
+})();
