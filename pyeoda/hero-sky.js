@@ -28,7 +28,7 @@
   .mobile-build .adult-switch{gap:4px;margin:0;flex-shrink:0}
   .mobile-build .adult-switch button{font-size:12px;padding:6px 10px;min-height:36px}
   .mobile-build #home .hero{height:auto!important;min-height:0!important;padding:112px 16px 18px!important;background-position:center bottom!important}
-  .mobile-build #home .hero>div:first-child{padding:10px 12px!important;background:rgba(251,248,241,.9)!important;border-radius:14px!important;text-align:center!important}
+  .mobile-build #home .hero>div:first-child{padding:10px 12px!important;background:none!important;border-radius:0!important;text-align:center!important}
   .mobile-build #home .hero .eyebrow{display:none}
   .mobile-build #home .hero h1{font-size:clamp(23px,6.4vw,27px)!important;line-height:1.3!important;margin:0 0 8px!important;letter-spacing:-.045em!important}
   .mobile-build #home .hero .hero-copy{font-size:13px!important;line-height:1.6!important;text-align:center!important;font-weight:500!important}
@@ -85,4 +85,86 @@
  // Hidden screens need not keep drawing animations.
  function sync(){sky.style.display=hero.closest('.screen')?.classList.contains('active')?'':'none';}
  new MutationObserver(sync).observe(hero.closest('.screen'),{attributes:true,attributeFilter:['class']});sync();
+})();
+
+/* Mobile registration: one question per page, cover creation comes last. */
+(()=>{
+ if(!document.body.classList.contains('mobile-build'))return;
+ const screen=document.getElementById('register'),form=screen.querySelector('.register-form');
+ if(form.dataset.mobileSteps)return;form.dataset.mobileSteps='true';
+ const css=document.createElement('style');css.textContent=`
+ .mobile-build #register .register-shell{padding:12px 14px 0!important}
+ .mobile-build #register .register-head{margin:0 0 10px!important;gap:0!important}
+ .mobile-build #register .register-head h2{font-size:22px!important;margin:0!important}
+ .mobile-build #register .register-head p,.mobile-build #register .register-head>.meta{display:none}
+ .mobile-build #register .register-layout{display:block!important}
+ .mobile-build #register .register-form{padding:16px!important;display:flex;flex-direction:column;min-height:calc(100dvh - 258px);border-radius:16px}
+ .mobile-build #register .mobile-step[hidden],.mobile-build #register .register-actions[hidden],.mobile-build #register .mobile-step-nav [hidden]{display:none!important}
+ .mobile-build #register .mobile-step{min-width:0;flex:1}
+ .mobile-build #register .mobile-step .reg-field{margin:0!important}
+ .mobile-build #register .mobile-step label{font-size:17px}
+ .mobile-build #register .mobile-step input:not([type=checkbox]):not([type=radio]):not([type=file]),.mobile-build #register .mobile-step select{min-height:48px;margin-top:12px}
+ .mobile-build #register .mobile-step textarea{height:clamp(120px,28dvh,260px)!important;min-height:100px!important;margin-top:12px}
+ .mobile-build #register .mobile-step .reg-help,.mobile-build #register .mobile-step .meta{font-size:12px;line-height:1.55}
+ .mobile-build #register .mobile-step .text-limit-row{font-size:11px}
+ .mobile-build #register #adultRegistrationRules{font-size:12px;line-height:1.5}
+ .mobile-build #register #adultRegistrationRules p{margin:8px 0}
+ .mobile-build #register #adultRegistrationRules label{font-size:13px}
+ .mobile-build #register .mobile-step-progress{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;color:#68715a;font-size:12px}
+ .mobile-step-progress progress{width:90px;height:5px;accent-color:#697158}
+ .mobile-build #register .mobile-step-nav{display:grid;grid-template-columns:1fr 1.5fr;gap:10px;margin-top:18px;padding:10px 0 0;position:sticky;bottom:76px;background:#fffdf8;z-index:4}
+ .mobile-build #register .mobile-step-nav button{min-height:46px;font:inherit;font-size:14px;border-radius:24px}
+ .mobile-build #register .register-actions{margin-top:10px;padding:0;grid-template-columns:1fr!important}
+ .mobile-build #register .register-actions>[data-go=studio]{display:none}
+ .mobile-build #register .register-actions button{min-height:46px!important;font-size:14px}
+ .mobile-build #register .register-cover-card{position:static!important;border:0;background:none;padding:0!important;gap:10px}
+ .mobile-build #register .register-cover-preview{width:96px!important;max-width:96px!important;min-height:0!important;margin:0 auto!important}
+ .mobile-build #register .cover-tool-buttons{display:grid;grid-template-columns:1fr 1fr!important;gap:8px}
+ .mobile-build #register .cover-tool-btn{min-height:44px;padding:8px;font-size:12px!important}
+ .mobile-build #register .cover-style-grid{grid-template-columns:1fr 1fr!important;gap:10px}
+ .mobile-build #register .cover-style-grid span{padding:12px;font-size:13px}
+ .mobile-build #register .mobile-cover-title{font-size:15px;text-align:center;margin:0 0 8px;word-break:keep-all}
+ .mobile-build #register .mobile-cover-help{font-size:11px;line-height:1.5;margin:8px 0}
+ .mobile-build #register .cover-ai-status{font-size:12px;line-height:1.5;margin:8px 0}
+ .mobile-build #register .mobile-step-error{font-size:13px;color:#a34932;margin:10px 0 0}
+ `;document.head.append(css);
+ const progress=document.createElement('div');progress.className='mobile-step-progress';progress.setAttribute('aria-live','polite');
+ const steps=[];
+ const fields=[['newBookTitle','책 제목'],['newBookSubtitle','부제 · 선택'],['newPenName','필명'],['newCategory','카테고리'],['newWritingType','세부 유형'],['newGenre','장르'],['newFormat','작품 형태'],['newAgeRating','이용등급'],['newAudience','주 독자 · 선택'],['newPurpose','글의 목적'],['newBookIntro','책 소개'],['newAuthorNote','작가의 말'],['newTags','태그 · 선택']];
+ function step(node,label){const el=document.createElement('div');el.className='mobile-step';el.hidden=true;el.append(node);steps.push({el,label});return el;}
+ for(const [id,label] of fields)step(document.getElementById(id).closest('.reg-field'),label);
+ const writingGuide=document.createElement('details');const guideSummary=document.createElement('summary');guideSummary.textContent='선택한 유형의 집필 기준 보기';writingGuide.append(guideSummary,document.getElementById('registrationWritingGuide'));steps[4].el.append(writingGuide);
+ const cover=screen.querySelector('.register-cover-card'),tools=cover.querySelector('.cover-tools');
+ step(cover.querySelector('.cover-style-wrap'),'표지 스타일');
+ const prompt=document.getElementById('newCoverPrompt').parentElement;
+ const status=document.getElementById('coverAiStatus');tools.append(status);
+ step(prompt,'표지 장면 · AI 생성 시 입력');
+ const title=document.createElement('p');title.className='mobile-cover-title';cover.prepend(title);
+ const guide=cover.querySelector('.cover-guide');guide.remove();
+ const billing=tools.querySelector(':scope > .cover-prompt-help');billing.classList.add('mobile-cover-help');billing.textContent='직접 올리기 무료 · 책마다 첫 AI 생성 1회 무료. 두 번째부터 비용이 발생합니다.';
+ prompt.querySelector('.cover-prompt-help').textContent='장소 · 분위기 · 핵심 사물을 적어 주세요. 제목과 필명은 앞에서 입력한 내용으로 표지에 들어갑니다.';
+ step(cover,'표지 완성');
+ for(const old of [...form.querySelectorAll(':scope > .form-section')])old.remove();
+ const actions=form.querySelector('.register-actions');form.prepend(progress);for(const s of steps)form.insertBefore(s.el,actions);
+ const error=document.createElement('p');error.className='mobile-step-error';error.setAttribute('role','alert');error.hidden=true;form.insertBefore(error,actions);
+ const nav=document.createElement('div');nav.className='mobile-step-nav';nav.innerHTML='<button type="button" class="secondary">이전</button><button type="button" class="primary">다음</button>';form.insertBefore(nav,actions);
+ const [prev,next]=nav.children;let current=0;
+ function show(index,scroll=true){
+  current=Math.max(0,Math.min(steps.length-1,index));steps.forEach((s,i)=>s.el.hidden=i!==current);
+  progress.replaceChildren();const label=document.createElement('span');label.textContent=`${current+1} / ${steps.length} · ${steps[current].label}`;const bar=document.createElement('progress');bar.max=steps.length;bar.value=current+1;bar.setAttribute('aria-label','작품 등록 진행');progress.append(label,bar);
+  prev.textContent=current?'이전':'취소';next.hidden=current===steps.length-1;actions.hidden=current!==steps.length-1;
+  error.hidden=true;title.textContent=`${document.getElementById('newBookTitle').value.trim()} · ${document.getElementById('newPenName').value.trim()}`;
+  if(scroll){document.activeElement?.blur();window.scrollTo({top:0,behavior:'instant'});}
+ }
+ function valid(id,message,index){if(document.getElementById(id).value.trim())return true;show(index);error.textContent=message;error.hidden=false;document.getElementById(id).focus();return false;}
+ function required(){return valid('newBookTitle','책 제목을 입력해 주세요.',0)&&valid('newPenName','필명을 입력해 주세요.',2);}
+ function ratingOK(){if(document.getElementById('newAgeRating').value!=='19'||document.getElementById('adultPolicyConsent').checked)return true;show(7);error.textContent='19+ 등록기준과 별도 심사에 동의해 주세요.';error.hidden=false;return false;}
+ prev.onclick=()=>current?show(current-1):go('studio');
+ next.onclick=()=>{if(current===0&&!valid('newBookTitle','책 제목을 입력해 주세요.',0))return;if(current===2&&!valid('newPenName','필명을 입력해 주세요.',2))return;if(current===7&&!ratingOK())return;show(current+1);};
+ steps.forEach(s=>s.el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'&&!['checkbox','radio','file'].includes(e.target.type)){e.preventDefault();if(current<steps.length-1)next.click();}}));
+ document.getElementById('generateCoverBtn').addEventListener('click',e=>{if(!required()||!ratingOK()){e.preventDefault();e.stopImmediatePropagation();return;}if(!document.getElementById('newCoverPrompt').value.trim()){show(steps.length-2);error.textContent='AI 표지에 넣을 장면을 입력해 주세요.';error.hidden=false;e.preventDefault();e.stopImmediatePropagation();}},true);
+ document.getElementById('startWriting').addEventListener('click',e=>{if(!required()||!ratingOK()){e.preventDefault();e.stopImmediatePropagation();}},true);
+ let active=screen.classList.contains('active');new MutationObserver(()=>{const now=screen.classList.contains('active');if(now&&!active)show(0);active=now;}).observe(screen,{attributes:true,attributeFilter:['class']});
+ for(const b of document.querySelectorAll('[data-register-mode],#registeredNewBookBtn'))b.addEventListener('click',()=>show(0,false));
+ show(0,false);
 })();
