@@ -10017,8 +10017,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 <script>
 (async()=>{
  const status=document.getElementById('validation-status'),out=document.getElementById('validation-result'),downloads=document.getElementById('validation-downloads');
- const checks={},outputs=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
- function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});}
+ const checks={},outputs=[],uploadTasks=[];const assert=(ok,label)=>{if(!ok)throw new Error(label)};
+ function link(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.textContent=name;a.style='display:block;margin:12px 0';downloads.append(a);outputs.push({name,bytes:blob.size});const mode=name.includes('자동배치')?'auto':name.includes('한페이지')?'single':'spread';const ext=name.endsWith('.epub')?'epub':name.endsWith('.pdf')?'pdf':null;if(ext){const target='https://chnlljbmatsawxrrsany.supabase.co/functions/v1/manuscript-assets?action=validation_output&file='+mode+'.'+ext;uploadTasks.push(fetch(target,{method:'POST',headers:{Authorization:'Bearer '+location.hash.slice(1),'Content-Type':blob.type},body:blob}).then(async r=>{if(!r.ok)throw new Error('검증 파일 보관 실패 '+name+' '+r.status)}));}}
  try{
   currentEpisodeNo=0;episodes=CHECK_FIXTURE.episodes.map(ep=>({...ep}));saveCurrentBookData({...CHECK_FIXTURE.book,cover:'',serverCoverUrl:''});
   const originals=JSON.stringify(episodes),allImages=episodes.flatMap(exportEpisodeBlocks).filter(b=>b.type==='image');
@@ -10042,7 +10042,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   await build('single',full.slice(0,2),'그림책_R2_한페이지_검증');
   await build('spread',full.slice(0,2),'그림책_R2_펼침_검증');
   episodes=full;assert(JSON.stringify(episodes)===originals,'원고 변경');checks.originalFixtureUnchanged=true;
-  const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
+  status.textContent="검증 파일 보관 확인";await Promise.all(uploadTasks);const result={ok:true,checks,outputs};out.textContent=JSON.stringify(result,null,2);link(new Blob([JSON.stringify(result,null,2)],{type:'application/json'}),'r2-export-check.json');status.textContent='검증 완료';
  }catch(e){status.textContent='검증 실패';out.textContent=JSON.stringify({ok:false,error:e.message,stack:e.stack,checks,outputs},null,2);}
 })();
 </script>
