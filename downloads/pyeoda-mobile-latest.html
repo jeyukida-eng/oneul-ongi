@@ -1,4 +1,4 @@
-<!doctype html><html lang='ko'><head><style id='mobile-boot-style'>.mobile-booting body>:not(#mobileBoot){visibility:hidden!important}#mobileBoot{display:none}.mobile-booting #mobileBoot{position:fixed;inset:0;z-index:99999;display:grid;place-content:center;gap:10px;background:#f8f3e8;color:#697158;text-align:center;font:14px/1.6 system-ui,sans-serif}.mobile-booting #mobileBoot b{font:24px Georgia,serif}</style><script>document.documentElement.classList.add('mobile-booting');</script><base href="https://jeyukida-eng.github.io/oneul-ongi/pyeoda-app/"><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PYEODA</title><style>
+<!doctype html><html lang='ko'><head><meta name="pyeoda-security-policy" http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js https://js.tosspayments.com 'sha256-8JKk6LtvhQfVcs+pT8qyirhlBWCnUmOYi1frXSjp6as=' 'sha256-9teFQx23gNfOWPqgtfAwYBPHPAh6aNjvEB/tJiumIn0=' 'sha256-AnVY0lmnNBsUVAoW2Dle7JmEhoqoIrHdG7PaRiF+1Tc=' 'sha256-GU49IltZUtmivVx7bY2dlDt09ud1yCRgdNOQ4lX2zaU=' 'sha256-GlKcJcQApft6APCAWAaoOgm54CMxXHbCMXUg9aukaCU=' 'sha256-W9GrP9x/iR9UEtjlsGtLuota6nJcdHotTCsx8CvIanc=' 'sha256-kFnCD3+GWQ0QWVy/2TYbhTHswL7HUyQNLxprJyi81GU=' 'sha256-n0X+yZZdzr7ORPjm5MZwR0qaG0APqMRodwIv+/XoteM=' 'sha256-oE5K12DAPDgbaMZCDslFjWXUp9AOXL8sAgWOZY24qUQ=' 'sha256-tYD/N0FsC128WzBv+38Zkpt0+YQMkywEXtBNWLIBbRw=' 'sha256-uZeTqplpTK03rbWGC8DCQ41K61XuR5KejixHYYFjuNU=' 'sha256-vEKtQDesfA1vhSKs3FrOSa0b4eAsW2kr+43SvnI0h0w=' 'sha256-vmnlsab1CXjDD3i6M0uXc7RTAi9zmAAq1hY+29a8ugM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://chnlljbmatsawxrrsany.supabase.co wss://chnlljbmatsawxrrsany.supabase.co https://*.tosspayments.com https://*.toss.im; frame-src 'self' blob: https://*.tosspayments.com https://*.toss.im; object-src 'none'; base-uri 'none'; form-action 'self' https://*.tosspayments.com https://*.toss.im"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="referrer" content="strict-origin-when-cross-origin"><style id='mobile-boot-style'>.mobile-booting body>:not(#mobileBoot){visibility:hidden!important}#mobileBoot{display:none}.mobile-booting #mobileBoot{position:fixed;inset:0;z-index:99999;display:grid;place-content:center;gap:10px;background:#f8f3e8;color:#697158;text-align:center;font:14px/1.6 system-ui,sans-serif}.mobile-booting #mobileBoot b{font:24px Georgia,serif}</style><script>document.documentElement.classList.add('mobile-booting');</script><base href="https://jeyukida-eng.github.io/oneul-ongi/pyeoda-app/"><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PYEODA</title><style>
 :root{
   --ink:#2f2b24;
   --muted:#7b7468;
@@ -3021,7 +3021,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
       <button type='button' class='cover-tool-btn accent' id='generateCoverBtn'>AI 표지 생성 · 1회 무료</button>
     </div>
     <p class='cover-prompt-help'><b>책마다 첫 AI 표지 1회는 무료</b> · 같은 책의 2회째 생성부터 비용이 발생합니다. 직접 표지 이미지를 올리는 방식은 계속 무료입니다.</p>
-    <input id='newCoverFile' type='file' accept='image/*'>
+    <input id='newCoverFile' type='file' accept='image/png,image/jpeg,image/webp'>
     <div>
       <label for='newCoverPrompt' class='cover-prompt-label'>AI 표지 프롬프트</label>
       <textarea id='newCoverPrompt' class='cover-prompt' placeholder='예: 제주의 밤 바다와 오래된 빌라'></textarea>
@@ -3090,7 +3090,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
   </div>
 </section>
 <section id='editor' class='screen'><div class='section'><div class='panel'><h2>작품 쓰기</h2><p class='meta'>등록한 책에 회차를 추가하고 본문을 작성합니다.</p><div class='current-book'><div class='current-book-cover' id='currentBookCover'>표지</div><div class='current-book-info'><b id='currentBookTitle'>퇴근한 신들이 사는 빌라</b><span><span id='currentPenName' style='display:inline'>겨울나무</span> · <span id='currentBookMeta' style='display:inline'>소설 · 현대판타지 · 회차 연재</span></span></div><button class='secondary' data-go='register' data-register-mode='edit'>책 정보 수정</button></div>
-<div style='display:none'><div id='coverPreview'></div><input id='coverFile' type='file' accept='image/*'></div>
+<div style='display:none'><div id='coverPreview'></div><input id='coverFile' type='file' accept='image/png,image/jpeg,image/webp'></div>
 <div class='writer-cheatsheet' id='writerCheatsheet'>
   <div class='writer-cheatsheet-head'><b>✍ 쓰면서 이것만 기억하세요</b><span class='writer-cheatsheet-type' id='writerCheatsheetType'>웹소설</span></div>
   <div class='writer-tip-chips' id='writerTipChips'></div>
@@ -3199,7 +3199,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
             </div>
           </div>
           <div class='epub-preview-page'>
-            <iframe id='epubPreviewFrame' title='EPUB 전자책 미리보기'></iframe>
+            <iframe id='epubPreviewFrame' sandbox="allow-same-origin" title='EPUB 전자책 미리보기'></iframe>
           </div>
         </div>
 
@@ -3430,7 +3430,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
             </div>
           </div>
           <div class='localized-epub-page' id='localizedEpubPage'>
-            <iframe id='localizedPreviewFrame' title='다국어 EPUB 미리보기'></iframe>
+            <iframe id='localizedPreviewFrame' sandbox="allow-same-origin" title='다국어 EPUB 미리보기'></iframe>
           </div>
           <div class='localized-pdf-stage' id='localizedPdfStage' hidden>
             <div class='localized-pdf-page' id='localizedPdfPage'></div>
@@ -3516,7 +3516,7 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
   anonKey: "sb_publishable_5GSQmJ7eFEKFuPmL6dxpxA_fKct9Zdn"
 };
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js" integrity="sha384-AkNSQdptcXlJ0/NBZc4qGk86cDVXcCevwoWgEKIpHOEfbvlXGLlIkimQtONt8KNf" crossorigin="anonymous"></script>
 <script>/* Private raster assets. Persist IDs, never blob URLs or signed URLs. */
 (() => {
  'use strict';
@@ -4535,36 +4535,42 @@ function saveReadingState(b,state){
   store[bookKey(b)]=state;
   localStorage.setItem(READING_PROGRESS_KEY,JSON.stringify(store));
 }
+function safeImageSource(value){
+ const src=String(value||'').trim();
+ if(/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(src))return src;
+ try{const u=new URL(src,location.href);if(u.protocol==='https:'||u.protocol==='http:')return u.href;if(u.protocol==='blob:'&&u.origin===location.origin)return u.href;}catch(_){}
+ return '';
+}
 function cardHTML(b,i,type){
   const coverMedia=b.cover
-    ? `<img src="${b.cover}" alt="${b.title} 표지">`
+    ? `<img src="${htmlEscape(safeImageSource(b.cover))}" alt="${htmlEscape(b.title)} 표지">`
     : `<div class="cover-placeholder">책 표지<br>이미지</div>`;
   const r=readingStateFor(b);
   const action=b.price?'소장하기':readLabel(r);
   const hint=b.price?'':readHint(r);
   const stateAttr=b.price?'purchase':(r?.state||'first');
-  const safeTitle=b.title.replace(/"/g,'&quot;');
-  const safeAuthor=(b.author||'').replace(/"/g,'&quot;');
-  const serverAttr=b.serverId?` data-server-id="${b.serverId}"`:'';
+  const safeTitle=htmlEscape(b.title);
+  const safeAuthor=htmlEscape(b.author||'');
+  const serverAttr=b.serverId?` data-server-id="${htmlEscape(b.serverId)}"`:'';
   let actionHtml='';
   if(b.price){
-    actionHtml=`<span class='price-tag'>${b.price}</span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="purchase">소장하기</button></div>`;
+    actionHtml=`<span class='price-tag'>${htmlEscape(b.price)}</span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="purchase">소장하기</button></div>`;
   }else if(r?.state==='resume'){
     actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="resume">보던 곳부터</button><button class='secondary read-first' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr}>첫 화부터</button></div>`;
   }else if(r?.state==='replay'){
     const purchasable=purchasableVersionFor(b);
     const buyPrice=purchasable?.price||'';
-    actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="replay">다시보기</button><button class='secondary buy-book' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-price="${buyPrice}">소장하기</button></div>`;
+    actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="replay">다시보기</button><button class='secondary buy-book' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-price="${htmlEscape(buyPrice)}">소장하기</button></div>`;
   }else{
     actionHtml=`<span></span><div class='read-buttons'><button class='secondary read' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-read-state="${stateAttr}">${action}</button></div>`;
   }
   if(!b.price && r?.state!=='replay'){
     const buyPrice=purchasableVersionFor(b)?.price||'';
-    const buyButton=`<button type="button" class='secondary buy-book' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-price="${buyPrice}">소장하기</button>`;
+    const buyButton=`<button type="button" class='secondary buy-book' data-title="${safeTitle}" data-author="${safeAuthor}"${serverAttr} data-price="${htmlEscape(buyPrice)}">소장하기</button>`;
     actionHtml=actionHtml.replace('</div>',buyButton+'</div>');
   }
   const rankHtml=type==='popular'?`<span class='rank'>${i+1}</span>`:'';
-  return `<div class='card book-card'>${rankHtml}<div class='cover'>${coverMedia}</div><h3>${b.title}${b.serverId?'<span class="server-book-badge">공개</span>':''}</h3><p class='meta book-author'>${b.author} · ${b.meta}</p><p class='book-copy intro'><b>책 소개</b>${b.intro||''}</p><p class='book-copy note'><b>작가의 말</b>${b.note||''}</p><div class='book-foot'><div><p class='meta'>${type==='new'&&!b.serverId?b.metric:publicMetricForBook(b,type)}</p>${hint?`<div class='read-progress'>${hint}</div>`:''}</div><div class='book-actions'>${actionHtml}</div></div></div>`
+  return `<div class='card book-card'>${rankHtml}<div class='cover'>${coverMedia}</div><h3>${htmlEscape(b.title)}${b.serverId?'<span class="server-book-badge">공개</span>':''}</h3><p class='meta book-author'>${htmlEscape(b.author)} · ${htmlEscape(b.meta)}</p><p class='book-copy intro'><b>책 소개</b>${htmlEscape(b.intro||'')}</p><p class='book-copy note'><b>작가의 말</b>${htmlEscape(b.note||'')}</p><div class='book-foot'><div><p class='meta'>${htmlEscape(type==='new'&&!b.serverId?b.metric:publicMetricForBook(b,type))}</p>${hint?`<div class='read-progress'>${hint}</div>`:''}</div><div class='book-actions'>${actionHtml}</div></div></div>`
 }
 function renderShelf(type='popular'){
   const s=shelves[type];
@@ -5063,7 +5069,7 @@ function renderReader(){
   doneBtn.style.display=isLast?'inline-flex':'none';
   doneBtn.textContent='작품 읽기 완료';
   const cover=document.getElementById('readerCover');
-  cover.innerHTML=b.cover?`<img src="${b.cover}" alt="${b.title} 표지">`:'책 표지';
+  cover.innerHTML=b.cover?`<img src="${htmlEscape(safeImageSource(b.cover))}" alt="${htmlEscape(b.title)} 표지">`:'책 표지';
   updateReaderState();
   refreshReaderHeart();
   refreshReaderSubscription();
@@ -6143,7 +6149,7 @@ async function activateRegisteredBook(row){
 function registeredBookCoverHtml(row){
   const src=row.cover||'';
   return src
-    ? `<img src="${src}" alt="${htmlEscape(row.title||'')} 표지">`
+    ? `<img src="${htmlEscape(safeImageSource(src))}" alt="${htmlEscape(row.title||'')} 표지">`
     : '책 표지';
 }
 var studioBookFilter='completed';
@@ -6565,7 +6571,7 @@ function publishingBookSummary(){
   }
   if(cover){
     const coverSrc=activeCoverSource(data);
-    cover.innerHTML=coverSrc?`<img src="${coverSrc}" alt="${data.title||''} 표지">`:'표지';
+    cover.innerHTML=coverSrc?`<img src="${htmlEscape(safeImageSource(coverSrc))}" alt="${htmlEscape(data.title||'')} 표지">`:'표지';
   }
 
   const note=document.getElementById('publishingGateNote');
@@ -7121,7 +7127,7 @@ function renderCoverPreview(){
   const note=(data.note||'').slice(0,150);
   const gloss=opt.finish==='glossy'?' cover-gloss':'';
   const guides=opt.bleed==='bleed'?'<div class="cover-bleed-guide"></div><div class="cover-safe-guide"></div>':'<div class="cover-safe-guide"></div>';
-  const front=cover?`<img src="${cover}" alt="앞표지">`:`<div class="fallback"><h3>${htmlEscape(data.title||'제목 없는 책')}</h3><p>${htmlEscape(data.pen||'작가')}</p></div>`;
+  const front=cover?`<img src="${htmlEscape(safeImageSource(cover))}" alt="앞표지">`:`<div class="fallback"><h3>${htmlEscape(data.title||'제목 없는 책')}</h3><p>${htmlEscape(data.pen||'작가')}</p></div>`;
   document.getElementById('printPreviewBody').innerHTML=`<div class="cover-spread-stage"><div class="cover-wrap-preview" style="grid-template-columns:1fr ${spinePx}px 1fr"><div class="cover-panel back${gloss}">${guides}<div class="cover-back-copy"><h4>${htmlEscape(data.title||'제목 없는 책')}</h4><p>${htmlEscape(intro)}</p>${note?`<p>${htmlEscape(note)}</p>`:''}<div class="author">${htmlEscape(data.pen||'작가')}</div></div></div><div class="cover-spine${gloss}"><span>${htmlEscape(data.title||'제목 없는 책')} · ${htmlEscape(data.pen||'작가')}</span></div><div class="cover-panel front${gloss}">${guides}${front}</div></div></div>`;
   document.getElementById('printPreviewTitle').textContent='전체 표지 미리보기';
   document.getElementById('printPreviewMeta').textContent=`뒷표지 + 책등 약 ${spine.toFixed(1)} mm + 앞표지 · ${opt.finish==='glossy'?'유광':'무광'} · ${trim.label}`;
@@ -7407,7 +7413,7 @@ function coverPdfSvg(opt){
   const backX=bleedPx;
 
   const front=cover
-    ? `<img src="${cover}" style="width:100%;height:100%;object-fit:contain;display:block;background:#fbf8f0"/>`
+    ? `<img src="${htmlEscape(safeImageSource(cover))}" style="width:100%;height:100%;object-fit:contain;display:block;background:#fbf8f0"/>`
     : `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px"><h1 style="font-size:34px;line-height:1.4;margin:0 0 18px">${title}</h1><div>${author}</div></div>`;
 
   const wrapper=`<div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${w}px;height:${h}px;background:#f4ecdc;font-family:'Noto Serif KR','Batang',serif;color:#332d27;overflow:hidden">
@@ -8717,7 +8723,7 @@ const coverFile=document.getElementById('coverFile');
 const coverPreview=document.getElementById('coverPreview');
 const savedCover=localStorage.getItem('pyeoda-demo-cover');
 if(savedCover){  shelves.popular.items[0].cover=savedCover;
-  coverPreview.innerHTML=`<img src="${savedCover}" alt="등록된 책 표지">`;
+  coverPreview.innerHTML=`<img src="${htmlEscape(safeImageSource(savedCover))}" alt="등록된 책 표지">`;
   renderShelf(document.querySelector('.tab.active')?.dataset.shelf||'popular');
   renderDiscover();
 }
@@ -8727,7 +8733,7 @@ coverFile.addEventListener('change',e=>{
   const reader=new FileReader();
   reader.onload=()=>{
     const data=reader.result;
-    coverPreview.innerHTML=`<img src="${data}" alt="책 표지 미리보기">`;
+    coverPreview.innerHTML=`<img src="${htmlEscape(safeImageSource(data))}" alt="책 표지 미리보기">`;
     shelves.popular.items[0].cover=data;
     localStorage.setItem('pyeoda-demo-cover',data);
     renderShelf(document.querySelector('.tab.active')?.dataset.shelf||'popular');
@@ -8744,7 +8750,7 @@ const newCoverPreview=document.getElementById('newCoverPreview');
 let pendingNewCover=localStorage.getItem('pyeoda-demo-cover')||'';
 function paintRegisterCover(src){
   if(!newCoverPreview) return;
-  newCoverPreview.innerHTML=src?`<img src="${src}" alt="책 표지 미리보기">`:'책 표지<br>미리보기';
+  newCoverPreview.innerHTML=src?`<img src="${htmlEscape(safeImageSource(src))}" alt="책 표지 미리보기">`:'책 표지<br>미리보기';
 }
 paintRegisterCover(pendingNewCover);
 
@@ -8967,6 +8973,7 @@ function optimizeCoverDataUrl(dataUrl){
 function optimizeCoverFile(file){
   return new Promise((resolve,reject)=>{
     if(!file){resolve('');return}
+    if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>10485760){reject(new Error('표지는 10MB 이하 PNG, JPG, WEBP 파일을 선택해 주세요.'));return;}
     if(file.type==='image/svg+xml'){
       const r=new FileReader();
       r.onload=()=>resolve(r.result);
@@ -9490,8 +9497,8 @@ function syncBookUI(data){
   const penEl=document.getElementById('currentPenName'); if(penEl) penEl.textContent=data.pen||'작가';
   const metaEl=document.getElementById('currentBookMeta'); if(metaEl) metaEl.textContent=[data.category,writingRule(data.writingType||'webNovel').label,data.genre,data.completed?'완결':data.format].filter(Boolean).join(' · ');
   const coverSrc=activeCoverSource(data);
-  const c=document.getElementById('currentBookCover'); if(c)c.innerHTML=coverSrc?`<img src="${coverSrc}" alt="${data.title||''} 표지">`:'표지';
-  if(coverSrc){coverPreview.innerHTML=`<img src="${coverSrc}" alt="등록된 책 표지">`; shelves.popular.items[0].cover=coverSrc;}
+  const c=document.getElementById('currentBookCover'); if(c)c.innerHTML=coverSrc?`<img src="${htmlEscape(safeImageSource(coverSrc))}" alt="${htmlEscape(data.title||'')} 표지">`:'표지';
+  if(coverSrc){coverPreview.innerHTML=`<img src="${htmlEscape(safeImageSource(coverSrc))}" alt="등록된 책 표지">`; shelves.popular.items[0].cover=coverSrc;}
   shelves.popular.items[0].title=data.title||shelves.popular.items[0].title;
   shelves.popular.items[0].author=data.pen||shelves.popular.items[0].author;
   shelves.popular.items[0].meta=data.completed?`${data.genre||data.category||'작품'} · 완결 · ${episodes.length}화`:`${data.genre||data.category||'작품'} · ${episodes.length}화 연재 중`;
@@ -9755,7 +9762,7 @@ function syncRevenueBookUI(){
 
   if(cover){
     const src=activeCoverSource(data);
-    cover.innerHTML=src?`<img src="${src}" alt="${htmlEscape(data.title)} 표지">`:'책 표지';
+    cover.innerHTML=src?`<img src="${htmlEscape(safeImageSource(src))}" alt="${htmlEscape(data.title)} 표지">`:'책 표지';
   }
 
   const isPublic=isBookPublic();

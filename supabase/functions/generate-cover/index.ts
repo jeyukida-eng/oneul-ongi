@@ -1,8 +1,8 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://jeyukida-eng.github.io",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
@@ -10,7 +10,7 @@ const corsHeaders = {
 function json(body: Record<string, unknown>, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
+    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
   });
 }
 
@@ -51,14 +51,20 @@ Deno.serve(async (req: Request) => {
   const token = authHeader.replace(/^Bearer\s+/i, "");
   const { data: userData, error: userError } = await userClient.auth.getUser(token);
   const user = userData?.user ?? null;
-  if (userError || !user) return json({ ok: false, code: "AUTH_REQUIRED", message: "작가 로그인이 필요합니다." }, 401);
+  if (userError || !user || user.is_anonymous) return json({ ok: false, code: "AUTH_REQUIRED", message: "작가 로그인이 필요합니다." }, 401);
 
   let body: any = {};
   try {
-    body = await req.json();
+    const reader=req.body?.getReader();let size=0;const chunks:Uint8Array[]=[];
+    if(!reader)throw new Error('EMPTY_BODY');
+    for(;;){const {value,done}=await reader.read();if(done)break;size+=value.length;if(size>32768){await reader.cancel();return json({ok:false,code:'REQUEST_TOO_LARGE',message:'표지 설명이 너무 깁니다.'},413);}chunks.push(value);}
+    const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
+    body=JSON.parse(new TextDecoder().decode(bytes));
   } catch {
     return failMessage("요청 형식이 올바르지 않습니다.", "BAD_REQUEST");
   }
+
+  if(!body||typeof body!=='object'||Array.isArray(body))return json({ok:false,code:'BAD_REQUEST',message:'요청 형식이 올바르지 않습니다.'},400);
 
   const coverKey = String(body.coverKey ?? "").trim();
   const fullPrompt = String(body.prompt ?? "").trim();
@@ -72,25 +78,14 @@ Deno.serve(async (req: Request) => {
   // The first successful AI cover generation is free for each book/draft.
   // cover_key is persisted with the book, so the partial unique index on (user_id, cover_key)
   // prevents a second free generation even across tabs/devices.
-  const { data: reservation, error: reserveError } = await admin
-    .from("cover_generation_logs")
-    .insert({
-      user_id: user.id,
-      cover_key: coverKey,
-      book_id: bookId,
-      user_prompt: userPrompt,
-      full_prompt: fullPrompt,
-      style,
-      model: imageModel,
-      quality: "medium",
-      is_free: true,
-      amount_krw: 0,
-      status: "pending",
-    })
-    .select("id")
-    .single();
+  if(fullPrompt.length>6000||userPrompt.length>3000)return json({ok:false,code:'PROMPT_TOO_LONG',message:'표지 설명은 6,000자 이내로 입력해 주세요.'},400);
+  const {data:reservation,error:reserveError}=await admin.rpc('reserve_cover_generation',{
+    p_owner:user.id,p_cover_key:coverKey,p_book:bookId,p_user_prompt:userPrompt,p_full_prompt:fullPrompt,p_style:style,p_model:imageModel
+  }).single();
 
   if (reserveError) {
+    if(reserveError.message?.includes('COVER_RATE_LIMIT'))return json({ok:false,code:'RATE_LIMIT',message:'표지 생성은 1분에 2회, 하루에 10회까지 가능합니다. 잠시 후 다시 시도해 주세요.'},429);
+    if(reserveError.message?.includes('COVER_OWNER_REQUIRED'))return json({ok:false,code:'OWNER_REQUIRED',message:'본인 작품에만 표지를 만들 수 있습니다.'},403);
     if (reserveError.code === "23505") {
       return failMessage(
         "이 책의 첫 AI 표지 무료 1회를 이미 사용했습니다. 2회째부터는 유료입니다.",
@@ -225,3 +220,4 @@ Deno.serve(async (req: Request) => {
     return failMessage("AI 표지 생성 중 오류가 발생했습니다. 무료 1회는 차감되지 않았습니다.", "UNEXPECTED_ERROR");
   }
 });
+

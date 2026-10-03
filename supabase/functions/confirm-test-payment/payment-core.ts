@@ -10,11 +10,20 @@ async function adultAccess(admin,book,user){
  const {data,error}=await admin.from('adult_verifications').select('expires_at,revoked_at').eq('user_id',user.id).maybeSingle();
  return !error&&!!data&&!data.revoked_at&&Date.parse(data.expires_at)>Date.now();
 }
+async function readJSON(req,limit=16384){
+ const reader=req.body?.getReader();if(!reader)throw Object.assign(new Error('BODY_REQUIRED'),{status:400});
+ let size=0;const chunks=[];
+ for(;;){const {value,done}=await reader.read();if(done)break;size+=value.length;if(size>limit){await reader.cancel();throw Object.assign(new Error('REQUEST_TOO_LARGE'),{status:413});}chunks.push(value);}
+ const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
+ let value;try{value=JSON.parse(new TextDecoder().decode(bytes));}catch(_){throw Object.assign(new Error('INVALID_JSON'),{status:400});}
+ if(!value||typeof value!=='object'||Array.isArray(value))throw Object.assign(new Error('INVALID_JSON'),{status:400});
+ return value;
+}
 export async function handle(req,mode){
  if(req.method==='OPTIONS')return new Response('ok',{headers:cors});
  if(req.method!=='POST')return json({ok:false,message:'POST only'},405);
  try{
-  const input=await req.json();
+  const input=await readJSON(req);
   const clientKey=Deno.env.get('TOSS_TEST_CLIENT_KEY')||'';
   const secretKey=Deno.env.get('TOSS_TEST_SECRET_KEY')||'';
   // This deployment cannot use a live key, even if an administrator sets one accidentally.
@@ -107,7 +116,9 @@ export async function handle(req,mode){
   if(error)return json({ok:false,code:'SAVE_RETRY_REQUIRED',message:'토스 승인 후 주문 저장을 다시 확인해야 합니다. 승인 확인을 다시 눌러 주세요.',retryable:true},503);
   return json({ok:true,testMode:true,order:summary(row)});
  }catch(error){
+  if(error?.status===400||error?.status===413)return json({ok:false,message:'요청 형식 또는 크기가 올바르지 않습니다.'},error.status);
   console.error('test payment error',error?.name||'Error');
   return json({ok:false,code:'PAYMENT_RETRY_REQUIRED',message:'결제 상태를 확인하지 못했습니다. 잠시 후 다시 확인해 주세요.',retryable:true},503);
  }
 }
+

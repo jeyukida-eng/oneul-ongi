@@ -8,11 +8,20 @@ async function adultAccess(admin,book,user){
  const {data,error}=await admin.from('adult_verifications').select('expires_at,revoked_at').eq('user_id',user.id).maybeSingle();
  return !error&&!!data&&!data.revoked_at&&Date.parse(data.expires_at)>Date.now();
 }
+async function readJSON(req,limit=16384){
+ const reader=req.body?.getReader();if(!reader)throw Object.assign(new Error('BODY_REQUIRED'),{status:400});
+ let size=0;const chunks=[];
+ for(;;){const {value,done}=await reader.read();if(done)break;size+=value.length;if(size>limit){await reader.cancel();throw Object.assign(new Error('REQUEST_TOO_LARGE'),{status:413});}chunks.push(value);}
+ const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length;}
+ let value;try{value=JSON.parse(new TextDecoder().decode(bytes));}catch(_){throw Object.assign(new Error('INVALID_JSON'),{status:400});}
+ if(!value||typeof value!=='object'||Array.isArray(value))throw Object.assign(new Error('INVALID_JSON'),{status:400});
+ return value;
+}
 export async function handle(req){
  if(req.method==='OPTIONS')return new Response('ok',{headers:cors});
  if(!['GET','POST'].includes(req.method))return json({ok:false,message:'GET or POST only'},405);
  try{
-  const input=req.method==='POST'?await req.json():{};
+  const input=req.method==='POST'?await readJSON(req):{};
   const bookId=input.bookId||new URL(req.url).searchParams.get('book_id');
   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(bookId||''))return json({ok:false,message:'작품 ID가 올바르지 않습니다.'},400);
   const admin=createClient(Deno.env.get('SUPABASE_URL'),Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'),{auth:{persistSession:false,autoRefreshToken:false}});
@@ -39,6 +48,7 @@ export async function handle(req){
    return {...ep,price,locked:!unlocked,testMode:price>0,body:unlocked?ep.body:'',body_html:unlocked?ep.body_html:''};
   });
   return json({ok:true,bookId,testMode:true,episodes:safe});
- }catch(error){console.error('paid episode read failed',error?.name);return json({ok:false,message:'회차를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.'},503);}
+ }catch(error){
+  if(error?.status===400||error?.status===413)return json({ok:false,message:'요청 형식 또는 크기가 올바르지 않습니다.'},error.status);console.error('paid episode read failed',error?.name);return json({ok:false,message:'회차를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.'},503);}
 }
 Deno.serve(handle);
