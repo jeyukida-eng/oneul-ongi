@@ -10293,6 +10293,18 @@ function syncAdultRegistration(){
  .mobile-build #register .mobile-cover-design .cover-prompt-help{font-size:11px;line-height:1.45;margin:6px 0 0}
  .mobile-build #register .mobile-step-nav{align-items:center;padding-top:0;margin-top:14px;flex-shrink:0}
  .mobile-build #register .mobile-step-nav #startWriting{min-width:0!important;font-size:13px!important;padding:8px!important}
+ .mobile-build #register .mobile-cover-top{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;align-items:center}
+ .mobile-build #register .mobile-cover-top .register-cover-preview{width:76px!important;max-width:76px!important;font-size:12px;border-radius:10px}
+ .mobile-build #register .mobile-cover-design .cover-style-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px}
+ .mobile-build #register .mobile-cover-design .cover-style-grid span{min-height:38px;padding:5px 6px;font-size:10px;gap:5px;border-radius:10px;line-height:1.3}
+ .mobile-build #register .mobile-cover-design .cover-style-grid span::before{width:10px;height:10px}
+ .mobile-build #register .mobile-cover-design .cover-style-wrap{gap:5px;margin:0}
+ .mobile-build #register .register-cover-card .cover-tools{gap:7px}
+ .mobile-build #register .register-cover-card #newCoverPrompt{height:80px!important;min-height:80px!important;padding:9px 11px;margin-top:0;resize:vertical;font-size:13px}
+ .mobile-build #register .register-cover-card .cover-prompt-label{margin-bottom:5px}
+ .mobile-build #register .register-cover-card .cover-prompt-help{font-size:10px;line-height:1.4;margin:3px 0 0}
+ .mobile-build #register .register-cover-card .cover-ai-status{font-size:11px;line-height:1.4;margin:0;min-height:0}
+ .mobile-build #register .mobile-cover-title{font-size:12px;line-height:1.4;margin:0;overflow-wrap:anywhere}
  @media(max-height:700px){.mobile-build #register .register-form{padding:12px!important}.mobile-build #register .mobile-step-progress{margin-bottom:10px}.mobile-build #register .mobile-step-fields{gap:9px}.mobile-build #register .mobile-step-nav{margin-top:12px}.mobile-build #register .register-cover-preview{width:78px!important;max-width:78px!important}}
  `;document.head.append(css);
  const progress=document.createElement('div');progress.className='mobile-step-progress';progress.setAttribute('aria-live','polite');
@@ -10309,12 +10321,13 @@ function syncAdultRegistration(){
  const design=document.createElement('div');design.className='mobile-cover-design';design.append(cover.querySelector('.cover-style-wrap'));
  const prompt=document.getElementById('newCoverPrompt').parentElement;
  const status=document.getElementById('coverAiStatus');tools.append(status);
- design.append(prompt);step(design,'표지 스타일과 장면');
+ const top=document.createElement('div');top.className='mobile-cover-top';top.append(cover.querySelector('.register-cover-preview'),design);cover.prepend(top);tools.prepend(prompt);
+ document.getElementById('generateCoverBtn').textContent='AI 생성 · 첫 1회 무료';
  const title=document.createElement('p');title.className='mobile-cover-title';cover.prepend(title);
  const guide=cover.querySelector('.cover-guide');guide.remove();
  const billing=tools.querySelector(':scope > .cover-prompt-help');billing.classList.add('mobile-cover-help');billing.textContent='직접 올리기 무료 · 책마다 첫 AI 생성 1회 무료. 두 번째부터 비용이 발생합니다.';
- prompt.querySelector('.cover-prompt-help').textContent='장소 · 분위기 · 핵심 사물을 적어 주세요. 제목과 필명은 앞에서 입력한 내용으로 표지에 들어갑니다.';
- step(cover,'표지 완성');
+ prompt.querySelector('.cover-prompt-help').textContent='제목과 필명은 자동으로 들어갑니다.';
+ step(cover,'표지 만들기');
  for(const old of [...form.querySelectorAll(':scope > .form-section')])old.remove();
  steps[3].el.querySelector('#introCount').previousElementSibling.textContent='최대 1,000자';steps[4].el.querySelector('#authorNoteCount').previousElementSibling.textContent='최대 500자';steps[3].el.querySelector('#newTags').nextElementSibling.textContent='핵심 태그 3~5개 · 선택';
  const actions=form.querySelector('.register-actions');form.prepend(progress);for(const s of steps)form.insertBefore(s.el,actions);
@@ -10334,7 +10347,7 @@ function syncAdultRegistration(){
  prev.onclick=()=>current?show(current-1):go('studio');
  next.onclick=()=>{if(current===0&&!required())return;if(current===2&&!ratingOK())return;show(current+1);};
  steps.forEach(s=>s.el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'&&!['checkbox','radio','file'].includes(e.target.type)){e.preventDefault();const inputs=[...s.el.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea')];const following=inputs[inputs.indexOf(e.target)+1];if(following)following.focus();else if(current<steps.length-1)next.click();}}));
- document.getElementById('generateCoverBtn').addEventListener('click',e=>{if(!required()||!ratingOK()){e.preventDefault();e.stopImmediatePropagation();return;}if(!document.getElementById('newCoverPrompt').value.trim()){show(steps.length-2);error.textContent='AI 표지에 넣을 장면을 입력해 주세요.';error.hidden=false;e.preventDefault();e.stopImmediatePropagation();}},true);
+ document.getElementById('generateCoverBtn').addEventListener('click',e=>{if(!required()||!ratingOK()){e.preventDefault();e.stopImmediatePropagation();return;}if(!document.getElementById('newCoverPrompt').value.trim()){show(steps.length-1);document.getElementById('newCoverPrompt').focus();error.textContent='AI 표지에 넣을 장면을 입력해 주세요.';error.hidden=false;e.preventDefault();e.stopImmediatePropagation();}},true);
  document.getElementById('startWriting').addEventListener('click',e=>{if(!required()||!ratingOK()){e.preventDefault();e.stopImmediatePropagation();}},true);
  let active=screen.classList.contains('active');new MutationObserver(()=>{const now=screen.classList.contains('active');if(now&&!active)show(0);active=now;}).observe(screen,{attributes:true,attributeFilter:['class']});
  for(const b of document.querySelectorAll('[data-register-mode],#registeredNewBookBtn'))b.addEventListener('click',()=>show(0,false));
