@@ -10509,7 +10509,7 @@ function syncAdultRegistration(){
  const editor=document.getElementById('editor');if(!editor)return;
  const styles=document.createElement('style');styles.textContent=`
  body.mobile-writing{height:100dvh;overflow:hidden!important}
- .mobile-writing #editor{position:fixed;left:var(--writing-left,0px);top:var(--writing-top,90px);width:var(--writing-width,100%);height:var(--writing-height,calc(100dvh - 90px));z-index:30;overflow:hidden;background:var(--paper);box-sizing:border-box}
+ .mobile-writing #editor{position:fixed;left:var(--writing-left,0px);top:var(--writing-top,90px);width:var(--writing-width,100%)!important;max-width:var(--writing-width,100%)!important;min-width:0!important;height:var(--writing-height,calc(100dvh - 90px));z-index:30;overflow:hidden;background:var(--paper);box-sizing:border-box}
  .mobile-writing #editor>.section{height:100%;padding:6px 8px!important;box-sizing:border-box}
  .mobile-writing #editor>.section>.panel{height:100%;min-height:0;padding:0!important;border:0;box-shadow:none;background:transparent;display:flex;flex-direction:column;gap:5px;overflow:hidden;box-sizing:border-box}
  .mobile-writing #editor>.section>.panel>h2,.mobile-writing #editor>.section>.panel>p.meta{display:none!important}
