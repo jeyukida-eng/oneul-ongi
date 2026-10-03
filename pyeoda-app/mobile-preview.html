@@ -10188,7 +10188,7 @@ function syncAdultRegistration(){
   .mobile-build #home #shelfDesc{display:none}
   .mobile-build #home .tabs{gap:12px!important;padding:0!important}
   .mobile-build #home .tab{min-height:36px;padding:6px 10px;font-size:13px}
-  .mobile-build #home #bookGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:clamp(72px,calc((100dvh - 420px)/4),92px);gap:7px!important;overflow:visible!important;padding:0!important;scroll-snap-type:none}
+  .mobile-build #home #bookGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:clamp(72px,calc((100dvh - 495px)/4),92px);gap:7px!important;overflow:visible!important;padding:0!important;scroll-snap-type:none}
   .mobile-build #home #bookGrid>.book-card{width:100%!important;min-width:0!important;min-height:0!important;height:100%!important;padding:6px!important;grid-template-columns:42px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr) 13px 24px!important;column-gap:6px!important;row-gap:2px;align-content:stretch;border-radius:10px}
   .mobile-build #home #bookGrid .cover{grid-column:1;grid-row:1/4;height:100%!important;min-height:0;align-self:stretch;border-radius:4px}
   .mobile-build #home #bookGrid h3{grid-column:2;grid-row:1;font-size:11px!important;line-height:1.25!important;margin:0!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;align-self:center;white-space:normal!important;word-break:keep-all;overflow-wrap:anywhere}
@@ -10218,6 +10218,19 @@ function syncAdultRegistration(){
   .mobile-build #home .pyeoda-sky{height:58px;bottom:auto}
   .mobile-build .pyeoda-sky .sky-cloud{top:calc(var(--my)*.45);left:var(--mx);width:calc(var(--size)*.44);opacity:.95;animation-name:mobile-sky-drift;animation-duration:calc(var(--duration)*.65)}
   .mobile-build .pyeoda-sky .sky-star{top:calc(var(--my)*.5);left:var(--mx);width:calc(var(--size)*.85);height:calc(var(--size)*.85);color:#657060}
+  .mobile-build .mobile-quick-memo{margin:0 12px;padding:6px 0 4px}
+  .mobile-quick-memo .memo-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;font:11px/1.4 system-ui,sans-serif;color:#697158}
+  .mobile-quick-memo .memo-head label{font-weight:700;color:#3e4436}
+  .mobile-quick-memo .memo-head button{border:0;background:none;color:#697158;padding:2px 0 2px 8px;font:inherit;min-height:24px;cursor:pointer}
+  .mobile-build #home .mobile-quick-memo textarea{display:block;width:100%;height:40px;min-height:40px;max-height:40px;padding:8px 10px;margin:0;border:1px solid #d6d0c4;border-radius:10px;resize:none;background:#fffdf8;color:#393c32;box-sizing:border-box;font:16px/1.4 system-ui,sans-serif}
+  .mobile-memo-dialog{width:min(94vw,560px);height:min(86dvh,760px);max-height:90dvh;padding:16px;border:1px solid #d6d0c4;border-radius:18px;background:#fffdf8;color:#393c32;box-sizing:border-box}
+  .mobile-memo-dialog[open]{display:flex;flex-direction:column;gap:12px}
+  .mobile-memo-dialog::backdrop{background:rgba(40,37,31,.5)}
+  .mobile-memo-dialog header,.mobile-memo-dialog footer{display:flex;align-items:center;justify-content:space-between;gap:10px;font:12px/1.5 system-ui,sans-serif;flex-shrink:0}
+  .mobile-memo-dialog header h2{font:600 18px/1.4 system-ui,sans-serif;margin:0}
+  .mobile-memo-dialog button{min-height:40px;padding:6px 14px;border:1px solid #c9c9bc;border-radius:20px;background:transparent;color:#4e5741;font:13px system-ui,sans-serif}
+  .mobile-memo-dialog textarea{flex:1;min-height:0;width:100%;resize:none;padding:12px;border:1px solid #ddd7cc;border-radius:12px;background:transparent;color:#393c32;font:16px/1.8 system-ui,sans-serif;box-sizing:border-box}
+  .mobile-memo-dialog footer span{font-size:11px;color:#697158}
   @keyframes mobile-sky-drift{0%,100%{transform:translate3d(-12px,4px,0) rotate(-2deg)}50%{transform:translate3d(18px,-7px,0) rotate(2deg)}}
   @media(prefers-reduced-motion:reduce){.mobile-build .pyeoda-sky .sky-cloud{animation:none}}
   `;
@@ -10228,6 +10241,24 @@ function syncAdultRegistration(){
   const fullCopy=document.createElement('p');fullCopy.textContent=copy.innerText||copy.textContent;
   details.append(summary,fullCopy);copy.textContent='쓰고, 연재하고, 나만의 책으로 만드세요.';
   hero.querySelector('.cta').after(details);
+  // A private, local notepad available without author login.
+  const memoKey='pyeoda.quickMemo.v1';let memoValue='',storageAvailable=true;
+  try{memoValue=localStorage.getItem(memoKey)||'';}catch(e){storageAvailable=false;}
+  const memo=document.createElement('section');memo.className='mobile-quick-memo';memo.setAttribute('aria-label','간단 메모');
+  memo.innerHTML='<div class="memo-head"><label for="quickMemoInput">간단 메모 <span id="quickMemoStatus">이 기기에 자동 저장</span></label><button type="button" id="openQuickMemo">크게 쓰기 ↗</button></div><textarea id="quickMemoInput" rows="1" placeholder="떠오른 생각을 바로 적어 보세요."></textarea>';
+  hero.after(memo);
+  const memoDialog=document.createElement('dialog');memoDialog.className='mobile-memo-dialog';memoDialog.setAttribute('aria-labelledby','quickMemoTitle');
+  memoDialog.innerHTML='<header><h2 id="quickMemoTitle">나의 메모장</h2><button type="button" id="closeQuickMemo">닫기</button></header><textarea id="quickMemoEditor" aria-label="메모장 내용" placeholder="이야기, 아이디어, 오늘의 생각을 자유롭게 적어 보세요."></textarea><footer><span id="quickMemoEditorStatus">이 기기에 저장 · 로그인 없이 사용</span><button type="button" id="downloadQuickMemo">TXT 저장</button></footer>';
+  document.body.append(memoDialog);
+  const memoInput=memo.querySelector('textarea'),memoEditor=memoDialog.querySelector('textarea'),memoStatus=memo.querySelector('#quickMemoStatus'),editorStatus=memoDialog.querySelector('#quickMemoEditorStatus');
+  memoInput.value=memoEditor.value=memoValue;
+  function memoSave(value,source){memoValue=value;if(source!==memoInput)memoInput.value=value;if(source!==memoEditor)memoEditor.value=value;try{localStorage.setItem(memoKey,value);storageAvailable=true;}catch(e){storageAvailable=false;}memoStatus.textContent=storageAvailable?'저장됨 · 이 기기':'저장 불가 · TXT로 보관';editorStatus.textContent=storageAvailable?'이 기기에 저장됨 · '+value.length.toLocaleString()+'자':'자동 저장 불가 · TXT 저장을 눌러 보관해 주세요.';}
+  if(!storageAvailable){memoStatus.textContent='저장 불가 · TXT로 보관';editorStatus.textContent='자동 저장 불가 · TXT 저장을 눌러 보관해 주세요.';}
+  memoInput.addEventListener('input',()=>memoSave(memoInput.value,memoInput));memoEditor.addEventListener('input',()=>memoSave(memoEditor.value,memoEditor));
+  memo.querySelector('#openQuickMemo').onclick=()=>{memoEditor.value=memoInput.value;memoDialog.showModal();memoEditor.focus();};
+  memoDialog.querySelector('#closeQuickMemo').onclick=()=>memoDialog.close();memoDialog.addEventListener('close',()=>memoSave(memoEditor.value,memoEditor));
+  memoDialog.querySelector('#downloadQuickMemo').onclick=()=>{const url=URL.createObjectURL(new Blob(['\uFEFF'+memoEditor.value],{type:'text/plain;charset=utf-8'}));const link=document.createElement('a');link.href=url;link.download='pyeoda-memo.txt';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+
 
  }
  const sky=document.createElement('div');sky.className='pyeoda-sky';sky.setAttribute('aria-hidden','true');
