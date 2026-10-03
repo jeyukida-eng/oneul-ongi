@@ -86,10 +86,36 @@
   .mobile-memo-dialog button{min-height:40px;padding:6px 14px;border:1px solid #c9c9bc;border-radius:20px;background:transparent;color:#4e5741;font:13px system-ui,sans-serif}
   .mobile-memo-dialog textarea{flex:1;min-height:0;width:100%;resize:none;padding:12px;border:1px solid #ddd7cc;border-radius:12px;background:transparent;color:#393c32;font:16px/1.8 system-ui,sans-serif;box-sizing:border-box}
   .mobile-memo-dialog footer span{font-size:11px;color:#697158}
+  .mobile-build .book-title-link{display:block;width:100%;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;color:inherit!important;text-align:left;font:inherit!important;line-height:inherit!important;cursor:pointer;box-shadow:none!important}
+  .mobile-build .book-title-link:focus-visible{outline:2px solid #697158;outline-offset:3px}
+  .mobile-build #home .book-title-link{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+  .mobile-build #home .mobile-book-description{display:none!important}
+  .mobile-build #discover #discoverGrid .book-card{height:270px!important;min-height:270px!important;grid-template-rows:auto auto minmax(0,1fr) auto!important;row-gap:6px;align-content:stretch}
+  .mobile-build #discover .mobile-book-description{grid-column:2;grid-row:3;min-height:0;max-height:none;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#aeb29e transparent;padding-right:5px;line-height:1.6;-webkit-overflow-scrolling:touch}
+  .mobile-build #discover .mobile-book-description:focus-visible{outline:1px solid #697158;outline-offset:2px}
+  .mobile-build #discover .mobile-book-description .book-copy{display:block!important;-webkit-line-clamp:unset!important;max-height:none!important;height:auto!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;margin:0 0 12px!important;font-size:12px!important;line-height:1.7!important}
+  .mobile-build #discover .mobile-book-description .book-copy b{display:block;margin-bottom:4px;font-size:11px;color:#697158}
+  .mobile-build #discover .book-foot{grid-row:4!important;grid-column:2;margin-top:0!important;min-height:0!important}
+  .mobile-build #discover #discoverGrid .cover{grid-row:1/5!important;align-self:start}
   @keyframes mobile-sky-drift{0%,100%{transform:translate3d(-12px,4px,0) rotate(-2deg)}50%{transform:translate3d(18px,-7px,0) rotate(2deg)}}
   @media(prefers-reduced-motion:reduce){.mobile-build .pyeoda-sky .sky-cloud{animation:none}}
   `;
   document.head.append(mobileStyle);
+  function enhanceMobileBooks(grid){
+   for(const card of grid.querySelectorAll('.book-card')){
+    const heading=card.querySelector('h3'),read=card.querySelector('.read');
+    if(heading&&read&&!heading.querySelector('.book-title-link')){
+     const titleButton=document.createElement('button');titleButton.type='button';titleButton.className='book-title-link';titleButton.setAttribute('aria-label',(read.dataset.title||heading.textContent)+' 첫 페이지 읽기');titleButton.append(...heading.childNodes);heading.append(titleButton);
+     titleButton.onclick=async()=>{const book=findBookFromButton(read);if(!book){toast('작품 정보를 찾지 못했습니다.');return;}if(book.price){read.click();return;}titleButton.disabled=true;try{await openReader(book,{state:'first',lastEpisode:0,totalEpisodes:inferTotalEpisodes(book)});}finally{titleButton.disabled=false;}};
+    }
+    if(grid.id==='discoverGrid'&&!card.querySelector('.mobile-book-description')){
+     const intro=card.querySelector('.book-copy.intro'),note=card.querySelector('.book-copy.note');if(!intro&&!note)continue;
+     const description=document.createElement('div');description.className='mobile-book-description';description.tabIndex=0;description.setAttribute('role','region');description.setAttribute('aria-label',(read?.dataset.title||'작품')+' 책 소개와 작가의 말');
+     if(intro)description.append(intro);if(note)description.append(note);card.insertBefore(description,card.querySelector('.book-foot'));
+    }
+   }
+  }
+  for(const id of ['bookGrid','discoverGrid']){const grid=document.getElementById(id);if(!grid)continue;enhanceMobileBooks(grid);new MutationObserver(()=>enhanceMobileBooks(grid)).observe(grid,{childList:true});}
   const copy=hero.querySelector('.hero-copy');
   const details=document.createElement('details');details.className='mobile-home-details';
   const summary=document.createElement('summary');summary.textContent='시작 비용 0원 · 4개 언어 출판 안내';
