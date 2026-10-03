@@ -1,5 +1,5 @@
-const CACHE='pyeoda-adult-v1-20261003';
-const CORE=['../pyeoda/adult-section.js?v=adult1','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'];
+const CACHE='pyeoda-adult-v2-20261003';
+const CORE=['../pyeoda/adult-section.js?v=adult2','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
