@@ -10313,7 +10313,7 @@ function syncAdultRegistration(){
  for(const b of document.querySelectorAll('[data-register-mode],#registeredNewBookBtn'))b.addEventListener('click',()=>show(0,false));
  show(0,false);
 })();
-<\/script></body></html>
+<\/script><script>AUTHOR_SCREENS.delete('register');<\/script></body></html>
 </script>
 <script>
 const source=document.getElementById('mobile-source').textContent.replaceAll('<\\/script','</'+'script');
