@@ -10237,11 +10237,15 @@ function syncAdultRegistration(){
   .mobile-build #home #shelfDesc{display:none}
   .mobile-build #home .tabs{gap:12px!important;padding:0!important}
   .mobile-build #home .tab{min-height:36px;padding:6px 10px;font-size:13px}
-  .mobile-build #home #bookGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:clamp(72px,calc((100dvh - 495px)/4),92px);gap:7px!important;overflow:visible!important;padding:0!important;scroll-snap-type:none}
-  .mobile-build #home #bookGrid>.book-card{width:100%!important;min-width:0!important;min-height:0!important;height:100%!important;padding:6px!important;grid-template-columns:42px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr) 13px 28px!important;column-gap:6px!important;row-gap:2px;align-content:stretch;border-radius:10px}
+  .mobile-build .book-card{font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  .mobile-build .book-card :is(h3,.book-author,.book-copy,.meta,.read-progress,.rank,.book-actions button,.book-title-link){font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif!important;letter-spacing:0!important}
+  .mobile-build .book-card h3{font-weight:600!important}
+  .mobile-build .book-card .book-actions button{font-weight:600!important}
+  .mobile-build #home #bookGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:none!important;grid-auto-rows:clamp(96px,calc((100dvh - 495px)/4),112px);gap:7px!important;overflow:visible!important;padding:0!important;scroll-snap-type:none}
+  .mobile-build #home #bookGrid>.book-card{width:100%!important;min-width:0!important;min-height:0!important;height:100%!important;padding:6px!important;grid-template-columns:42px minmax(0,1fr)!important;grid-template-rows:minmax(33px,1fr) 14px 28px!important;column-gap:6px!important;row-gap:2px;align-content:stretch;border-radius:10px}
   .mobile-build #home #bookGrid .cover{grid-column:1;grid-row:1/4;height:100%!important;min-height:0;align-self:stretch;border-radius:4px}
-  .mobile-build #home #bookGrid h3{grid-column:2;grid-row:1;font-size:11px!important;line-height:1.25!important;margin:0!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;align-self:center;white-space:normal!important;word-break:keep-all;overflow-wrap:anywhere}
-  .mobile-build #home #bookGrid .book-author{grid-column:2;grid-row:2;font-size:9px!important;line-height:13px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0!important}
+  .mobile-build #home #bookGrid h3{grid-column:2;grid-row:1;font-size:12px!important;line-height:1.35!important;margin:0!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;align-self:center;white-space:normal!important;word-break:keep-all;overflow-wrap:anywhere}
+  .mobile-build #home #bookGrid .book-author{grid-column:2;grid-row:2;font-size:10px!important;line-height:14px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0!important}
   .mobile-build #home #bookGrid .book-copy,.mobile-build #home #bookGrid .server-book-badge,.mobile-build #home #bookGrid .book-foot>div:first-child,.mobile-build #home #bookGrid .price-tag,.mobile-build #home #bookGrid .read-progress{display:none!important}
   .mobile-build #home #bookGrid .book-foot{grid-column:2;grid-row:3;margin:0!important;padding:0!important;display:block!important;min-width:0;border:0!important}
   .mobile-build #home #bookGrid .book-actions{display:block!important;margin:0!important}
