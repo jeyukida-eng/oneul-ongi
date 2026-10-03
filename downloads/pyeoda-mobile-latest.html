@@ -1,4 +1,4 @@
-<!doctype html><html lang='ko'><head><style id='mobile-boot-style'>.mobile-booting body>:not(#mobileBoot){visibility:hidden!important}#mobileBoot{display:none}.mobile-booting #mobileBoot{position:fixed;inset:0;z-index:99999;display:grid;place-content:center;gap:10px;background:#f8f3e8;color:#697158;text-align:center;font:14px/1.6 system-ui,sans-serif}.mobile-booting #mobileBoot b{font:24px Georgia,serif}</style><script>document.documentElement.classList.add('mobile-booting');</script>><base href="https://jeyukida-eng.github.io/oneul-ongi/pyeoda-app/"><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PYEODA</title><style>
+<!doctype html><html lang='ko'><head><style id='mobile-boot-style'>.mobile-booting body>:not(#mobileBoot){visibility:hidden!important}#mobileBoot{display:none}.mobile-booting #mobileBoot{position:fixed;inset:0;z-index:99999;display:grid;place-content:center;gap:10px;background:#f8f3e8;color:#697158;text-align:center;font:14px/1.6 system-ui,sans-serif}.mobile-booting #mobileBoot b{font:24px Georgia,serif}</style><script>document.documentElement.classList.add('mobile-booting');</script><base href="https://jeyukida-eng.github.io/oneul-ongi/pyeoda-app/"><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PYEODA</title><style>
 :root{
   --ink:#2f2b24;
   --muted:#7b7468;
@@ -3520,8 +3520,8 @@ html,body{width:100%;min-width:0;margin:0;overflow-x:hidden}
   url: "https://chnlljbmatsawxrrsany.supabase.co",
   anonKey: "sb_publishable_5GSQmJ7eFEKFuPmL6dxpxA_fKct9Zdn"
 };
-</script>>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>/* Private raster assets. Persist IDs, never blob URLs or signed URLs. */
 (() => {
  'use strict';
@@ -3603,7 +3603,7 @@ html,body{width:100%;min-width:0;margin:0;overflow-x:hidden}
  const start=()=>{new MutationObserver(records=>{for(const record of records)for(const node of record.addedNodes){if(node.nodeType===1)hydrate(node);}}).observe(document.body,{childList:true,subtree:true});hydrate(document.body);};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
-</script>>
+</script>
 <script>
 const shelves={
  popular:{title:'지금 인기 있는 작품',desc:'표지부터 책 소개, 작가의 말까지 한 장에서 빠르게 살펴보세요.',items:[
@@ -9817,11 +9817,11 @@ priceInput.addEventListener('keydown',e=>{
 syncRevenueBookUI();
 bindMobilePageNavigation();
 
-</script>><script>
+</script><script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => Promise.resolve());
 }
-</script>>
+</script>
 <script>
 (()=>{
   const btn=document.getElementById('pyeodaMobileInstall');
@@ -9842,7 +9842,7 @@ if ('serviceWorker' in navigator) {
   });
   window.addEventListener('appinstalled',()=>{btn.style.display='none';});
 })();
-</script>>
+</script>
 <dialog id='testPaymentDialog' class='test-payment-dialog' aria-labelledby='testPaymentTitle'>
  <div class='test-payment-card'>
   <div class='test-payment-heading'><span class='test-payment-badge'>테스트 모드</span><button type='button' id='testPaymentClose' aria-label='닫기'>✕</button></div>
@@ -10014,7 +10014,7 @@ function bindTestPayments(){
  resumeTestPaymentReturn();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindTestPayments,{once:true});else bindTestPayments();
-</script>><script>
+</script><script>
 /* PYEODA_MD_MANUSCRIPT_IMPORT: current episode only; ordinary save/publish flow. */
 let manuscriptImportBusy=false;
 function manuscriptImportContext(){
@@ -10111,7 +10111,7 @@ function bindMarkdownManuscriptImport(){
  updateManuscriptImportRestore();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindMarkdownManuscriptImport,{once:true});else bindMarkdownManuscriptImport();
-</script>><script>/* Pyeoda: one shared service, separately gated adult catalog. */
+</script><script>/* Pyeoda: one shared service, separately gated adult catalog. */
 function syncAdultRegistration(){
  document.getElementById('adultRegistrationRules').hidden=document.getElementById('newAgeRating').value!=='19';
 }
@@ -10197,7 +10197,7 @@ function syncAdultRegistration(){
  syncAdultRegistration();updateToggle();renderShelf('popular');renderDiscover();
  setInterval(()=>{if(section==='adult'&&!verified())leaveAdult();},15000);
 })();
-</script>><script>/* A quiet moving sky, drawn to match Pyeoda's pencil landscape. */
+</script><script>/* A quiet moving sky, drawn to match Pyeoda's pencil landscape. */
 (()=>{
  const hero=document.querySelector('#home .hero');
  if(!hero||hero.querySelector('.pyeoda-sky'))return;
@@ -10504,4 +10504,4 @@ function syncAdultRegistration(){
  for(const b of document.querySelectorAll('[data-register-mode],#registeredNewBookBtn'))b.addEventListener('click',()=>show(0,false));
  show(0,false);
 })();
-</script>><script>for(const screen of ['register','editor','studio','books'])AUTHOR_SCREENS.delete(screen);</script>><script>document.documentElement.classList.remove('mobile-booting');document.getElementById('mobileBoot')?.remove();</script>></body></html>
+</script><script>for(const screen of ['register','editor','studio','books'])AUTHOR_SCREENS.delete(screen);</script><script>document.documentElement.classList.remove('mobile-booting');document.getElementById('mobileBoot')?.remove();</script></body></html>
