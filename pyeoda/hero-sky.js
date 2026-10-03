@@ -87,7 +87,7 @@
  new MutationObserver(sync).observe(hero.closest('.screen'),{attributes:true,attributeFilter:['class']});sync();
 })();
 
-/* Mobile registration: one question per page, cover creation comes last. */
+/* Mobile registration: compact groups per page, cover creation comes last. */
 (()=>{
  if(!document.body.classList.contains('mobile-build'))return;
  const screen=document.getElementById('register'),form=screen.querySelector('.register-form');
@@ -127,18 +127,40 @@
  .mobile-build #register .mobile-cover-help{font-size:11px;line-height:1.5;margin:8px 0}
  .mobile-build #register .cover-ai-status{font-size:12px;line-height:1.5;margin:8px 0}
  .mobile-build #register .mobile-step-error{font-size:13px;color:#a34932;margin:10px 0 0}
+
+ .mobile-build #register .mobile-step-fields{display:grid;gap:12px}
+ .mobile-build #register .mobile-step-fields.two-columns{grid-template-columns:1fr 1fr;gap:14px 10px}
+ .mobile-build #register .mobile-step-fields.two-columns .reg-field:has(#newAgeRating){grid-column:1/-1}
+ .mobile-build #register .mobile-step label{font-size:14px}
+ .mobile-build #register .mobile-step input:not([type=checkbox]):not([type=radio]):not([type=file]),.mobile-build #register .mobile-step select{min-height:44px;margin-top:6px;padding:8px 10px}
+ .mobile-build #register .mobile-step .reg-help{font-size:11px;line-height:1.4;margin-top:4px}
+ .mobile-build #register .two-columns .reg-help{display:none}
+ .mobile-build #register .mobile-step details{margin-top:12px;font-size:12px}
+ .mobile-build #register .mobile-step textarea{height:clamp(100px,22dvh,180px)!important;margin-top:6px}
+ .mobile-build #register #newAuthorNote{height:clamp(130px,30dvh,260px)!important}
+ .mobile-build #register .mobile-cover-design .cover-style-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px}
+ .mobile-build #register .mobile-cover-design .cover-style-grid span{font-size:11px;padding:9px 5px}
+ .mobile-build #register .mobile-cover-design .cover-style-wrap{margin-bottom:12px}
+ .mobile-build #register .mobile-cover-design .reg-help{display:none}
+ .mobile-build #register .mobile-cover-design #newCoverPrompt{height:clamp(90px,18dvh,150px)!important}
+ .mobile-build #register .mobile-step-nav #startWriting{min-width:0!important;font-size:13px!important;padding:8px!important}
+ @media(max-height:700px){.mobile-build #register .register-form{padding:12px!important}.mobile-build #register .mobile-step-progress{margin-bottom:10px}.mobile-build #register .mobile-step-fields{gap:9px}.mobile-build #register .mobile-step-nav{margin-top:12px}.mobile-build #register .register-cover-preview{width:78px!important;max-width:78px!important}}
  `;document.head.append(css);
  const progress=document.createElement('div');progress.className='mobile-step-progress';progress.setAttribute('aria-live','polite');
  const steps=[];
- const fields=[['newBookTitle','책 제목'],['newBookSubtitle','부제 · 선택'],['newPenName','필명'],['newCategory','카테고리'],['newWritingType','세부 유형'],['newGenre','장르'],['newFormat','작품 형태'],['newAgeRating','이용등급'],['newAudience','주 독자 · 선택'],['newPurpose','글의 목적'],['newBookIntro','책 소개'],['newAuthorNote','작가의 말'],['newTags','태그 · 선택']];
  function step(node,label){const el=document.createElement('div');el.className='mobile-step';el.hidden=true;el.append(node);steps.push({el,label});return el;}
- for(const [id,label] of fields)step(document.getElementById(id).closest('.reg-field'),label);
- const writingGuide=document.createElement('details');const guideSummary=document.createElement('summary');guideSummary.textContent='선택한 유형의 집필 기준 보기';writingGuide.append(guideSummary,document.getElementById('registrationWritingGuide'));steps[4].el.append(writingGuide);
+ function group(ids,label,columns=false){const grid=document.createElement('div');grid.className='mobile-step-fields'+(columns?' two-columns':'');for(const id of ids)grid.append(document.getElementById(id).closest('.reg-field'));return step(grid,label);}
+ group(['newBookTitle','newBookSubtitle','newPenName'],'제목과 작가');
+ group(['newCategory','newWritingType','newGenre','newFormat'],'작품 분류',true);
+ const writingGuide=document.createElement('details');const guideSummary=document.createElement('summary');guideSummary.textContent='집필 기준 보기';writingGuide.append(guideSummary,document.getElementById('registrationWritingGuide'));steps[1].el.append(writingGuide);
+ group(['newAudience','newPurpose','newAgeRating'],'독자와 이용등급',true);
+ group(['newBookIntro','newTags'],'책 소개와 태그');
+ group(['newAuthorNote'],'작가의 말');
  const cover=screen.querySelector('.register-cover-card'),tools=cover.querySelector('.cover-tools');
- step(cover.querySelector('.cover-style-wrap'),'표지 스타일');
+ const design=document.createElement('div');design.className='mobile-cover-design';design.append(cover.querySelector('.cover-style-wrap'));
  const prompt=document.getElementById('newCoverPrompt').parentElement;
  const status=document.getElementById('coverAiStatus');tools.append(status);
- step(prompt,'표지 장면 · AI 생성 시 입력');
+ design.append(prompt);step(design,'표지 스타일과 장면');
  const title=document.createElement('p');title.className='mobile-cover-title';cover.prepend(title);
  const guide=cover.querySelector('.cover-guide');guide.remove();
  const billing=tools.querySelector(':scope > .cover-prompt-help');billing.classList.add('mobile-cover-help');billing.textContent='직접 올리기 무료 · 책마다 첫 AI 생성 1회 무료. 두 번째부터 비용이 발생합니다.';
@@ -148,20 +170,20 @@
  const actions=form.querySelector('.register-actions');form.prepend(progress);for(const s of steps)form.insertBefore(s.el,actions);
  const error=document.createElement('p');error.className='mobile-step-error';error.setAttribute('role','alert');error.hidden=true;form.insertBefore(error,actions);
  const nav=document.createElement('div');nav.className='mobile-step-nav';nav.innerHTML='<button type="button" class="secondary">이전</button><button type="button" class="primary">다음</button>';form.insertBefore(nav,actions);
- const [prev,next]=nav.children;let current=0;
+ const [prev,next]=nav.children;const finish=document.getElementById('startWriting');nav.append(finish);let current=0;
  function show(index,scroll=true){
   current=Math.max(0,Math.min(steps.length-1,index));steps.forEach((s,i)=>s.el.hidden=i!==current);
   progress.replaceChildren();const label=document.createElement('span');label.textContent=`${current+1} / ${steps.length} · ${steps[current].label}`;const bar=document.createElement('progress');bar.max=steps.length;bar.value=current+1;bar.setAttribute('aria-label','작품 등록 진행');progress.append(label,bar);
-  prev.textContent=current?'이전':'취소';next.hidden=current===steps.length-1;actions.hidden=current!==steps.length-1;
+  prev.textContent=current?'이전':'취소';next.hidden=current===steps.length-1;actions.hidden=true;finish.hidden=current!==steps.length-1;
   error.hidden=true;title.textContent=`${document.getElementById('newBookTitle').value.trim()} · ${document.getElementById('newPenName').value.trim()}`;
   if(scroll){document.activeElement?.blur();window.scrollTo({top:0,behavior:'instant'});}
  }
  function valid(id,message,index){if(document.getElementById(id).value.trim())return true;show(index);error.textContent=message;error.hidden=false;document.getElementById(id).focus();return false;}
- function required(){return valid('newBookTitle','책 제목을 입력해 주세요.',0)&&valid('newPenName','필명을 입력해 주세요.',2);}
- function ratingOK(){if(document.getElementById('newAgeRating').value!=='19'||document.getElementById('adultPolicyConsent').checked)return true;show(7);error.textContent='19+ 등록기준과 별도 심사에 동의해 주세요.';error.hidden=false;return false;}
+ function required(){return valid('newBookTitle','책 제목을 입력해 주세요.',0)&&valid('newPenName','필명을 입력해 주세요.',0);}
+ function ratingOK(){if(document.getElementById('newAgeRating').value!=='19'||document.getElementById('adultPolicyConsent').checked)return true;show(2);error.textContent='19+ 등록기준과 별도 심사에 동의해 주세요.';error.hidden=false;return false;}
  prev.onclick=()=>current?show(current-1):go('studio');
- next.onclick=()=>{if(current===0&&!valid('newBookTitle','책 제목을 입력해 주세요.',0))return;if(current===2&&!valid('newPenName','필명을 입력해 주세요.',2))return;if(current===7&&!ratingOK())return;show(current+1);};
- steps.forEach(s=>s.el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'&&!['checkbox','radio','file'].includes(e.target.type)){e.preventDefault();if(current<steps.length-1)next.click();}}));
+ next.onclick=()=>{if(current===0&&!required())return;if(current===2&&!ratingOK())return;show(current+1);};
+ steps.forEach(s=>s.el.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'&&!['checkbox','radio','file'].includes(e.target.type)){e.preventDefault();const inputs=[...s.el.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=file]),select,textarea')];const following=inputs[inputs.indexOf(e.target)+1];if(following)following.focus();else if(current<steps.length-1)next.click();}}));
  document.getElementById('generateCoverBtn').addEventListener('click',e=>{if(!required()||!ratingOK()){e.preventDefault();e.stopImmediatePropagation();return;}if(!document.getElementById('newCoverPrompt').value.trim()){show(steps.length-2);error.textContent='AI 표지에 넣을 장면을 입력해 주세요.';error.hidden=false;e.preventDefault();e.stopImmediatePropagation();}},true);
  document.getElementById('startWriting').addEventListener('click',e=>{if(!required()||!ratingOK()){e.preventDefault();e.stopImmediatePropagation();}},true);
  let active=screen.classList.contains('active');new MutationObserver(()=>{const now=screen.classList.contains('active');if(now&&!active)show(0);active=now;}).observe(screen,{attributes:true,attributeFilter:['class']});
