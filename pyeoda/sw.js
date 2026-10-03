@@ -1,4 +1,4 @@
-const CACHE='pyeoda-mobile-book-resume-v12-20261003';
+const CACHE='pyeoda-mobile-writing-caret-v13-20261003';
 const CORE=['../pyeoda/hero-sky.js?v=sky7','../pyeoda/adult-section.js?v=adult2','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));

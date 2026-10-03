@@ -750,7 +750,7 @@ body{background:#fbf8f1;color:var(--ink);}
 
 
 /* v5.6 — 옛 타자기 느낌 집필 커서 */
-.body-editor.typewriter-caret-active{caret-color:transparent}
+.body-editor{caret-color:var(--ink,#2f2b24)}
 .typewriter-caret{
   position:fixed;
   z-index:9998;
@@ -5828,66 +5828,10 @@ typewriterCaret.className='typewriter-caret';
 typewriterCaret.setAttribute('aria-hidden','true');
 document.body.appendChild(typewriterCaret);
 
-function selectionBelongsToEditor(sel){
-  if(!sel||!sel.rangeCount||!sel.isCollapsed)return false;
-  const node=sel.anchorNode;
-  return !!node && (node===body || body.contains(node));
-}
-function fallbackCaretRect(range){
-  try{
-    const node=range.startContainer;
-    const offset=range.startOffset;
-    if(node.nodeType===Node.TEXT_NODE){
-      const text=node.nodeValue||'';
-      const r=document.createRange();
-      // 줄바꿈 직후에는 다음 글자의 왼쪽을 기준으로 잡는다.
-      if(offset>0 && text[offset-1]==='\n' && offset<text.length){
-        r.setStart(node,offset);r.setEnd(node,Math.min(text.length,offset+1));
-        const rect=r.getBoundingClientRect();
-        if(rect.height)return {left:rect.left,top:rect.top,height:rect.height};
-      }
-      if(offset>0){
-        r.setStart(node,Math.max(0,offset-1));r.setEnd(node,offset);
-        const rect=r.getBoundingClientRect();
-        if(rect.height)return {left:rect.right,top:rect.top,height:rect.height};
-      }
-      if(text.length){
-        r.setStart(node,0);r.setEnd(node,Math.min(1,text.length));
-        const rect=r.getBoundingClientRect();
-        if(rect.height)return {left:rect.left,top:rect.top,height:rect.height};
-      }
-    }
-  }catch(e){}
-  const editorRect=body.getBoundingClientRect();
-  const line=parseFloat(getComputedStyle(body).lineHeight)||34;
-  return {left:editorRect.left+2,top:editorRect.top+4,height:line*.78};
-}
+// Native caret stays on the actual insertion point, including empty lines and IME composition.
 function updateTypewriterCaret(){
-  const sel=window.getSelection();
-  if(document.activeElement!==body || !selectionBelongsToEditor(sel)){
-    typewriterCaret.style.display='none';
-    body.classList.remove('typewriter-caret-active');
-    return;
-  }
-  const range=sel.getRangeAt(0).cloneRange();
-  let rect=range.getBoundingClientRect();
-  let pos=(rect&&rect.height>0)?{left:rect.left,top:rect.top,height:rect.height}:fallbackCaretRect(range);
-  if(!pos||!Number.isFinite(pos.left)||!Number.isFinite(pos.top)){
-    typewriterCaret.style.display='none';
-    body.classList.remove('typewriter-caret-active');
-    return;
-  }
-  const editorRect=body.getBoundingClientRect();
-  if(pos.top<editorRect.top-3 || pos.top>editorRect.bottom+3){
-    typewriterCaret.style.display='none';
-    return;
-  }
-  const h=Math.max(22,Math.min(31,(pos.height||27)*.92));
-  typewriterCaret.style.left=`${Math.max(editorRect.left,pos.left)}px`;
-  typewriterCaret.style.top=`${pos.top+Math.max(0,((pos.height||h)-h)/2)}px`;
-  typewriterCaret.style.height=`${h}px`;
-  typewriterCaret.style.display='block';
-  body.classList.add('typewriter-caret-active');
+  typewriterCaret.style.display='none';
+  body.classList.remove('typewriter-caret-active');
 }
 function queueTypewriterCaret(){requestAnimationFrame(updateTypewriterCaret)}
 body.addEventListener('focus',queueTypewriterCaret);
