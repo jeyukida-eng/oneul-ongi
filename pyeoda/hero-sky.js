@@ -380,3 +380,24 @@
     alert(ios?'Safari에서 공유 버튼 → “홈 화면에 추가” → “추가”를 눌러 주세요.':'브라우저 메뉴(⋮ 또는 ≡)에서 “앱 설치” 또는 “홈 화면에 추가”를 눌러 주세요. 메뉴에 없으면 Chrome이나 삼성 인터넷에서 펴다를 열어 주세요.');
   }
 })();
+
+/* Calm typography: native Korean sans for the interface, serif only for reading. */
+(()=>{
+ const style=document.createElement('style');
+ style.id='pyeoda-typography';
+ style.textContent=`
+ :root{--pyeoda-ui-font:"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕","Noto Sans KR",system-ui,sans-serif;--pyeoda-reading-font:"AppleMyungjo","Noto Serif KR","Batang","바탕",serif}
+ body{font-family:var(--pyeoda-ui-font)!important}
+ body .app *:not(.paper-preview):not(.paper-preview *):not(.cover):not(.cover *) ,body dialog * ,body .mobilebar *{font-family:var(--pyeoda-ui-font)!important}
+ body .app :is(button,input,select,textarea){font-family:var(--pyeoda-ui-font)!important}
+ body .app :is(h1,h2,h3){font-weight:600!important;letter-spacing:-.025em!important}
+ body .app :is(button,.tab,.book-author,.meta,.book-copy,.eyebrow){letter-spacing:normal!important}
+ body .app .hero h1{line-height:1.35!important}
+ body .app :is(.book-copy,.book-author,.meta){font-weight:400!important}
+ body .app .book-copy b{font-weight:600!important}
+ body .app .reader-body,body .app .reader-body *{font-family:var(--pyeoda-reading-font)!important;letter-spacing:normal!important}
+ body .app .logo,body .app .logo *{font-family:Georgia,"Times New Roman",serif!important}
+ body .app .logo small{font-family:var(--pyeoda-ui-font)!important}
+ `;
+ document.head.appendChild(style);
+})();
