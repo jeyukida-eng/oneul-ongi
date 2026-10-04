@@ -388,7 +388,7 @@
  style.textContent=`
  :root{--pyeoda-ui-font:"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕","Noto Sans KR",system-ui,sans-serif;--pyeoda-reading-font:"AppleMyungjo","Noto Serif KR","Batang","바탕",serif}
  body{font-family:var(--pyeoda-ui-font)!important}
- body .app *:not(.paper-preview):not(.paper-preview *):not(.cover):not(.cover *) ,body dialog * ,body .mobilebar *{font-family:var(--pyeoda-ui-font)!important}
+ body .app *:not(.paper-preview):not(.paper-preview *):not(.cover):not(.cover *):not(#body):not(#body *) ,body dialog * ,body .mobilebar *{font-family:var(--pyeoda-ui-font)!important}
  body .app :is(button,input,select,textarea){font-family:var(--pyeoda-ui-font)!important}
  body .app :is(h1,h2,h3){font-weight:600!important;letter-spacing:-.025em!important}
  body .app :is(button,.tab,.book-author,.meta,.book-copy,.eyebrow){letter-spacing:normal!important}
