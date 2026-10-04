@@ -191,7 +191,8 @@
     const mid = W / 2;
     const korean = '"Apple SD Gothic Neo", "Noto Sans KR", "NanumSquare", sans-serif';
     const S = (weight, px) => `${weight} ${px}px ${korean}`;
-    const ink = '#383038', violet = '#7755AE', warm = '#A9744F', quiet = '#837774';
+    const ink = '#463B36', terracotta = '#C9795D', warm = '#B86F50', quiet = '#7E716A', sage = '#8E9B83';
+    const paper = '#FFF9F2', cream = '#FFFDF8', peach = '#F4D8C7', blush = '#F8E9E0';
     const rrect = (x,y,w,h,r,fill,stroke) => {
       c.beginPath(); c.roundRect(x,y,w,h,r);
       if(fill){c.fillStyle=fill;c.fill();}
@@ -201,89 +202,101 @@
       c.font=font; c.textAlign='center'; c.textBaseline='alphabetic'; c.fillStyle=fill;
       c.fillText(str,mid,y,maxW);
     };
-    c.fillStyle='#F9F2EA'; c.fillRect(0,0,W,H);
-    c.save();c.shadowColor='rgba(91,70,65,.12)';c.shadowBlur=42;c.shadowOffsetY=12;
-    rrect(36,34,W-72,H-68,64,'#FCF6EF');c.restore();
-    c.save();c.beginPath();c.roundRect(36,34,W-72,H-68,64);c.clip();
-    c.fillStyle='#FAF0F8';
-    [[-25,story?600:470,175,103],[1036,story?990:712,130,125],[-8,H-68,180,130],[1080,H-60,178,130]].forEach(([x,y,rx,ry])=>{
-      c.beginPath();c.ellipse(x,y,rx,ry,0,0,2*Math.PI);c.fill();
+
+    // Warm cream paper with very soft editorial blobs.
+    c.fillStyle=paper; c.fillRect(0,0,W,H);
+    c.save(); c.shadowColor='rgba(91,61,48,.10)'; c.shadowBlur=46; c.shadowOffsetY=12;
+    rrect(34,32,W-68,H-64,66,cream); c.restore();
+    c.save(); c.beginPath(); c.roundRect(34,32,W-68,H-64,66); c.clip();
+    c.fillStyle='#FCECE2';
+    [[-10,story?540:410,200,120],[1050,story?850:640,175,145],[-30,H-120,220,145]].forEach(([x,y,rx,ry])=>{
+      c.beginPath(); c.ellipse(x,y,rx,ry,0,0,2*Math.PI); c.fill();
     });
-    // A light violet signature pill and a live date rather than baked-in image text.
-    const badgeY=story?112:70;
-    rrect(mid-126,badgeY,252,68,34,'#F0E7F7');
-    center('오늘의 온기',badgeY+47,S(800,34),violet,225);
+    c.fillStyle='#EEF1E8';
+    c.beginPath(); c.ellipse(1030,story?1510:1115,170,115,0,0,2*Math.PI); c.fill();
+
+    // Brand chip + date.
+    const badgeY=story?108:72;
+    rrect(mid-138,badgeY,276,70,35,'#F8E4D8');
+    center('오늘의 온기',badgeY+48,S(800,34),terracotta,240);
     const d=new Date();
     center(`${d.getMonth()+1}월 ${d.getDate()}일 (${'일월화수목금토'[d.getDay()]})`,
-      story?249:201,S(600,30),quiet);
+      story?247:205,S(600,29),quiet);
+
+    // User-selectable warm headline.
     const headlines=[
       ['오늘도 나를','잘 돌봤어요'],
       ['작은 걸음도','충분히 소중해요'],
       ['나를 돌본 오늘을','기억해요']
     ];
     const chosen=headlines[sharePhrase]||headlines[0];
-    const headlineY=story?365:309, headingSize=story?83:78;
+    center('오늘의 작은 성취',story?330:278,S(700,24),sage);
+    const headlineY=story?420:355, headingSize=story?82:76;
     center(chosen[0],headlineY,S(800,headingSize),ink);
     center(chosen[1],headlineY+89,S(800,headingSize),ink);
-    // Single warm number and tiny lavender accent marks carry the hierarchy.
-    const bubbleY=story?620:446;
-    rrect(304,bubbleY,472,204,102,'#F1E7F5');
-    c.fillStyle=violet;
-    c.save();c.translate(279,bubbleY+65);c.rotate(-.55);rrect(-6,-23,12,45,6,violet);c.restore();
-    c.save();c.translate(810,bubbleY+65);c.rotate(.55);rrect(-6,-23,12,45,6,violet);c.restore();
-    c.textAlign='left';c.fillStyle=warm;c.font=S(800,61);c.fillText('온기',392,bubbleY+137);
-    c.font=S(800,s.today>99?123:150);c.fillText(String(s.today),570,bubbleY+154,167);
+
+    // Main warmth count, designed to read clearly in an Instagram feed.
+    const bubbleY=story?635:495;
+    c.fillStyle=peach; c.beginPath(); c.ellipse(mid,bubbleY+99,256,112,0,0,2*Math.PI); c.fill();
+    c.fillStyle='#F9E7DB'; c.beginPath(); c.ellipse(mid-245,bubbleY+72,26,26,0,0,2*Math.PI); c.fill();
+    c.fillStyle='#E8D7C9'; c.beginPath(); c.ellipse(mid+250,bubbleY+132,15,15,0,0,2*Math.PI); c.fill();
+    center(String(s.today),bubbleY+128,S(800,s.today>99?118:148),warm,260);
+    center('오늘 모은 온기',bubbleY+182,S(700,29),ink,340);
+
     const base = read().records?.[DATE()]||{};
     const label=[];
     if(moodIds.includes(base.mood))label.push('오늘의 기분 선택');
     if(base.smallDone)label.push('작은 실천 완료');
     if(typeof base.note==='string'&&base.note.trim())label.push('한 줄 기록 남기기');
     if(includeTasks&&s.growth.length)label.push(`성장 미션 ${s.growth.length}개 완료`);
-    // Keep each Korean phrase together rather than squeezing a long sentence.
-    const sublines=[];c.font=S(600,story?36:32);
+    const sublines=[]; c.font=S(600,story?35:31);
     if(!label.length)sublines.push('지금부터 시작해도 충분해요');
     for(const phrase of label){
-      const i=sublines.length-1,joined=i>=0?sublines[i]+' · '+phrase:phrase;
-      if(i>=0&&c.measureText(joined).width<=875)sublines[i]=joined;
+      const i=sublines.length-1, joined=i>=0?sublines[i]+' · '+phrase:phrase;
+      if(i>=0&&c.measureText(joined).width<=860)sublines[i]=joined;
       else sublines.push(phrase);
     }
-    const y=story?904:688;
-    sublines.slice(0,2).forEach((line,i)=>center(line,y+43*i,S(600,story?36:32),quiet));
-    const artY=story?1020:752,artH=story?243:188;
+    const y=story?910:720;
+    sublines.slice(0,2).forEach((line,i)=>center(line,y+42*i,S(600,story?35:31),quiet));
+
+    // Keep the approved cozy illustration, but give it more breathing room.
+    const artY=story?1015:785, artH=story?250:192;
     if(shareArtwork.complete&&shareArtwork.naturalWidth>0){
-      c.drawImage(shareArtwork,70,artY,940,artH);
+      c.drawImage(shareArtwork,74,artY,932,artH);
     }else{
-      c.fillStyle='#EFE5F3';c.beginPath();c.ellipse(mid,artY+142,320,92,0,0,2*Math.PI);c.fill();
-      center('♡',artY+152,S(800,102),violet);
+      c.fillStyle=blush; c.beginPath(); c.ellipse(mid,artY+138,318,88,0,0,2*Math.PI); c.fill();
+      center('♡',artY+151,S(800,96),terracotta);
     }
+
+    // Small wins list card.
     const list=previewData(s);
-    const listY=story?1340:947, rowH=story?65:53;
-    const listH=list.length?Math.max(184,49+list.length*rowH):158;
-    c.save();c.shadowColor='rgba(78,57,63,.07)';c.shadowBlur=20;c.shadowOffsetY=5;
-    rrect(166,listY,748,listH,44,'#FFFDFB');c.restore();
+    const listY=story?1350:985, rowH=story?65:53;
+    const listH=list.length?Math.max(184,49+list.length*rowH):154;
+    c.save(); c.shadowColor='rgba(83,56,43,.07)'; c.shadowBlur=20; c.shadowOffsetY=5;
+    rrect(160,listY,760,listH,42,'#FFFFFF'); c.restore();
     if(list.length){
-      c.textAlign='left';c.textBaseline='alphabetic';
+      c.textAlign='left'; c.textBaseline='alphabetic';
       list.forEach((item,i)=>{
-        const y=listY+53+i*rowH;
-        rrect(213,y-33,89,44,22,'#F1EAFB');
-        c.fillStyle=violet;c.textAlign='center';c.font=S(800,28);c.fillText('+1',258,y-2);
-        c.fillStyle='#766D71';c.textAlign='left';c.font=S(600,story?31:30);
+        const yy=listY+53+i*rowH;
+        rrect(207,yy-33,89,44,22,'#FFF0E7');
+        c.fillStyle=terracotta; c.textAlign='center'; c.font=S(800,28); c.fillText('+1',252,yy-2);
+        c.fillStyle='#6F655F'; c.textAlign='left'; c.font=S(600,story?31:30);
         const words=String(item).split(/\s+/),out=[];
         for(const word of words){const candidate=[...out,word].join(' ');if(c.measureText(candidate+'…').width>525)break;out.push(word);}
         let display=out.length?out.join(' ')+(out.length<words.length?'…':''):String(item);
         if(c.measureText(display).width>525)display=Array.from(String(item)).reduce((a,ch)=>c.measureText(a+ch+'…').width<=525?a+ch:a,'')+'…';
-        c.fillText(display,329,y);
-        if(i<list.length-1){c.strokeStyle='#F1E9E3';c.lineWidth=1;c.beginPath();c.moveTo(326,y+17);c.lineTo(856,y+17);c.stroke();}
+        c.fillText(display,324,yy);
+        if(i<list.length-1){c.strokeStyle='#F3E9E1';c.lineWidth=1;c.beginPath();c.moveTo(322,yy+17);c.lineTo(858,yy+17);c.stroke();}
       });
     }else{
-      center('아직 오늘의 기록이 없어요',listY+93,S(600,32),quiet,650);
+      center('아직 오늘의 기록이 없어요',listY+91,S(600,32),quiet,650);
     }
-    const mottoY=story?1768:1242;
-    c.strokeStyle='#D5C7BC';c.lineWidth=1.5;c.beginPath();
-    c.moveTo(192,mottoY-12);c.lineTo(284,mottoY-12);
-    c.moveTo(796,mottoY-12);c.lineTo(888,mottoY-12);c.stroke();
+
+    // Instagram-like clean footer.
+    const mottoY=story?1770:1240;
     center('작은 하루가 쌓여 나를 만듭니다',mottoY,S(600,29),quiet);
-    center('오늘의 온기',story?1850:1296,S(800,31),violet);
+    center('#오늘의온기   #작은성취',mottoY+50,S(700,24),terracotta);
+    center('ONEUL ONGI',story?1860:1315,S(800,24),sage);
     c.restore();
     return canvas;
   }
