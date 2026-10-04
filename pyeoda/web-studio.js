@@ -16,7 +16,9 @@
  .mobile-writing #editor .current-book-info>b{font-size:15px!important}
  .mobile-writing #editor .current-book button{height:34px!important;min-height:34px!important;width:auto!important;padding:0 11px!important;font-size:12px!important;border-radius:8px!important;white-space:nowrap}
  .mobile-writing #editor #mobileWritingTools{order:2}
- .mobile-writing #editor .web-writer-top-actions{display:flex;gap:6px;flex-shrink:0}
+ .mobile-writing #editor .web-writer-top-actions{display:grid;grid-template-columns:repeat(4,96px);gap:8px;flex-shrink:0}
+ body:not(.mobile-build).mobile-writing #editor .web-writer-top-actions>:is(#saveEpisodeBtn,#publishEpisode,#mobileWritingTools,button){width:96px!important;height:36px!important;min-height:36px!important;min-width:0!important;box-sizing:border-box!important;border-width:1px!important;border-style:solid!important;border-radius:8px!important;padding:0 6px!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:12px!important;line-height:1.2!important}
+ body:not(.mobile-build).mobile-writing #editor .web-writer-top-actions>:is(#saveEpisodeBtn,#publishEpisode,#mobileWritingTools,button):focus-visible{outline:2px solid var(--olive);outline-offset:2px}
  .mobile-writing #editor .editor-episode-tools{display:none!important}
  .mobile-writing #editor .panel.editor{border:0!important;border-radius:0!important;padding:10px 18px!important;gap:6px!important}
  .mobile-writing #editor #editorStatus{font-size:11px!important;font-weight:400!important;color:#85877d}
@@ -56,7 +58,7 @@
  .mobile-writing #editor>.section.web-library-hidden{grid-template-columns:170px minmax(0,1fr)}
  .web-library-hidden .web-writer-library{display:none}
  }
- @media(max-width:1050px){.web-writer-side,.web-writer-library{display:none}.web-writer-top-actions{display:flex;gap:4px}.mobile-writing #editor .current-book{flex-wrap:wrap;height:auto!important;flex-basis:auto!important;min-height:38px!important}.mobile-writing #editor #manuscriptToolbar{display:none}}
+ @media(max-width:1050px){.web-writer-side,.web-writer-library{display:none}.mobile-writing #editor .web-writer-top-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;width:100%;flex-basis:100%}body:not(.mobile-build).mobile-writing #editor .web-writer-top-actions>:is(#saveEpisodeBtn,#publishEpisode,#mobileWritingTools,button){width:100%!important;min-width:0!important;height:36px!important;min-height:36px!important;box-sizing:border-box!important;border-width:1px!important;border-style:solid!important;border-radius:8px!important;padding:0 4px!important;font-size:12px!important;line-height:1.2!important;display:flex!important;align-items:center!important;justify-content:center!important}.mobile-writing #editor .current-book{flex-wrap:wrap;height:auto!important;flex-basis:auto!important;min-height:38px!important}.mobile-writing #editor #manuscriptToolbar{display:none}}
  `;document.head.append(style);
  const left=document.createElement('aside');left.className='web-writer-side';left.setAttribute('aria-label','집필 관리 메뉴');
  const heading=document.createElement('h2');heading.textContent='작가 스튜디오';left.append(heading);
@@ -71,8 +73,8 @@
  const eps=document.getElementById('episodeList');if(eps)right.append(eps);section.append(right);
  const header=editor.querySelector('.current-book');const actions=document.createElement('div');actions.className='web-writer-top-actions';
  for(const id of ['saveEpisodeBtn','publishEpisode']){const b=document.getElementById(id);if(b){b.textContent=id==='saveEpisodeBtn'?'저장하기':'공개하기';actions.append(b)}}header.append(actions);
- const toggle=document.createElement('button');toggle.type='button';toggle.textContent='목록 접기';toggle.setAttribute('aria-expanded','true');toggle.onclick=()=>{const hidden=section.classList.toggle('web-library-hidden');toggle.textContent=hidden?'목록 열기':'목록 접기';toggle.setAttribute('aria-expanded',String(!hidden))};header.append(toggle);
- const tool=document.getElementById('mobileWritingTools');if(tool)tool.textContent='책 정보·도구';
+ const toggle=document.createElement('button');toggle.type='button';toggle.textContent='목록 접기';toggle.setAttribute('aria-expanded','true');toggle.onclick=()=>{const hidden=section.classList.toggle('web-library-hidden');toggle.textContent=hidden?'목록 열기':'목록 접기';toggle.setAttribute('aria-expanded',String(!hidden))};actions.append(toggle);
+ const tool=document.getElementById('mobileWritingTools');if(tool){tool.textContent='책 정보·도구';actions.append(tool);}
  const toolbar=document.getElementById('manuscriptToolbar'),body=document.getElementById('body'),viewbar=document.querySelector('.manuscript-viewbar'),dialog=document.querySelector('.mobile-writing-tools');
  const desktop=matchMedia('(min-width:1051px)');
  function placeTools(){
