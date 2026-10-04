@@ -61,7 +61,7 @@ export async function handle(req,mode){
     }else{
      if(input.downloadFileId){
       if(!book.completed)return json({ok:false,message:'완결 작품만 소장할 수 있습니다.'},400);
-      const {data:file,error}=await admin.from('book_download_files').select('id').eq('book_id',book.id).eq('id',input.downloadFileId).maybeSingle();
+      const {data:file,error}=await admin.from('book_download_files').select('id').eq('book_id',book.id).eq('id',input.downloadFileId).eq('format','pdf').maybeSingle();
       if(error||!file)return json({ok:false,message:'판매 파일을 찾지 못했습니다. 다시 선택해 주세요.'},400);
      }
      amount=Number(book.price);name=book.title;productKey=`book:${book.id}`;

@@ -1,6 +1,7 @@
 import {createClient} from 'npm:@supabase/supabase-js@2.57.4';
 import {AwsClient} from 'npm:aws4fetch@1.0.20';
 import {UUID,LANGUAGES,publicationMime,canDownload,boundedBytes} from './access.ts';
+import {PDF_LIMIT,loadPublication,watermarkPdf} from './watermark.ts';
 const cors={'Access-Control-Allow-Origin':'https://jeyukida-eng.github.io','Access-Control-Allow-Headers':'authorization,x-client-info,apikey,content-type','Access-Control-Allow-Methods':'GET,POST,OPTIONS','Access-Control-Expose-Headers':'Content-Disposition'};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,'Content-Type':'application/json','Cache-Control':'private, no-store','Vary':'Authorization','X-Content-Type-Options':'nosniff'}});
 export async function handle(req:Request){
@@ -22,11 +23,11 @@ export async function handle(req:Request){
    if(book.adult_review_status!=='approved'||!adultVerified)return json({ok:false,message:'성인인증 및 작품 심사 승인이 필요합니다.'},403);
   }
   let orders:any[]=[];
-  if(user&&!owner){const {data,error}=await admin.from('payment_orders').select('buyer_id,book_id,product_key,status,environment').eq('buyer_id',user.id).eq('book_id',bookId).eq('product_key','book:'+bookId).eq('status','confirmed').eq('environment','test');if(error)throw error;orders=data||[]}
+  if(user&&!owner){const {data,error}=await admin.from('payment_orders').select('id,buyer_id,book_id,product_key,status,environment').eq('buyer_id',user.id).eq('book_id',bookId).eq('product_key','book:'+bookId).eq('status','confirmed').eq('environment','test').order('created_at',{ascending:true});if(error)throw error;orders=data||[]}
   const allowed=canDownload({book,user,orders,adultVerified});
   if(action==='list'&&req.method==='GET'){
-   const {data,error}=await admin.from('book_download_files').select('id,language,format,filename,byte_size,updated_at').eq('book_id',bookId).order('language');if(error)throw error;
-   return json({ok:true,title:book.title,price:Number(book.price),canDownload:allowed,owner,environment:'test',files:(data||[]).map(f=>({id:f.id,language:f.language,format:f.format,filename:f.filename,byte_size:f.byte_size,updated_at:f.updated_at}))});
+   const {data,error}=await admin.from('book_download_files').select('id,language,format,filename,byte_size,updated_at').eq('book_id',bookId).eq('format','pdf').order('language');if(error)throw error;
+   return json({ok:true,title:book.title,price:Number(book.price),canDownload:allowed,owner,environment:'test',protection:'purchase-watermark',files:(data||[]).map(f=>({id:f.id,language:f.language,format:f.format,filename:f.filename,byte_size:f.byte_size,updated_at:f.updated_at}))});
   }
   if(action==='read'&&!allowed)return json({ok:false,message:'이 작품의 결제 승인을 먼저 완료해 주세요.'},403);
   if(action==='upload'&&!owner)return json({ok:false,message:'본인 작품에만 판매 파일을 등록할 수 있습니다.'},403);
@@ -37,8 +38,9 @@ export async function handle(req:Request){
   if(action==='upload'&&req.method==='POST'){
    if(Deno.env.get('PYEODA_R2_UPLOADS_ENABLED')!=='true')return json({ok:false,message:'파일 저장소 점검 중입니다.'},503);
    const language=url.searchParams.get('language')||'',format=url.searchParams.get('format')||'';
-   if(!LANGUAGES.includes(language)||!['pdf','epub'].includes(format))return json({ok:false,message:'언어와 파일 형식을 확인해 주세요.'},400);
-   const bytes=await boundedBytes(req,50*1024*1024),mime=publicationMime(bytes,format);if(!mime)return json({ok:false,message:'올바른 PDF 또는 EPUB 파일을 선택해 주세요.'},400);
+   if(!LANGUAGES.includes(language)||format!=='pdf')return json({ok:false,message:'언어와 파일 형식을 확인해 주세요.'},400);
+   const bytes=await boundedBytes(req,PDF_LIMIT),mime=publicationMime(bytes,format);if(!mime)return json({ok:false,message:'올바른 PDF 파일을 선택해 주세요.'},400);
+   await loadPublication(bytes);
    const hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v=>v.toString(16).padStart(2,'0')).join('');
    const object_key=`downloads/${bookId}/${language}/${format}/${hash}.${format}`;
    const filename=(book.title.replace(/[\\/:*?"<>|\r\n]/g,'_').slice(0,120)||'book')+'_'+language+'.'+format;
@@ -49,11 +51,14 @@ export async function handle(req:Request){
   }
   if(action==='read'&&req.method==='GET'){
    const id=url.searchParams.get('id')||'';if(!UUID.test(id))return json({ok:false,message:'파일을 확인해 주세요.'},400);
-   const {data:file,error}=await admin.from('book_download_files').select('*').eq('id',id).eq('book_id',bookId).maybeSingle();if(error)throw error;if(!file)return json({ok:false,message:'등록된 파일을 찾지 못했습니다.'},404);
+   const {data:file,error}=await admin.from('book_download_files').select('*').eq('id',id).eq('book_id',bookId).maybeSingle();if(error)throw error;if(!file||file.format!=='pdf')return json({ok:false,message:'등록된 파일을 찾지 못했습니다.'},404);
    const response=await r2.fetch(objectUrl(file.object_key),{signal:AbortSignal.timeout(30000)});if(!response.ok)throw new Error('READ_FAILED');
-   return new Response(response.body,{headers:{...cors,'Content-Type':file.format==='pdf'?'application/pdf':'application/epub+zip','Content-Disposition':`attachment; filename="book.${file.format}"; filename*=UTF-8''${encodeURIComponent(file.filename)}`,'Cache-Control':'private, no-store','Vary':'Authorization','X-Content-Type-Options':'nosniff'}});
+   const reference=owner?'AUTHOR PREVIEW':'ORDER '+orders[0]?.id;
+   const bytes=await boundedBytes(response as any,PDF_LIMIT);
+   const protectedPdf=await watermarkPdf(bytes,reference);
+   return new Response(protectedPdf,{headers:{...cors,'Content-Type':'application/pdf','Content-Disposition':`attachment; filename="book.pdf"; filename*=UTF-8''${encodeURIComponent(file.filename)}`,'Cache-Control':'private, no-store','Vary':'Authorization','X-Content-Type-Options':'nosniff'}});
   }
   return json({ok:false,message:'요청을 확인해 주세요.'},400);
- }catch(error:any){const large=error?.message==='FILE_TOO_LARGE';console.error('book-downloads',large?'size':'unavailable');return json({ok:false,message:large?'파일은 50MB 이하로 등록해 주세요.':'파일을 처리하지 못했습니다. 다시 시도해 주세요.'},large?413:503)}
+ }catch(error:any){const large=error?.message==='FILE_TOO_LARGE',invalid=error?.message==='INVALID_PDF';console.error('book-downloads',large?'size':'unavailable');return json({ok:false,message:large?'PDF 파일은 20MB 이하로 등록해 주세요.':invalid?'암호 없는 정상 PDF를 등록해 주세요. 최대 600페이지까지 지원합니다.':'파일을 처리하지 못했습니다. 다시 시도해 주세요.'},large?413:invalid?400:503)}
 }
 Deno.serve(handle);
