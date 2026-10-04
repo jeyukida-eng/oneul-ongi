@@ -1,4 +1,4 @@
-<!doctype html><html lang='ko'><head><meta name="pyeoda-security-policy" http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js https://js.tosspayments.com 'sha256-/PGiVjRcHgvvzK0ygLsoQh6j7FJnPrYVNn95ODc8PUw=' 'sha256-AnVY0lmnNBsUVAoW2Dle7JmEhoqoIrHdG7PaRiF+1Tc=' 'sha256-FNiuA/w99WxBdcnadvh0nbdTnX7I0IMfTcQWAlqAsXM=' 'sha256-GU49IltZUtmivVx7bY2dlDt09ud1yCRgdNOQ4lX2zaU=' 'sha256-n0X+yZZdzr7ORPjm5MZwR0qaG0APqMRodwIv+/XoteM=' 'sha256-uZeTqplpTK03rbWGC8DCQ41K61XuR5KejixHYYFjuNU=' 'sha256-vmnlsab1CXjDD3i6M0uXc7RTAi9zmAAq1hY+29a8ugM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://chnlljbmatsawxrrsany.supabase.co wss://chnlljbmatsawxrrsany.supabase.co https://*.tosspayments.com https://*.toss.im; frame-src 'self' blob: https://*.tosspayments.com https://*.toss.im; object-src 'none'; base-uri 'none'; form-action 'self' https://*.tosspayments.com https://*.toss.im"><meta name="referrer" content="strict-origin-when-cross-origin"><style id='mobile-boot-style'>.mobile-booting body>:not(#mobileBoot){visibility:hidden!important}#mobileBoot{display:none}.mobile-booting #mobileBoot{position:fixed;inset:0;z-index:99999;display:grid;place-content:center;gap:10px;background:#f8f3e8;color:#697158;text-align:center;font:14px/1.6 system-ui,sans-serif}.mobile-booting #mobileBoot b{font:24px Georgia,serif}</style><script>document.documentElement.classList.add('mobile-booting');</script><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PYEODA</title><style>
+<!doctype html><html lang='ko'><head><meta name="pyeoda-security-policy" http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js https://js.tosspayments.com 'sha256-7EKVR891LrFuXkyh/rfxdr5X1ETRXZh+og+M8jQ/jjc=' 'sha256-AnVY0lmnNBsUVAoW2Dle7JmEhoqoIrHdG7PaRiF+1Tc=' 'sha256-FNiuA/w99WxBdcnadvh0nbdTnX7I0IMfTcQWAlqAsXM=' 'sha256-GU49IltZUtmivVx7bY2dlDt09ud1yCRgdNOQ4lX2zaU=' 'sha256-n0X+yZZdzr7ORPjm5MZwR0qaG0APqMRodwIv+/XoteM=' 'sha256-uZeTqplpTK03rbWGC8DCQ41K61XuR5KejixHYYFjuNU=' 'sha256-vmnlsab1CXjDD3i6M0uXc7RTAi9zmAAq1hY+29a8ugM='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://chnlljbmatsawxrrsany.supabase.co wss://chnlljbmatsawxrrsany.supabase.co https://*.tosspayments.com https://*.toss.im; frame-src 'self' blob: https://*.tosspayments.com https://*.toss.im; object-src 'none'; base-uri 'none'; form-action 'self' https://*.tosspayments.com https://*.toss.im"><meta name="referrer" content="strict-origin-when-cross-origin"><style id='mobile-boot-style'>.mobile-booting body>:not(#mobileBoot){visibility:hidden!important}#mobileBoot{display:none}.mobile-booting #mobileBoot{position:fixed;inset:0;z-index:99999;display:grid;place-content:center;gap:10px;background:#f8f3e8;color:#697158;text-align:center;font:14px/1.6 system-ui,sans-serif}.mobile-booting #mobileBoot b{font:24px Georgia,serif}</style><script>document.documentElement.classList.add('mobile-booting');</script><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>PYEODA</title><style>
 :root{
   --ink:#2f2b24;
   --muted:#7b7468;
@@ -2701,6 +2701,10 @@ body.mobile-build{margin:0!important;min-width:0!important;-webkit-text-size-adj
 #body.manuscript-grid:empty:before{font-size:14px;letter-spacing:0;word-spacing:0}
 @media(max-width:600px){.manuscript-viewbar{align-items:flex-start}.manuscript-viewbar p{flex-basis:100%}#body.manuscript-grid{min-height:52vh!important}}
 
+
+/* Keep the native Korean composition text flowing until its final input commits. */
+#body.manuscript-grid.manuscript-composing,#body.manuscript-grid.manuscript-composing :is(div,p,span,font,b,strong,i,em,u,s,strike,blockquote,li,sub,sup){letter-spacing:16px!important;word-spacing:0!important;word-break:break-all!important;overflow-wrap:anywhere!important;font-variant-ligatures:none}
+#body.manuscript-grid.manuscript-composing .manuscript-cell{display:inline!important;width:auto!important;min-width:0!important;max-width:none!important;height:auto!important;letter-spacing:16px!important;word-spacing:0!important;white-space:pre-wrap!important;word-break:break-all!important;overflow-wrap:anywhere!important;position:relative;left:8px;font-variant-ligatures:none}
 
 /* Each editable grapheme has a real cell; spacing is never used to imitate cells. */
 #body.manuscript-grid{padding:0 0 32px!important;max-width:100%;letter-spacing:0!important;word-spacing:0!important;font-variant-east-asian:normal;word-break:normal!important;overflow-wrap:normal!important;line-height:32px!important;text-align:left!important}
@@ -7730,6 +7734,7 @@ function applyManuscriptCommand(command,value=null){
 
 let manuscriptComposing=false;
 let manuscriptPaperObserver=null;
+let manuscriptPaperFrame=0;
 const manuscriptSegmenter=typeof Intl.Segmenter==='function'?new Intl.Segmenter('ko',{granularity:'grapheme'}):null;
 function manuscriptCharacters(text){
   return manuscriptSegmenter?[...manuscriptSegmenter.segment(text)].map(item=>({text:item.segment,index:item.index})):Array.from(text).map((text,index,array)=>({text,index:array.slice(0,index).join('').length}));
@@ -7754,7 +7759,7 @@ function fitManuscriptPaperWidth(){
   body.style.width=(columns*32+2)+'px';
 }
 function layoutManuscriptCells(){
-  if(!body.classList.contains('manuscript-grid')||manuscriptComposing)return;
+  if(!body.classList.contains('manuscript-grid')||manuscriptComposing||manuscriptPaperFrame)return;
   manuscriptPaperObserver?.disconnect();
   const points=manuscriptSelectionPoints();
   const walker=document.createTreeWalker(body,NodeFilter.SHOW_TEXT);
@@ -7782,6 +7787,23 @@ function layoutManuscriptCells(){
   }
   body.querySelectorAll('.manuscript-cell').forEach(cell=>{
     if(!cell.textContent||cell.childNodes.length!==1||cell.firstChild.nodeType!==Node.TEXT_NODE)cell.classList.replace('manuscript-cell','manuscript-cell-fragment');
+  });
+  // A native IME may split or expand an old cell. Its wrapper must not
+  // contain the new cells: copied inline widths could otherwise clip them.
+  body.querySelectorAll('.manuscript-cell-fragment').forEach(cell=>{
+    if(points)for(const name of ['anchor','focus']){
+      if(points[name+'Node']!==cell)continue;
+      const offset=points[name+'Offset'],children=[...cell.childNodes];
+      if(children.length){
+        const child=children[Math.min(offset,children.length-1)];
+        points[name+'Node']=child;
+        points[name+'Offset']=offset<children.length?0:(child.nodeType===Node.TEXT_NODE?child.data.length:child.childNodes.length);
+      }else{
+        points[name+'Node']=cell.parentNode;
+        points[name+'Offset']=[...cell.parentNode.childNodes].indexOf(cell);
+      }
+    }
+    cell.replaceWith(...cell.childNodes);
   });
   restoreManuscriptPoints(points);
   fitManuscriptPaperWidth();
@@ -7820,8 +7842,23 @@ function bindManuscriptPaperView(){
     button.addEventListener('mousedown',event=>{rememberRichEditorSelection();event.preventDefault();});
     button.addEventListener('click',()=>{setManuscriptPaperMode(value);restoreRichEditorSelection();});
   }
-  body.addEventListener('compositionstart',()=>{manuscriptComposing=true;});
-  body.addEventListener('compositionend',()=>{manuscriptComposing=false;layoutManuscriptCells();autosaveEpisode();queueTypewriterCaret();});
+  body.addEventListener('compositionstart',()=>{
+    if(manuscriptPaperFrame)cancelAnimationFrame(manuscriptPaperFrame);
+    manuscriptPaperFrame=0;manuscriptComposing=true;
+    body.classList.add('manuscript-composing');
+  });
+  body.addEventListener('compositionend',()=>{
+    manuscriptComposing=false;
+    // Chrome can deliver the final input AFTER compositionend. Do not replace
+    // its text nodes until that input and the associated observer have settled.
+    if(manuscriptPaperFrame)cancelAnimationFrame(manuscriptPaperFrame);
+    manuscriptPaperFrame=requestAnimationFrame(()=>{
+      manuscriptPaperFrame=0;
+      if(manuscriptComposing)return;
+      body.classList.remove('manuscript-composing');
+      layoutManuscriptCells();autosaveEpisode();wc();queueTypewriterCaret();
+    });
+  });
   body.addEventListener('input',event=>{if(!event.isComposing&&!manuscriptComposing)layoutManuscriptCells();});
   if(typeof ResizeObserver==='function')new ResizeObserver(fitManuscriptPaperWidth).observe(body.parentElement);
   window.addEventListener('resize',fitManuscriptPaperWidth);
