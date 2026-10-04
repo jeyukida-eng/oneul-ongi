@@ -38,7 +38,7 @@
  const button=document.createElement('button');button.type='button';button.textContent='PDF 불러오기';button.id='importPdfDraft';button.className='btn';
  const input=document.createElement('input');input.type='file';input.accept='.pdf,application/pdf';input.hidden=true;
  group.prepend(button,input);
- const hint=group.querySelector('span');if(hint)hint.textContent='MD는 현재 회차에, PDF는 확인 후 새 회차로 가져옵니다.';
+ const hint=group.querySelector('span');if(hint)hint.textContent='MD·TXT는 현재 회차에, PDF는 확인 후 새 회차로 가져옵니다.';
  // Desktop: direct access without adding a fifth button to the writing header.
  const side=document.querySelector('.web-writer-side');if(side){const shortcut=button.cloneNode(true);shortcut.removeAttribute('id');shortcut.onclick=()=>button.click();side.insertBefore(shortcut,side.querySelector('.web-writer-note'))}
  const style=document.createElement('style');style.textContent=`
