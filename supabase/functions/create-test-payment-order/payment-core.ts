@@ -59,6 +59,11 @@ export async function handle(req,mode){
      if(!ep||no<=5||(!ep.published&&book.owner_id!==uid)||Number(ep.price)<=0)return json({ok:false,message:'첫 5화는 무료입니다. 가격이 설정된 6화 이후만 테스트할 수 있습니다.'},400);
      amount=Number(ep.price);name=`${book.title} · ${no}화`;productKey=`episode:${book.id}:${no}`;
     }else{
+     if(input.automaticPdf){
+      if(!book.completed||!book.published)return json({ok:false,message:'공개된 완결 작품만 소장할 수 있습니다.'},400);
+      const {count,error}=await admin.from('episodes').select('id',{count:'exact',head:true}).eq('book_id',book.id).eq('published',true);
+      if(error||!count)return json({ok:false,message:'공개된 원고가 없습니다.'},400);
+     }
      if(input.downloadFileId){
       if(!book.completed)return json({ok:false,message:'완결 작품만 소장할 수 있습니다.'},400);
       const {data:file,error}=await admin.from('book_download_files').select('id').eq('book_id',book.id).eq('id',input.downloadFileId).eq('format','pdf').maybeSingle();

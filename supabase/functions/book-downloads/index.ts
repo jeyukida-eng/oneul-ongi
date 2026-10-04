@@ -2,6 +2,7 @@ import {createClient} from 'npm:@supabase/supabase-js@2.57.4';
 import {AwsClient} from 'npm:aws4fetch@1.0.20';
 import {UUID,LANGUAGES,publicationMime,canDownload,boundedBytes} from './access.ts';
 import {PDF_LIMIT,loadPublication,watermarkPdf} from './watermark.ts';
+import {PURCHASE_LANGUAGES,publicationSource,translationChunks,translatePublicationChunk} from './publication.ts';
 const cors={'Access-Control-Allow-Origin':'https://jeyukida-eng.github.io','Access-Control-Allow-Headers':'authorization,x-client-info,apikey,content-type','Access-Control-Allow-Methods':'GET,POST,OPTIONS','Access-Control-Expose-Headers':'Content-Disposition'};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{...cors,'Content-Type':'application/json','Cache-Control':'private, no-store','Vary':'Authorization','X-Content-Type-Options':'nosniff'}});
 export async function handle(req:Request){
@@ -13,8 +14,8 @@ export async function handle(req:Request){
   const admin=createClient(Deno.env.get('SUPABASE_URL')!,Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,{auth:{persistSession:false,autoRefreshToken:false}});
   const token=(req.headers.get('Authorization')||'').replace(/^Bearer\s+/i,'');let user:any=null;
   if(token){const {data,error}=await admin.auth.getUser(token);if(!error&&data.user&&!data.user.is_anonymous)user=data.user;}
-  if(action!=='list'&&!user)return json({ok:false,message:'로그인 후 이용해 주세요.'},401);
-  const {data:book,error:be}=await admin.from('books').select('id,owner_id,title,price,published,completed,age_rating,adult_review_status').eq('id',bookId).maybeSingle();if(be)throw be;
+  if(!['list','catalog'].includes(action)&&!user)return json({ok:false,message:'로그인 후 이용해 주세요.'},401);
+  const {data:book,error:be}=await admin.from('books').select('id,owner_id,title,pen_name,intro,author_note,price,published,completed,age_rating,adult_review_status').eq('id',bookId).maybeSingle();if(be)throw be;
   const owner=user?.id===book?.owner_id;
   if(!book||(!owner&&(!book.published||!book.completed)))return json({ok:false,message:'소장용 작품을 찾지 못했습니다.'},404);
   let adultVerified=false;
@@ -25,6 +26,29 @@ export async function handle(req:Request){
   let orders:any[]=[];
   if(user&&!owner){const {data,error}=await admin.from('payment_orders').select('id,buyer_id,book_id,product_key,status,environment').eq('buyer_id',user.id).eq('book_id',bookId).eq('product_key','book:'+bookId).eq('status','confirmed').eq('environment','test').order('created_at',{ascending:true});if(error)throw error;orders=data||[]}
   const allowed=canDownload({book,user,orders,adultVerified});
+  if(action==='catalog'&&req.method==='GET'){
+   const {count,error}=await admin.from('episodes').select('id',{count:'exact',head:true}).eq('book_id',bookId).eq('published',true);if(error)throw error;
+   return json({ok:true,title:book.title,price:Number(book.price),canDownload:allowed,owner,environment:'test',automatic:true,protection:'purchase-watermark',hasSource:count>0,translationAvailable:!!Deno.env.get('OPENAI_API_KEY'),languages:PURCHASE_LANGUAGES});
+  }
+  if(['source','translate','stamp'].includes(action)){
+   if(!allowed)return json({ok:false,message:'이 작품의 결제 승인을 먼저 완료해 주세요.'},403);
+   if(action==='stamp'&&req.method==='POST'){
+    const bytes=await boundedBytes(req,PDF_LIMIT);if(!publicationMime(bytes,'pdf'))return json({ok:false,message:'PDF를 다시 생성해 주세요.'},400);
+    const output=await watermarkPdf(bytes,owner?'AUTHOR PREVIEW':'ORDER '+orders[0]?.id);
+    return new Response(output,{headers:{...cors,'Content-Type':'application/pdf','Content-Disposition':'attachment; filename="book.pdf"','Cache-Control':'private, no-store','Vary':'Authorization','X-Content-Type-Options':'nosniff'}});
+   }
+   if((action==='source'&&req.method!=='GET')||(action==='translate'&&req.method!=='POST'))return json({ok:false,message:'요청을 확인해 주세요.'},405);
+   const {data:episodes,error}=await admin.from('episodes').select('episode_no,title,body,body_html').eq('book_id',bookId).eq('published',true).order('episode_no',{ascending:true});if(error)throw error;
+   if(!episodes?.length)return json({ok:false,message:'공개된 원고가 없습니다.'},409);
+   const publication=publicationSource(book,episodes),chunks=translationChunks(publication.items);
+   const sourceHash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(publication))))].map(x=>x.toString(16).padStart(2,'0')).join('');
+   if(action==='source')return json({ok:true,publication,sourceHash,chunkCount:chunks.length});
+   const language=url.searchParams.get('language')||'',index=Number(url.searchParams.get('chunk'));
+   if(!['en','ja','zh'].includes(language)||!Number.isInteger(index)||index<0||index>=chunks.length)return json({ok:false,message:'번역 언어와 진행 단계를 확인해 주세요.'},400);
+   if(url.searchParams.get('sourceHash')!==sourceHash)return json({ok:false,message:'원고가 변경되었습니다. 다시 생성해 주세요.'},409);
+   const result=await translatePublicationChunk(admin,bookId,sourceHash,language,index,chunks[index]);
+   return json({ok:true,...result,chunk:index,total:chunks.length},result.processing?202:200);
+  }
   if(action==='list'&&req.method==='GET'){
    const {data,error}=await admin.from('book_download_files').select('id,language,format,filename,byte_size,updated_at').eq('book_id',bookId).eq('format','pdf').order('language');if(error)throw error;
    return json({ok:true,title:book.title,price:Number(book.price),canDownload:allowed,owner,environment:'test',protection:'purchase-watermark',files:(data||[]).map(f=>({id:f.id,language:f.language,format:f.format,filename:f.filename,byte_size:f.byte_size,updated_at:f.updated_at}))});
@@ -59,6 +83,6 @@ export async function handle(req:Request){
    return new Response(protectedPdf,{headers:{...cors,'Content-Type':'application/pdf','Content-Disposition':`attachment; filename="book.pdf"; filename*=UTF-8''${encodeURIComponent(file.filename)}`,'Cache-Control':'private, no-store','Vary':'Authorization','X-Content-Type-Options':'nosniff'}});
   }
   return json({ok:false,message:'요청을 확인해 주세요.'},400);
- }catch(error:any){const large=error?.message==='FILE_TOO_LARGE',invalid=error?.message==='INVALID_PDF';console.error('book-downloads',large?'size':'unavailable');return json({ok:false,message:large?'PDF 파일은 20MB 이하로 등록해 주세요.':invalid?'암호 없는 정상 PDF를 등록해 주세요. 최대 600페이지까지 지원합니다.':'파일을 처리하지 못했습니다. 다시 시도해 주세요.'},large?413:invalid?400:503)}
+ }catch(error:any){const large=error?.message==='FILE_TOO_LARGE',invalid=error?.message==='INVALID_PDF';const translationMessages={TRANSLATION_NOT_CONFIGURED:'자동 번역 연결이 준비되지 않았습니다. 한국어 PDF는 내려받을 수 있습니다.',TRANSLATION_UNAVAILABLE:'자동 번역 연결을 확인해 주세요. 완료된 부분은 보관됩니다.',TRANSLATION_INCOMPLETE:'번역 일부를 완료하지 못했습니다. 다시 시도하면 이어서 생성합니다.',TRANSLATION_RETRY_LIMIT:'번역 재시도 한도에 도달했습니다. 관리자에게 문의해 주세요.',PUBLICATION_TOO_LARGE:'원고 분량이 자동 생성 범위를 넘었습니다. 관리자에게 문의해 주세요.'};console.error('book-downloads',large?'size':'unavailable');return json({ok:false,message:translationMessages[error?.message as keyof typeof translationMessages]|| (large?'PDF 파일은 20MB 이하로 등록해 주세요.':invalid?'암호 없는 정상 PDF를 등록해 주세요. 최대 600페이지까지 지원합니다.':'파일을 처리하지 못했습니다. 다시 시도해 주세요.')},large?413:invalid?400:503)}
 }
 Deno.serve(handle);
