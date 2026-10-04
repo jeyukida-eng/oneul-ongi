@@ -1,7 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2.57.4";
 const cors = {"Access-Control-Allow-Origin":"https://jeyukida-eng.github.io","Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type","Access-Control-Allow-Methods":"POST, OPTIONS"};
 const demos = {"사는 게 익숙해질 줄 알았다":4900,"문 앞에 두고 갑니다":5900,"바람이 기억한 이름":3900,"작은 가게의 큰 하루":4500,"서랍 속 여름":4900,"밤의 우체국":5500,"돌담 너머의 편지":4900,"새벽 세 시의 세탁소":5200};
-const summary = row => ({orderId:row.order_id,productName:row.product_name,amount:row.amount,status:row.status,method:row.method,approvedAt:row.approved_at,createdAt:row.created_at,environment:row.environment});
+const summary = row => ({orderId:row.order_id,productName:row.product_name,amount:row.amount,status:row.status,method:row.method,approvedAt:row.approved_at,createdAt:row.created_at,environment:row.environment,bookId:row.book_id,productKey:row.product_key});
 const json = (body,status=200) => new Response(JSON.stringify(body),{status,headers:{...cors,"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"}});
 async function adultAccess(admin,book,user){
  if(book.age_rating!=='19')return true;
@@ -49,7 +49,7 @@ export async function handle(req,mode){
    }else if(input.type==='test'){
     amount=1000;name='펴다 테스트 결제';productKey='demo:checkout';
    }else if(input.bookId){
-    const {data:book,error}=await admin.from('books').select('id,title,price,published,owner_id,age_rating,adult_review_status').eq('id',input.bookId).maybeSingle();
+    const {data:book,error}=await admin.from('books').select('id,title,price,published,completed,owner_id,age_rating,adult_review_status').eq('id',input.bookId).maybeSingle();
     if(error||!book||(!book.published&&book.owner_id!==uid))return json({ok:false,message:'테스트할 작품을 찾지 못했습니다.'},404);
     if(!await adultAccess(admin,book,auth.user))return json({ok:false,code:'ADULT_ACCESS_REQUIRED',message:'성인인증 및 작품 심사 승인이 필요합니다.'},403);
     bookId=book.id;
@@ -58,7 +58,14 @@ export async function handle(req,mode){
      const {data:ep}=await admin.from('episodes').select('episode_no,price,published').eq('book_id',book.id).eq('episode_no',no).maybeSingle();
      if(!ep||no<=5||(!ep.published&&book.owner_id!==uid)||Number(ep.price)<=0)return json({ok:false,message:'첫 5화는 무료입니다. 가격이 설정된 6화 이후만 테스트할 수 있습니다.'},400);
      amount=Number(ep.price);name=`${book.title} · ${no}화`;productKey=`episode:${book.id}:${no}`;
-    }else{amount=Number(book.price);name=book.title;productKey=`book:${book.id}`;}
+    }else{
+     if(input.downloadFileId){
+      if(!book.completed)return json({ok:false,message:'완결 작품만 소장할 수 있습니다.'},400);
+      const {data:file,error}=await admin.from('book_download_files').select('id').eq('book_id',book.id).eq('id',input.downloadFileId).maybeSingle();
+      if(error||!file)return json({ok:false,message:'판매 파일을 찾지 못했습니다. 다시 선택해 주세요.'},400);
+     }
+     amount=Number(book.price);name=book.title;productKey=`book:${book.id}`;
+    }
    }else{
     name=String(input.title||'');amount=demos[name]||0;productKey=`demo:${name}`;
    }
