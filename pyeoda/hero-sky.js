@@ -349,3 +349,34 @@
  }}
  for(const id of ['bookGrid','discoverGrid']){const grid=document.getElementById(id);if(!grid)continue;enhance(grid);new MutationObserver(()=>enhance(grid)).observe(grid,{childList:true});}
 })();
+
+/* Installation entry remains available even before the browser offers a prompt. */
+(()=>{
+  const controls=document.querySelector('.mobile-page-controls');
+  if(!controls||document.getElementById('pyeodaInstallEntry'))return;
+  const style=document.createElement('style');
+  style.textContent='#pyeodaMobileInstall{display:none!important}#pyeodaInstallEntry{margin-left:auto;white-space:nowrap;color:#596148;font-weight:700}#pyeodaInstallEntry[hidden]{display:none!important}';
+  document.head.appendChild(style);
+  const button=document.createElement('button');
+  button.type='button';button.id='pyeodaInstallEntry';button.textContent='앱 설치';
+  button.setAttribute('aria-label','펴다 앱 설치');
+  controls.appendChild(button);
+  let promptEvent=null;
+  const mode=window.matchMedia('(display-mode: standalone)');
+  const sync=()=>{button.hidden=mode.matches||navigator.standalone===true;};
+  sync();mode.addEventListener?.('change',sync);
+  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();promptEvent=event;sync();});
+  window.addEventListener('appinstalled',()=>{promptEvent=null;button.hidden=true;});
+  button.addEventListener('click',async()=>{
+    if(promptEvent){
+      const event=promptEvent;promptEvent=null;
+      try{await event.prompt();const choice=await event.userChoice;if(choice.outcome==='accepted')button.hidden=true;}catch{showInstructions();}
+      return;
+    }
+    showInstructions();
+  });
+  function showInstructions(){
+    const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    alert(ios?'Safari에서 공유 버튼 → “홈 화면에 추가” → “추가”를 눌러 주세요.':'브라우저 메뉴(⋮ 또는 ≡)에서 “앱 설치” 또는 “홈 화면에 추가”를 눌러 주세요. 메뉴에 없으면 Chrome이나 삼성 인터넷에서 펴다를 열어 주세요.');
+  }
+})();
