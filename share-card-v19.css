@@ -39,3 +39,27 @@
  .achievement-panel.share.active{gap:5px!important}
  .achievement-sheet.is-sharing .achievement-body{gap:6px!important;padding-top:8px!important}
 }
+
+/* v21 — warmer Instagram share editor */
+.achievement-panel.share.active .share-preview{
+  background:linear-gradient(160deg,#fff5ec 0%,#f8ece5 58%,#f2eee7 100%)!important;
+  border-color:#ead7ca!important;
+  box-shadow:inset 0 1px 8px rgba(255,255,255,.9)!important;
+}
+.achievement-panel.share.active .achievement-heading-row strong{color:#59443a!important}
+.achievement-panel.share.active .achievement-heading-row span,
+.achievement-panel.share.active .reward-helper{color:#8c786e!important}
+.achievement-panel.share.active .reward-chip{
+  background:#fffaf6!important;border-color:#eadfd8!important;color:#765f55!important
+}
+.achievement-panel.share.active .reward-chip.selected{
+  background:#fff0e7!important;border-color:#dfaa91!important;color:#a65f46!important
+}
+.achievement-panel.share.active .reward-primary{
+  background:linear-gradient(180deg,#d48b6d,#bd6f52)!important;
+  box-shadow:0 10px 24px rgba(189,111,82,.18)!important
+}
+.achievement-panel.share.active .reward-secondary{
+  background:#fffaf6!important;border-color:#e7d8ce!important;color:#755f54!important
+}
+.achievement-panel.share.active .reward-include{color:#6f5f57!important}
