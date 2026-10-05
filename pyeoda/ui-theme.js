@@ -50,5 +50,15 @@
  :is(.web-writer-side button,.web-writer-top-actions button,.manuscript-file-tools button,dialog button):hover:not(:disabled){filter:brightness(.97)}
  :is(.web-writer-side button,.web-writer-top-actions button,.manuscript-file-tools button,dialog button,dialog input,dialog select):focus-visible{outline:2px solid var(--pyeoda-action-olive);outline-offset:3px}
  @media(max-width:480px){.pdf-import-dialog{padding:18px!important}.pdf-import-controls{gap:8px!important}.pdf-import-controls label:has(input[type=radio]){padding:9px 10px;font-size:12px}.pdf-import-controls label:has(input[type=number]){gap:6px}.pdf-import-controls input[type=number]{width:60px!important}.pdf-import-dialog footer button{padding:9px 14px!important}.pdf-import-dialog [data-import]{flex:1}.book-file-dialog .file-actions{grid-template-columns:minmax(0,1fr) auto}}
+
+ /* Match the writer layout's specificity so its old square controls cannot win. */
+ body:not(.mobile-build).mobile-writing #editor .web-writer-top-actions>:is(#saveEpisodeBtn,#publishEpisode,#mobileWritingTools,button){border-radius:999px!important;font-family:var(--pyeoda-ui-font,system-ui,sans-serif)!important;font-weight:600!important}
+ #editor :is(.manuscript-toolbar,.manuscript-viewbar),.mobile-writing-tools :is(.manuscript-toolbar,.manuscript-viewbar){font-family:var(--pyeoda-ui-font,system-ui,sans-serif)!important;color:var(--pyeoda-action-ink)}
+ :is(#editor,.mobile-writing-tools) .manuscript-format-selects select{border:1px solid var(--pyeoda-action-line)!important;border-radius:999px!important;background:var(--pyeoda-action-paper)!important;color:var(--pyeoda-action-ink)!important;font-family:inherit!important}
+ :is(#editor,.mobile-writing-tools) .manuscript-format-buttons button{font-family:inherit!important;border:1px solid var(--pyeoda-action-line)!important;border-radius:999px!important;background:var(--pyeoda-action-paper)!important;color:var(--pyeoda-action-ink)!important;box-sizing:border-box;line-height:1.2;white-space:nowrap}
+ :is(#editor,.mobile-writing-tools) .manuscript-view-buttons button{font-family:inherit!important;border:1px solid var(--pyeoda-action-line)!important;border-radius:999px!important;background:var(--pyeoda-action-paper)!important;color:var(--pyeoda-action-ink)!important;box-sizing:border-box;line-height:1.2;white-space:nowrap}
+ :is(#editor,.mobile-writing-tools) .manuscript-format-buttons button[aria-pressed='true']{background:var(--pyeoda-action-soft)!important;border-color:#aab199!important;color:#4c5640!important}
+ :is(#editor,.mobile-writing-tools) .manuscript-view-buttons button[aria-pressed='true']{background:var(--pyeoda-action-olive)!important;border-color:var(--pyeoda-action-olive)!important;color:#fffdf8!important}
+ :is(#editor,.mobile-writing-tools) :is(.manuscript-format-buttons,.manuscript-view-buttons) button:focus-visible{outline:2px solid var(--pyeoda-action-olive);outline-offset:2px}
  `;document.head.append(style);
 })();
