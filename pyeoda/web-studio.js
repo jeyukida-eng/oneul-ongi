@@ -62,8 +62,8 @@
  `;document.head.append(style);
  const left=document.createElement('aside');left.className='web-writer-side';left.setAttribute('aria-label','집필 관리 메뉴');
  const heading=document.createElement('h2');heading.textContent='작가 스튜디오';left.append(heading);
- for(const [label,target]of[['✎  집필하기','editor'],['▤  내 작품','books'],['▦  스튜디오','studio'],['▧  출판 센터','publishing']]){const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>{if(saveBeforeMobileNavigation()!==false)go(target)};left.append(b)}
- const info=document.createElement('button');info.type='button';info.textContent='⚙  책 정보';info.onclick=()=>{if(saveBeforeMobileNavigation()!==false)openCurrentBookRegistration()};left.append(info);
+ for(const [label,target]of[['집필하기','editor'],['내 작품','books'],['스튜디오','studio'],['출판 센터','publishing']]){const b=document.createElement('button');b.type='button';b.textContent=label;if(target==='editor')b.setAttribute('aria-current','page');b.onclick=()=>{if(saveBeforeMobileNavigation()!==false)go(target)};left.append(b)}
+ const info=document.createElement('button');info.type='button';info.textContent='책 정보';info.onclick=()=>{if(saveBeforeMobileNavigation()!==false)openCurrentBookRegistration()};left.append(info);
  const note=document.createElement('p');note.className='web-writer-note';note.textContent='한 화면에서 집필하고, 작품과 회차를 바로 찾으세요.';left.append(note);section.prepend(left);
  const right=document.createElement('aside');right.className='web-writer-library';right.setAttribute('aria-label','내 작품과 회차 목록');
  const rh=document.createElement('div');rh.className='web-writer-library-heading';rh.innerHTML='<h2>내 작품</h2>';
