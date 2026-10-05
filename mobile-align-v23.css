@@ -1,0 +1,220 @@
+/* v23 — mobile full-screen alignment pass
+   Keeps existing visual design; normalizes width, gutters, centering and safe areas on phones. */
+@media (max-width:519px){
+  :root{--ongi-mobile-gutter:12px}
+  html,body{
+    width:100%;
+    max-width:100%;
+    margin:0;
+    overflow:hidden;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+  }
+
+  /* Free home */
+  .app-shell{
+    width:100%!important;
+    max-width:none!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
+    margin:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+  .home-scroll{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+  }
+  .app-home-v9.free-home-v18{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+    padding-left:max(var(--ongi-mobile-gutter),env(safe-area-inset-left,0px))!important;
+    padding-right:max(var(--ongi-mobile-gutter),env(safe-area-inset-right,0px))!important;
+  }
+  .free-home-v18>*,
+  .free-header,
+  .free-welcome,
+  .free-action-card,
+  .free-note-card,
+  .free-story-row,
+  .free-progress,
+  .free-dock{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+  .free-header{align-items:center!important}
+  .free-brand{flex:1 1 auto!important;min-width:0!important}
+  .free-plus-cta{
+    flex:0 1 190px!important;
+    min-width:154px!important;
+    max-width:190px!important;
+  }
+  .free-section-head,.free-card-top,.free-action-footer,.free-note-control{
+    width:100%!important;
+    min-width:0!important;
+  }
+  .free-mood-row,.free-dock.dock-nav{width:100%!important}
+  .free-mood,.free-dock-item{min-width:0!important}
+  .free-note-input{min-width:0!important}
+  .free-progress-track{min-width:64px}
+
+  /* Standard sheets */
+  .sheet-root{
+    width:100vw!important;
+    max-width:100vw!important;
+    left:0!important;
+    right:0!important;
+    margin:0!important;
+  }
+  .sheet{
+    width:100vw!important;
+    max-width:100vw!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+    margin:0!important;
+    border-radius:0!important;
+  }
+  .sheet-head{
+    width:100%!important;
+    padding-left:max(14px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(14px,env(safe-area-inset-right,0px))!important;
+  }
+  .sheet-body{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    padding-left:max(14px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(14px,env(safe-area-inset-right,0px))!important;
+  }
+  .sheet-body>*{max-width:100%;min-width:0}
+  .panel,.panel-tight,.story-row,.record-row,.manage-actions,.stats,.week-grid{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+
+  /* PLUS */
+  #premium-root,#personal-root{
+    width:100vw!important;
+    max-width:100vw!important;
+    left:0!important;
+    right:0!important;
+  }
+  .p-app,.a-shell{
+    width:100vw!important;
+    max-width:100vw!important;
+    margin:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+  .p-header,.a-header,
+  .p-main,.a-main,
+  .p-bottom,.a-bottom{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+  .p-main{
+    padding-left:max(12px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(12px,env(safe-area-inset-right,0px))!important;
+  }
+  .a-main{
+    padding-left:max(10px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(10px,env(safe-area-inset-right,0px))!important;
+  }
+  .p-header,.a-header{
+    padding-left:max(12px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(12px,env(safe-area-inset-right,0px))!important;
+  }
+  .p-bottom,.a-bottom{
+    padding-left:max(10px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(10px,env(safe-area-inset-right,0px))!important;
+  }
+  .p-stack,.a-screen,
+  .p-membership,.p-hub-summary,.p-feature-grid,.p-page-title,.p-white,
+  .p-mission-list,.p-report-metrics,.p-chart-card,.p-report-insight,
+  .p-challenge-feature,.p-progress-card,.p-challenge-today,.p-book-stage,.p-book-options,
+  .a-membership,.a-stat-grid,.a-hub-grid,.a-page-lead,.a-plan-strip,.a-why,
+  .a-mission-list,.a-mission-task,.a-chart,.a-report-tip,.a-challenge-visual,
+  .a-progress-panel,.a-challenge-task,.a-book-stage,.a-book-options,
+  .a-focus-card,.a-bonus-row,.a-mini-roadmap,.a-guide-paper,.a-review-paper{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+  .p-feature-grid,.p-hub-summary,.p-report-metrics,
+  .a-stat-grid,.a-report-stats,.a-hub-grid,.a-value-grid,.a-focus-steps{
+    min-width:0!important;
+  }
+  .p-feature,.p-stat,.a-hub-tile,.a-stat-grid>div,.a-report-stats>div{
+    min-width:0!important;
+  }
+
+  /* Achievement + share card */
+  .achievement-root{
+    width:100vw!important;
+    max-width:100vw!important;
+    left:0!important;
+    right:0!important;
+  }
+  .achievement-sheet{
+    width:100vw!important;
+    max-width:100vw!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+    margin:0!important;
+    border-radius:0!important;
+  }
+  .achievement-head{
+    width:100%!important;
+    padding-left:max(14px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(14px,env(safe-area-inset-right,0px))!important;
+  }
+  .achievement-body{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    padding-left:max(12px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(12px,env(safe-area-inset-right,0px))!important;
+  }
+  .achievement-tabs,.achievement-panel,.achievement-panel.active,
+  .achievement-stats,.achievement-flow,.today-chip-grid,.reward-week,
+  .achievement-badges,.reward-formats,.reward-phrases,.reward-share-actions,
+  .share-preview{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+  .achievement-panel.share.active .share-preview{
+    align-self:stretch!important;
+    justify-content:center!important;
+  }
+  .achievement-panel.share.active .share-preview-image{
+    margin:0 auto!important;
+  }
+
+  /* Prevent accidental horizontal drift anywhere in app overlays. */
+  .app-shell *,#premium-root *,#personal-root *,#achievement-host *{
+    box-sizing:border-box;
+  }
+  .toast,.p-toast,.a-toast,.achievement-feedback{
+    max-width:calc(100vw - 24px)!important;
+  }
+}
+
+@media (max-width:360px){
+  :root{--ongi-mobile-gutter:9px}
+  .free-plus-cta{min-width:148px!important;max-width:166px!important}
+  .sheet-body,.achievement-body{padding-left:10px!important;padding-right:10px!important}
+}
