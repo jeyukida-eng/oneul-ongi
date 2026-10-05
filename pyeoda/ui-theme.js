@@ -60,5 +60,12 @@
  :is(#editor,.mobile-writing-tools) .manuscript-format-buttons button[aria-pressed='true']{background:var(--pyeoda-action-soft)!important;border-color:#aab199!important;color:#4c5640!important}
  :is(#editor,.mobile-writing-tools) .manuscript-view-buttons button[aria-pressed='true']{background:var(--pyeoda-action-olive)!important;border-color:var(--pyeoda-action-olive)!important;color:#fffdf8!important}
  :is(#editor,.mobile-writing-tools) :is(.manuscript-format-buttons,.manuscript-view-buttons) button:focus-visible{outline:2px solid var(--pyeoda-action-olive);outline-offset:2px}
+
+ /* The mobile navigation uses the same four equal pill controls. */
+ .mobilebar{gap:6px!important;align-items:center!important;background:#fbf8f1!important;border-top:1px solid #e0dbd0!important;box-sizing:border-box}
+ .mobilebar button{width:100%!important;min-width:0!important;height:44px!important;min-height:44px!important;padding:0 6px!important;border:1px solid var(--pyeoda-action-line)!important;border-radius:999px!important;background:var(--pyeoda-action-paper)!important;color:var(--pyeoda-action-ink)!important;font-family:var(--pyeoda-ui-font,system-ui,sans-serif)!important;font-size:13px!important;font-weight:600!important;line-height:1.2!important;letter-spacing:-.02em!important;white-space:nowrap;box-sizing:border-box;display:flex;align-items:center;justify-content:center;box-shadow:none!important}
+ .mobilebar button.plus{background:var(--pyeoda-action-olive)!important;border-color:var(--pyeoda-action-olive)!important;color:#fffdf8!important;font-weight:700!important}
+ .mobilebar button:focus-visible{outline:2px solid var(--pyeoda-action-olive);outline-offset:2px}
+ @media(max-width:760px){.mobilebar{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;padding:8px!important}}
  `;document.head.append(style);
 })();
