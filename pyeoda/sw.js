@@ -1,5 +1,5 @@
-const CACHE='pyeoda-r2-compatible-v14-20261003-theme3-book2';
-const CORE=['../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky7','../pyeoda/adult-section.js?v=adult2','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=book2','./icon-192.png?v=book2','./icon-512.png?v=book2'];
+const CACHE='pyeoda-r2-compatible-v14-20261003-theme3-book2-wordmark3';
+const CORE=['../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky7','../pyeoda/adult-section.js?v=adult2','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=wordmark3','./icon-192.png?v=wordmark3','./icon-512.png?v=wordmark3'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
@@ -14,5 +14,6 @@ self.addEventListener('fetch',event=>{
     return response;
   }).catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html'))));
 });
+
 
 
