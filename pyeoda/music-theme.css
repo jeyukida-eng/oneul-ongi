@@ -200,9 +200,12 @@ body.pyeoda-music .music-profile .music-avatar-button{width:60px!important;heigh
 body.pyeoda-music .music-profile .music-avatar-button img{width:100%!important;height:100%!important;object-fit:cover!important}
 body.pyeoda-music .music-photo-preview{object-fit:cover!important}
 
-/* Studio navigation above the workspace, in parallel columns. */
-body.pyeoda-music #studio .studio{display:flex!important;flex-direction:column!important;gap:14px!important}
-body.pyeoda-music #studio .studio>.side{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important;width:100%!important;padding:8px!important;margin:0!important;flex:none!important}
-body.pyeoda-music #studio .studio>.side button{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 12px!important;font-size:14px!important;line-height:1.3!important;text-align:center!important;white-space:nowrap}
-body.pyeoda-music #studio .studio>.side+div{width:100%!important;min-width:0!important}
-@media(max-width:600px){body.pyeoda-music #studio .studio>.side{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}body.pyeoda-music #studio .studio>.side button{padding:10px 6px!important}}
+
+/* One persistent navigation for all author screens. */
+body.pyeoda-music #studio .studio{display:block!important}
+body.pyeoda-music main>.studio-section-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important;width:calc(100% - 48px)!important;padding:8px!important;margin:20px 24px 0!important}
+body.pyeoda-music main>.studio-section-nav[hidden]{display:none!important}
+body.pyeoda-music main>.studio-section-nav button{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 12px!important;font-size:14px!important;line-height:1.3!important;text-align:center!important;white-space:nowrap}
+body.pyeoda-music main>.studio-section-nav button.active{background:#735cff!important;border-color:#735cff!important;color:#fff!important}
+@media(max-width:760px){body.pyeoda-music main>.studio-section-nav{width:calc(100% - 32px)!important;margin:18px 16px 0!important}}
+@media(max-width:600px){body.pyeoda-music main>.studio-section-nav{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}body.pyeoda-music main>.studio-section-nav button{padding:10px 6px!important}}
