@@ -199,3 +199,10 @@ body.pyeoda-music .top .books-header-avatar img{border-radius:50%!important;aspe
 body.pyeoda-music .music-profile .music-avatar-button{width:60px!important;height:60px!important;min-width:60px!important;padding:0!important;background:transparent!important}
 body.pyeoda-music .music-profile .music-avatar-button img{width:100%!important;height:100%!important;object-fit:cover!important}
 body.pyeoda-music .music-photo-preview{object-fit:cover!important}
+
+/* Studio navigation above the workspace, in parallel columns. */
+body.pyeoda-music #studio .studio{display:flex!important;flex-direction:column!important;gap:14px!important}
+body.pyeoda-music #studio .studio>.side{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important;width:100%!important;padding:8px!important;margin:0!important;flex:none!important}
+body.pyeoda-music #studio .studio>.side button{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 12px!important;font-size:14px!important;line-height:1.3!important;text-align:center!important;white-space:nowrap}
+body.pyeoda-music #studio .studio>.side+div{width:100%!important;min-width:0!important}
+@media(max-width:600px){body.pyeoda-music #studio .studio>.side{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}body.pyeoda-music #studio .studio>.side button{padding:10px 6px!important}}
