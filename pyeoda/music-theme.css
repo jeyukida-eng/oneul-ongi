@@ -157,3 +157,31 @@ body.pyeoda-music .music-photo-select{display:block;padding:12px;border:1px soli
 body.pyeoda-music .music-photo-select input{display:block;width:100%;font-size:12px;margin-top:8px}
 body.pyeoda-music .music-photo-dialog [data-photo-status]{min-height:2em;font-size:13px}
 body.pyeoda-music .music-photo-dialog .music-choice-actions{flex-wrap:wrap}
+
+/* PYODA MUSIC masthead proportions, adapted for BOOKS. */
+body.pyeoda-music .top{padding:28px 36px 12px!important;gap:12px!important;border-bottom:0!important}
+body.pyeoda-music .top .logo{flex:1 1 auto!important;font:800 clamp(28px,4vw,48px)/1.05 Arial,sans-serif!important;letter-spacing:-1.3px!important;gap:10px!important}
+body.pyeoda-music .top .logo>span{white-space:nowrap}
+body.pyeoda-music .top .logo small{font:400 16px/1.3 Arial,sans-serif!important;letter-spacing:2.4px!important;margin:0!important}
+body.pyeoda-music .top #authorAuthBtn{display:none!important}
+body.pyeoda-music .top .books-header-actions{order:1;display:flex;align-items:center;gap:16px;flex:none}
+body.pyeoda-music .top .books-header-pill{height:68px;min-height:44px;padding:0 20px!important;border:2px solid #414148!important;border-radius:999px!important;background:#25252d!important;font-size:22px!important;font-weight:700;white-space:nowrap}
+body.pyeoda-music .top .books-header-avatar{width:76px;height:76px;min-width:76px;flex:none;padding:0!important;border:0!important;border-radius:50%!important;background:#25252d!important;overflow:hidden}
+body.pyeoda-music .top .books-header-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+body.pyeoda-music .top .mobile-page-controls{margin-top:8px}
+@media(max-width:760px){
+ body.pyeoda-music .top{padding:18px 16px 8px!important;gap:8px!important;min-height:0!important}
+ body.pyeoda-music .top .logo{font:800 clamp(20px,4.8vw,32px)/1.1 Arial,sans-serif!important;letter-spacing:-.8px!important;gap:6px!important}
+ body.pyeoda-music .top .logo small{font-size:10px!important;letter-spacing:1.4px!important}
+ body.pyeoda-music .top .books-header-actions{gap:7px}
+ body.pyeoda-music .top .books-header-avatar{width:40px;height:40px;min-width:40px}
+ body.pyeoda-music .top .books-header-pill{height:40px;min-height:40px;padding:0 11px!important;font-size:14px!important;border-width:1px!important}
+}
+@media(max-width:380px){
+ body.pyeoda-music .top .books-header-actions{gap:5px}
+ body.pyeoda-music .top .books-header-pill{padding:0 8px!important;font-size:12px!important}
+ body.pyeoda-music .top .books-header-avatar{width:34px;height:34px;min-width:34px}
+ body.pyeoda-music .top .logo small{font-size:8px!important;letter-spacing:1px!important}
+}
+
+@media(max-width:380px){body.pyeoda-music .top .logo{font-size:18px!important}}

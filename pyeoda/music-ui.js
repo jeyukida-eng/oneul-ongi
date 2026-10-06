@@ -1,7 +1,7 @@
 /* Reuses the existing app feature handlers and server client. */
 (()=>{
  'use strict';document.body.classList.add('pyeoda-music');document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#0d0d12');const css=document.querySelector('link[data-pyeoda-music]');if(css)document.head.append(css);
- const logo=document.querySelector('.top .logo');if(logo){logo.innerHTML='PYODA <small>BOOKS</small>';logo.setAttribute('aria-label','PYODA BOOKS 홈');}
+ const logo=document.querySelector('.top .logo');if(logo){logo.innerHTML='<span>PYODA BOOKS</span><small>BOOKS FOR CREATORS</small>';logo.setAttribute('aria-label','PYODA BOOKS 홈');}
  const install=document.getElementById('pyeodaInstallEntry');if(install){install.textContent='↓ 앱 설치';install.setAttribute('aria-label','PC·모바일에 펴다 앱 설치');}
  const hero=document.querySelector('#home .hero');if(hero){hero.querySelector('.eyebrow').textContent='YOUR NEXT STORY';hero.querySelector('h1').innerHTML='마음에 남을 이야기,<br>여기서 펼쳐보세요.';const copy=hero.querySelector('.hero-copy')||hero.querySelector('p');copy.textContent='새로운 작품을 만나고, 나만의 이야기를 써보세요.';const d=hero.querySelector('.mobile-home-details');if(d){d.querySelector('summary').textContent='글쓰기·다국어 출판 안내';d.querySelector('p').textContent='원고를 쓰고 연재하며 한국어·영어·일본어·중국어로 출판할 수 있습니다. 판매 수수료는 30%이며 작가 배분은 세금 등 추가 공제 전 70%입니다.';}}
  const nav=document.querySelector('.music-bottom-nav');let refreshSequence=0;
@@ -48,4 +48,25 @@
  function bindAuth(){const client=PYEODA_SERVER.client;if(!client||client===authClient)return;authClient=client;client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||owner&&session?.user?.id!==owner){++loadSequence;owner=null;resetImage();dialog.close();}setTimeout(()=>load(true),30);});load(true);}
  new MutationObserver(()=>{bindAuth();if(document.getElementById('my').classList.contains('active'))load(true);}).observe(document.getElementById('my'),{attributes:true,attributeFilter:['class']});
  new MutationObserver(()=>{bindAuth();load();}).observe(document.getElementById('authorAuthBtn'),{childList:true,subtree:true,characterData:true});bindAuth();window.addEventListener('online',()=>load(true));
+})();
+
+/* Home masthead matches PYODA MUSIC and shares the existing account photo. */
+(()=>{
+ 'use strict';
+ const top=document.querySelector('.top'),auth=document.getElementById('authorAuthBtn');
+ if(!top||!auth)return;
+ const actions=document.createElement('div');actions.className='books-header-actions';
+ const avatar=document.createElement('button');avatar.type='button';avatar.className='books-header-avatar';avatar.setAttribute('aria-label','내 프로필 보기');
+ const image=document.createElement('img');image.alt='내 프로필';image.src='./icon-192.png?v=books1';avatar.append(image);
+ const pass=document.createElement('button');pass.type='button';pass.className='books-header-pill';pass.textContent='이용권';pass.onclick=()=>go('plans');
+ const session=document.createElement('button');session.type='button';session.className='books-header-pill';session.textContent='로그인';
+ actions.append(avatar,pass,session);top.append(actions);
+ avatar.onclick=()=>{if(readerIsSignedIn())go('my');else auth.click();};
+ session.onclick=async()=>{if(!readerIsSignedIn()){auth.click();return;}session.disabled=true;try{await logoutAuthor();}finally{session.disabled=false;syncHeader();}};
+ const source=document.querySelector('#my .music-avatar-button img')||document.querySelector('#my .music-profile img');
+ function syncHeader(){const signed=readerIsSignedIn();session.textContent=signed?'로그아웃':'로그인';avatar.setAttribute('aria-label',signed?'내 프로필 보기':'로그인');image.src=source?.getAttribute('src')||'./icon-192.png?v=books1';}
+ if(source)new MutationObserver(syncHeader).observe(source,{attributes:true,attributeFilter:['src','alt']});
+ new MutationObserver(syncHeader).observe(auth,{childList:true,subtree:true,characterData:true});
+ let bound=null;function bind(){const client=PYEODA_SERVER.client;if(client&&client!==bound){bound=client;client.auth.onAuthStateChange(()=>setTimeout(syncHeader,0));}syncHeader();}
+ new MutationObserver(bind).observe(auth,{childList:true,subtree:true,characterData:true});bind();
 })();
