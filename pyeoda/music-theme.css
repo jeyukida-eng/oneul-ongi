@@ -186,9 +186,7 @@ body.pyeoda-music .top .mobile-page-controls{margin-top:8px}
 
 @media(max-width:380px){body.pyeoda-music .top .logo{font-size:18px!important}}
 
-/* Equal account and photo buttons in the MY profile card. */
-body.pyeoda-music #my .music-profile{display:grid!important;grid-template-columns:60px minmax(0,1fr);gap:14px;align-items:center}
-body.pyeoda-music #my .music-profile>.music-avatar-button{grid-column:1;grid-row:1}
-body.pyeoda-music #my .music-profile>div:not(.music-profile-actions){grid-column:2;grid-row:1}
-body.pyeoda-music #my .music-profile>.music-profile-actions{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-body.pyeoda-music #my .music-profile-actions>button{display:inline-flex!important;align-items:center;justify-content:center;width:100%!important;height:44px!important;min-height:44px!important;margin:0!important;padding:0 6px!important;font-size:14px!important;font-weight:500!important;line-height:1.2!important;letter-spacing:-.02em!important;border:1px solid #45404f!important;border-radius:12px!important;white-space:nowrap;box-sizing:border-box}
+
+/* Compact MY profile: avatar + is the only photo editor. */
+body.pyeoda-music #my .music-profile [data-music-login]{display:inline-flex!important;align-items:center;justify-content:center;min-height:40px!important;margin:8px 0 0!important;padding:0 14px!important;font-size:14px!important;font-weight:500!important;line-height:1.2!important;border:1px solid #45404f!important;border-radius:12px!important}
+body.pyeoda-music #my #musicProfileStatus:empty{display:none!important}
