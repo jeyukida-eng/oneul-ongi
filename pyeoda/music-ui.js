@@ -1,6 +1,6 @@
 /* Reuses the existing app feature handlers and server client. */
 (()=>{
- 'use strict';document.body.classList.add('pyeoda-music');const css=document.querySelector('link[data-pyeoda-music]');if(css)document.head.append(css);
+ 'use strict';document.body.classList.add('pyeoda-music');document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#0d0d12');const css=document.querySelector('link[data-pyeoda-music]');if(css)document.head.append(css);
  const logo=document.querySelector('.top .logo');if(logo){logo.innerHTML='PYODA <small>BOOKS</small>';logo.setAttribute('aria-label','PYODA BOOKS 홈');}
  const install=document.getElementById('pyeodaInstallEntry');if(install){install.textContent='↓ 앱 설치';install.setAttribute('aria-label','PC·모바일에 펴다 앱 설치');}
  const hero=document.querySelector('#home .hero');if(hero){hero.querySelector('.eyebrow').textContent='YOUR NEXT STORY';hero.querySelector('h1').innerHTML='마음에 남을 이야기,<br>여기서 펼쳐보세요.';const copy=hero.querySelector('.hero-copy')||hero.querySelector('p');copy.textContent='새로운 작품을 만나고, 나만의 이야기를 써보세요.';const d=hero.querySelector('.mobile-home-details');if(d){d.querySelector('summary').textContent='글쓰기·다국어 출판 안내';d.querySelector('p').textContent='원고를 쓰고 연재하며 한국어·영어·일본어·중국어로 출판할 수 있습니다. 판매 수수료는 30%이며 작가 배분은 세금 등 추가 공제 전 70%입니다.';}}
