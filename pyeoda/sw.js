@@ -1,5 +1,5 @@
-const CACHE='pyeoda-r2-compatible-music24';
-const CORE=['../pyeoda/creator-ui.js?v=music24','../pyeoda/music-theme.css?v=music24','../pyeoda/music-ui.js?v=music24','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
+const CACHE='pyeoda-r2-compatible-weight25';
+const CORE=['../pyeoda/creator-ui.js?v=weight25','../pyeoda/music-theme.css?v=weight25','../pyeoda/music-ui.js?v=weight25','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
