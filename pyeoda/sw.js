@@ -1,5 +1,5 @@
-const CACHE='pyeoda-r2-compatible-fit31';
-const CORE=['../pyeoda/creator-ui.js?v=fit31','../pyeoda/music-theme.css?v=fit31','../pyeoda/music-ui.js?v=fit31','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
+const CACHE='pyeoda-r2-compatible-publish32';
+const CORE=['../pyeoda/creator-ui.js?v=publish32','../pyeoda/music-theme.css?v=publish32','../pyeoda/music-ui.js?v=publish32','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
