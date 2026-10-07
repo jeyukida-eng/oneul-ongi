@@ -434,10 +434,10 @@ body.pyeoda-music #creator.active{height:100%;min-height:0;overflow:hidden}
 body.pyeoda-music #creator>.books-creator-home{height:100%;min-height:0;display:flex;flex-direction:column;box-sizing:border-box;padding-block:8px!important;gap:4px}
 body.pyeoda-music #creator .books-creator-home>:is(.books-creator-back,.books-creator-hero,.books-creator-stats,#creatorStatus){flex:none}
 body.pyeoda-music #creator #creatorStatus{margin:0;font-size:11px;line-height:14px}
-body.pyeoda-music #creator .books-creator-columns{display:flex!important;flex-direction:column;gap:8px!important;min-height:0;flex:0 1 auto}
-body.pyeoda-music #creator .books-creator-columns>div{display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
+body.pyeoda-music #creator .books-creator-columns{display:flex!important;flex-direction:column;gap:8px!important;min-height:0;flex:1 1 0}
+body.pyeoda-music #creator .books-creator-columns>div{display:flex;flex-direction:column;min-height:0;flex:1 1 0}
 body.pyeoda-music #creator .books-creator-columns h3{flex:none;margin:4px 0!important}
-body.pyeoda-music #creator #creatorWorks{height:264px;max-height:264px!important;min-height:0;flex:0 1 auto;overflow-y:auto!important;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-y}
+body.pyeoda-music #creator #creatorWorks{height:auto;max-height:none!important;min-height:0;flex:1 1 0;overflow-y:auto!important;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-y}
 body.pyeoda-music #creator #creatorWorks::-webkit-scrollbar{display:none;width:0;height:0}
 body.pyeoda-music #creator .books-creator-work{height:88px!important;min-height:88px!important;box-sizing:border-box;padding:10px 8px!important;gap:12px!important;margin:0!important}
 body.pyeoda-music #creator .books-creator-work img{width:46px!important;height:64px!important;flex:none}
