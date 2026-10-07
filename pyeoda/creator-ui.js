@@ -60,6 +60,7 @@
   document.getElementById('creatorFollowerCount').textContent=follow?Number(follow.followers||0).toLocaleString('ko-KR'):'—';
   document.getElementById('creatorWorkNote').textContent=profile?.work_note||'아직 작업노트가 없습니다.';
   document.getElementById('creatorNoteDate').textContent=profile?.updated_at?new Date(profile.updated_at).toLocaleDateString('ko-KR'):'';
+  document.getElementById('creatorSupport').hidden=owner;
   const manage=document.getElementById('creatorManage');manage.hidden=!owner;manage.disabled=loading;
   const button=document.getElementById('creatorFollow');button.hidden=owner;button.disabled=loading||followBusy;
   button.textContent=!loading&&!follow?'팔로우 다시 연결':follow?.following?'팔로잉':'＋ 팔로우';button.setAttribute('aria-pressed',String(!!follow?.following));
@@ -108,6 +109,13 @@
  });
  document.getElementById('creatorSearch').addEventListener('input',renderDirectory);
  document.getElementById('creatorBack').onclick=()=>go('creators');
+ const supportDialog=document.getElementById('creatorSupportDialog');
+ document.getElementById('creatorSupport').onclick=()=>{
+  document.getElementById('creatorSupportMessage').textContent=(document.getElementById('creatorName').textContent||'크리에이터')+' 작가에게 응원을 전하는 후원 공간입니다.';
+  if(!supportDialog.open)supportDialog.showModal();
+ };
+ document.getElementById('creatorSupportClose').onclick=()=>supportDialog.close();
+ supportDialog.addEventListener('click',event=>{if(event.target===supportDialog){const box=supportDialog.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)supportDialog.close();}});
  document.getElementById('creatorFollow').onclick=async()=>{
   if(!selected||followBusy)return;
   if(!readerIsSignedIn()){rememberCreatorAction(selected.id);openAuthorAuthModal('login','creator');toast('로그인하면 이 작가의 홈으로 돌아옵니다.');return;}
