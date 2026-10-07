@@ -83,6 +83,14 @@
     const page=document.querySelector('#main-content .free-home-v18');
     if(!page)return;
     const header=page.querySelector('.free-header');
+    if(header && !header.querySelector('.free-back-btn')) {
+      const back=document.createElement('button');
+      back.type='button';back.className='free-back-btn';
+      back.dataset.ongiNav='back';back.setAttribute('aria-label','이전 화면');
+      back.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
+      const brand=header.querySelector('.free-brand');
+      if(brand)header.insertBefore(back,brand);else header.prepend(back);
+    }
     if(header && !header.querySelector('.free-install-btn')) {
       const button=document.createElement('button');
       button.type='button';button.className='free-install-btn';
@@ -342,6 +350,20 @@
     if(action==='copy-week'){copyWeek();return}
   }
   document.addEventListener('click', event => {
+    const nav=event.target.closest('[data-ongi-nav="back"]');
+    if(nav){
+      const sheet=document.getElementById('sheet-root');
+      const sheetBack=sheet?.querySelector('.sheet-back');
+      const sheetClose=sheet?.querySelector('.sheet-close');
+      if(sheet?.innerHTML?.trim() && (sheetBack||sheetClose)){(sheetBack||sheetClose).click();return}
+      const personal=document.querySelector('#personal-root:not([hidden]) .a-back');
+      if(personal){personal.click();return}
+      const premium=document.querySelector('#premium-root:not([hidden]) .p-back');
+      if(premium){premium.click();return}
+      if(history.length>1){history.back();return}
+      location.href='./';
+      return;
+    }
     const target=event.target.closest('[data-ongi]');
     if(target){handleAction(target);return}
     if(event.target.closest('[data-action="clear-data"]')){
