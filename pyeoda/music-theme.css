@@ -542,3 +542,29 @@ body.pyeoda-music #editor#editor.active{position:relative!important;left:auto!im
 body.pyeoda-music :is(#publish,#paper,#global,#revenue).active>.section{padding:8px 12px!important}
 body.pyeoda-music :is(#publish,#paper,#global,#revenue) .panel{padding:12px!important}
 body.pyeoda-music dialog{max-height:calc(var(--books-viewport-height,100dvh) - 24px)!important;overflow:auto!important}
+/* Two spaces, one compact viewport. */
+body.pyeoda-music .workspace-switch{display:flex;flex:none;gap:4px;margin:0 12px 6px;padding:3px;background:#18181f;border:1px solid #2c2c38;border-radius:12px}
+body.pyeoda-music .workspace-switch button{flex:1;min-height:32px!important;padding:5px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:#a1a1b0!important;font-size:13px!important}
+body.pyeoda-music .workspace-switch button[aria-pressed=true]{background:#302844!important;color:#f4f0ff!important}
+body.pyeoda-music.creator-workspace .app{background:#101b23!important}
+body.pyeoda-music.creator-workspace .top,body.pyeoda-music.creator-workspace .music-bottom-nav{background:#101b23!important;border-color:#293b45!important}
+body.pyeoda-music.creator-workspace .workspace-switch{background:#152630;border-color:#293e48}
+body.pyeoda-music.creator-workspace .workspace-switch button[aria-pressed=true]{background:#284a4b!important;color:#c2f1df!important}
+body.pyeoda-music.creator-workspace .music-bottom-nav button.active{color:#b6e5d4!important}
+body.pyeoda-music.creator-workspace .music-bottom-nav .plus svg{background:#3c796c!important}
+body.pyeoda-music:not(.creator-workspace) .workspace-only,body.pyeoda-music.creator-workspace .reader-only{display:none!important}
+body.pyeoda-music #workspace .workspace-shell{display:flex;flex-direction:column;gap:10px;overflow:auto}
+body.pyeoda-music .workspace-heading{padding:6px 2px}
+body.pyeoda-music .workspace-heading small{font-size:11px;letter-spacing:1.5px;color:#a8d7c6}
+body.pyeoda-music .workspace-heading h2{font-size:25px!important;margin:6px 0!important;color:#f2faf6!important}
+body.pyeoda-music .workspace-heading p{margin:0;color:#b1c1c8;font-size:14px}
+body.pyeoda-music #workspace button{white-space:normal!important;text-align:left;min-height:64px!important;border:1px solid #304852!important;background:#192c36!important;border-radius:16px!important;padding:14px!important;color:#f0f7f6!important}
+body.pyeoda-music #workspace button b{display:block;font-size:16px!important;line-height:1.4}
+body.pyeoda-music #workspace button small{display:block;font-size:12px;line-height:1.5;color:#acc0c7;margin-top:4px}
+body.pyeoda-music #workspace .workspace-primary{display:flex;align-items:center;gap:16px;background:#284b47!important;border-color:#426d63!important;flex:none}
+body.pyeoda-music .workspace-primary>span{font-size:28px;color:#c9f7dd}
+body.pyeoda-music .workspace-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+body.pyeoda-music #workspace .workspace-grid button{min-height:96px!important}
+body.pyeoda-music #workspace [aria-label="간단 메모"]{margin:0!important;flex:1;min-height:104px;max-height:160px}
+body.pyeoda-music #workspace [aria-label="간단 메모"] textarea{max-height:78px!important}
+@media(max-height:720px){body.pyeoda-music #workspace .workspace-shell{gap:7px}body.pyeoda-music #workspace .workspace-grid button{min-height:76px!important;padding:10px!important}body.pyeoda-music .workspace-heading h2{font-size:22px!important}body.pyeoda-music #workspace [aria-label="간단 메모"]{flex:none;min-height:100px}}
