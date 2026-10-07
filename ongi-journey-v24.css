@@ -1,5 +1,8 @@
 /* 오늘의 온기 100일 여정 v24 — cozy mobile full-screen journey and install control */
-.free-home-v18 .free-header{gap:7px!important}
+.free-home-v18 .free-header{gap:6px!important}
+.free-back-btn{flex:none;width:34px;min-width:34px;height:34px;display:grid!important;place-items:center;border:0;border-radius:12px;background:#f7f2ee;color:#8c7569;padding:0!important;box-shadow:none}
+.free-back-btn svg{width:19px;height:19px}
+.free-back-btn:active{background:#efe5df}
 .free-home-v18 .free-brand{flex:1 1 auto!important;min-width:0}
 .free-home-v18 .free-plus-cta{flex:0 1 168px!important;min-width:136px!important;max-width:168px!important;padding:7px 8px!important;gap:5px!important}
 .free-home-v18 .free-plus-cta>span:last-child{font-size:17px!important}
@@ -8,6 +11,8 @@
 .free-progress .ongi-open-journey{flex:none;margin-left:auto;border:1px solid #e9d6c9;border-radius:99px;background:#fff2e8;color:#a46449;padding:5px 9px;font-size:10px!important;font-weight:850;line-height:1.25}
 .free-progress:has(.ongi-open-journey) .free-progress-track{margin-left:0!important;width:15%!important;min-width:24px!important;max-width:48px!important}
 @media(max-width:370px){
+ .free-back-btn{width:30px;min-width:30px;height:30px;border-radius:10px}
+ .free-back-btn svg{width:17px;height:17px}
  .free-home-v18 .free-brand strong{font-size:16px!important;letter-spacing:-.05em}
  .free-home-v18 .free-brand span{font-size:9px!important}
  .free-home-v18 .free-plus-cta{min-width:116px!important;max-width:139px!important;gap:3px!important;padding:5px 6px!important}
