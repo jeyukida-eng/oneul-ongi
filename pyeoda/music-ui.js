@@ -62,10 +62,10 @@
  const image=document.createElement('img');image.alt='내 프로필';image.src='./icon-192.png?v=books1';avatar.append(image);
  const session=document.createElement('button');session.type='button';session.className='books-header-pill';session.textContent='로그인';
  actions.append(avatar,session);top.append(actions);
- avatar.onclick=()=>{if(readerIsSignedIn())go('my');else auth.click();};
+ avatar.onclick=()=>go('my');
  session.onclick=async()=>{if(!readerIsSignedIn()){auth.click();return;}session.disabled=true;try{await logoutAuthor();}finally{session.disabled=false;syncHeader();}};
  const source=document.querySelector('#my .music-avatar-button img')||document.querySelector('#my .music-profile img');
- function syncHeader(){const signed=readerIsSignedIn();session.textContent=signed?'로그아웃':'로그인';avatar.setAttribute('aria-label',signed?'내 프로필 보기':'로그인');image.src=source?.getAttribute('src')||'./icon-192.png?v=books1';}
+ function syncHeader(){const signed=readerIsSignedIn();session.textContent=signed?'로그아웃':'로그인';avatar.setAttribute('aria-label','내 프로필 보기');image.src=source?.getAttribute('src')||'./icon-192.png?v=books1';}
  if(source)new MutationObserver(syncHeader).observe(source,{attributes:true,attributeFilter:['src','alt']});
  new MutationObserver(syncHeader).observe(auth,{childList:true,subtree:true,characterData:true});
  let bound=null;function bind(){const client=PYEODA_SERVER.client;if(client&&client!==bound){bound=client;client.auth.onAuthStateChange(()=>setTimeout(syncHeader,0));}syncHeader();}
@@ -76,4 +76,5 @@
 (()=>{
  if('serviceWorker' in navigator)navigator.serviceWorker.getRegistration().then(reg=>reg?.update()).catch(()=>{});
 })();
+
 

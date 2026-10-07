@@ -6,6 +6,17 @@
  const profiles=new Map();let selected=null,requestVersion=0,directoryVersion=0,followBusy=false;
  const uuid=id=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(id||''));
  const actor=()=>PYEODA_SERVER.authUser?.id||null;
+ const pendingKey='pyeoda-books-creator-action-v1';
+ function rememberCreatorAction(id){try{sessionStorage.setItem(pendingKey,JSON.stringify({id,at:Date.now()}));}catch(_){}}
+ window.booksResumeCreatorAction=()=>{
+  if(!readerIsSignedIn())return false;let action;
+  try{action=JSON.parse(sessionStorage.getItem(pendingKey)||'null');sessionStorage.removeItem(pendingKey);}catch(_){return false;}
+  if(!action||!Number.isFinite(action.at)||Date.now()-action.at>30*60*1000||action.at>Date.now()+60000)return false;
+  const id=action.id==='mine'?actor():action.id;if(!uuid(id))return false;
+  openCreator(id);return true;
+ };
+ document.getElementById('authorAuthClose')?.addEventListener('click',()=>{try{sessionStorage.removeItem(pendingKey);}catch(_){}});
+ document.getElementById('authorAuthModal')?.addEventListener('click',event=>{if(event.target.id==='authorAuthModal')try{sessionStorage.removeItem(pendingKey);}catch(_){}});
  const fields='id,owner_id,age_rating,adult_review_status,title,subtitle,pen_name,category,writing_type,image_layout,genre,format,intro,author_note,cover_url,completed,published,price,episode_count,views,likes,subscriber_count,owned,created_at,updated_at';
  function catalog(){return [...PYEODA_SERVER.publicBooks,...(typeof personalLikes!=='undefined'&&personalLikes.actor===personalLikesActor()?personalLikes.items:[])];}
  function groups(){
@@ -50,8 +61,8 @@
   document.getElementById('creatorWorkNote').textContent=profile?.work_note||'아직 작업노트가 없습니다.';
   document.getElementById('creatorNoteDate').textContent=profile?.updated_at?new Date(profile.updated_at).toLocaleDateString('ko-KR'):'';
   const manage=document.getElementById('creatorManage');manage.hidden=!owner;manage.disabled=loading;
-  const button=document.getElementById('creatorFollow');button.hidden=owner;button.disabled=loading||followBusy||!follow||!books.length;
-  button.textContent=follow?.following?'팔로잉':'＋ 팔로우';button.setAttribute('aria-pressed',String(!!follow?.following));
+  const button=document.getElementById('creatorFollow');button.hidden=owner;button.disabled=loading||followBusy;
+  button.textContent=!loading&&!follow?'팔로우 다시 연결':follow?.following?'팔로잉':'＋ 팔로우';button.setAttribute('aria-pressed',String(!!follow?.following));
   document.getElementById('creatorStatus').textContent=loading?'크리에이터 홈을 불러오는 중…':error?'일부 정보를 불러오지 못했습니다. 다시 방문해 주세요.':'';
   const list=document.getElementById('creatorWorks');list.replaceChildren();
   if(!loading&&!books.length){const empty=document.createElement('p');empty.className='discover-empty';empty.textContent='아직 공개된 작품이 없습니다.';list.append(empty);}
@@ -88,7 +99,7 @@
  window.booksOpenCreator=openCreator;
  function openMine(){
   if(saveBeforeMobileNavigation()===false)return;
-  if(!readerIsSignedIn()){openAuthorAuthModal('login','');toast('내 크리에이터 홈은 로그인 후 열 수 있습니다.');return;}
+  if(!readerIsSignedIn()){rememberCreatorAction('mine');openAuthorAuthModal('login','my');toast('로그인하면 내 크리에이터 홈으로 이어집니다.');return;}
   openCreator(actor());
  }
  document.querySelectorAll('[data-open-my-creator]').forEach(button=>button.onclick=openMine);
@@ -99,7 +110,8 @@
  document.getElementById('creatorBack').onclick=()=>go('creators');
  document.getElementById('creatorFollow').onclick=async()=>{
   if(!selected||followBusy)return;
-  if(!readerIsSignedIn()){openAuthorAuthModal('login','');toast('로그인 후 작가를 팔로우할 수 있습니다.');return;}
+  if(!readerIsSignedIn()){rememberCreatorAction(selected.id);openAuthorAuthModal('login','creator');toast('로그인하면 이 작가의 홈으로 돌아옵니다.');return;}
+  if(!selected.follow){await openCreator(selected.id);if(!selected?.follow)toast('팔로우 연결을 확인하지 못했습니다. 잠시 후 다시 눌러 주세요.');return;}
   const id=selected.id,viewer=actor(),following=!!selected.follow?.following;
   followBusy=true;renderCreator();
   try{
@@ -156,4 +168,5 @@
  });
  refreshDirectory();if(PYEODA_SERVER.connected&&uuid(deepId)){deepLinkDone=true;openCreator(deepId);}
 })();
+
 

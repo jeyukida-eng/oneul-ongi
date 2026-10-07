@@ -82,7 +82,9 @@
  for(const selector of ['#writerCheatsheet','#editorWritingGuide','.editor-book-tools','#episodeList','.manuscript-file-tools','.manuscript-viewbar','#manuscriptToolbar','#proofCard','.episode-pricing','.completion-next']){const el=editor.querySelector(selector);if(el)dialog.append(el);}
  const additional=document.createElement('div');additional.className='editor-actions';dialog.append(additional);
  for(const el of editor.querySelectorAll('.editor-actions>button:not(#saveEpisodeBtn)'))additional.append(el);
- dialog.addEventListener('click',event=>{if(event.target.closest('[data-go],#nextEpisodeBtn'))dialog.close();});
+ // Close the modal before commands restore a selection in the editor behind it.
+ dialog.addEventListener('click',event=>{if(event.target.closest('[data-go],[data-rich-command],#manuscriptGridView,#manuscriptPlainView,#nextEpisodeBtn,#addEpisode,#importMarkdownDraft,#importPdfDraft,#insertManuscriptImage,#restoreMarkdownDraft,#removeManuscriptImage,#aiBtn,#applyProof,#ignoreProof'))dialog.close();},true);
+ for(const select of dialog.querySelectorAll('#manuscriptFont,#manuscriptSize'))select.addEventListener('change',()=>dialog.close(),true);
  function viewport(){
   if(!editor.classList.contains('active'))return;
   const app=document.querySelector('.app').getBoundingClientRect(),top=document.querySelector('header.top').getBoundingClientRect(),view=window.visualViewport;
@@ -93,3 +95,4 @@
  new MutationObserver(active).observe(editor,{attributes:true,attributeFilter:['class']});
  window.addEventListener('resize',viewport);window.visualViewport?.addEventListener('resize',viewport);window.visualViewport?.addEventListener('scroll',viewport);active();
 })();
+
