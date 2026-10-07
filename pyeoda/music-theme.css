@@ -306,3 +306,6 @@ body.pyeoda-music #home#home .hero .hero-copy{display:block!important;font-size:
 body.pyeoda-music #home#home .hero .books-home-policy{display:block!important;grid-column:1/-1!important;margin:2px 0 0!important;font-size:11px!important;line-height:16px!important}
 body.pyeoda-music #home#home .hero .mobile-home-details{display:block!important}
 @media(max-width:650px){body.pyeoda-music .top{padding:8px 12px!important}body.pyeoda-music :is(.section,.studio,.register-shell){padding:12px!important}body.pyeoda-music main>.studio-section-nav{width:calc(100% - 24px)!important;margin-inline:12px!important;grid-template-columns:repeat(5,minmax(84px,1fr))!important}body.pyeoda-music #home#home .hero .cta{grid-row:3!important}body.pyeoda-music .screen>.section>h2,body.pyeoda-music .panel>h2{font-size:18px!important}body.pyeoda-music #creator .books-creator-stats{gap:12px!important}}
+
+body.pyeoda-music :is(#discover,#library,#my,#books,#studio,#register,#publishing,#publish,#paper,#global,#revenue,#creators) h2{font-size:20px!important;line-height:1.35!important;margin:0 0 10px!important}
+@media(max-width:650px){body.pyeoda-music :is(#discover,#library,#my,#books,#studio,#register,#publishing,#publish,#paper,#global,#revenue,#creators) h2{font-size:18px!important}}
