@@ -477,3 +477,29 @@ body.pyeoda-music #publishing .publish-choice ul{display:none}
 body.pyeoda-music #publishing .publish-choice-action{grid-column:3;grid-row:1/3;align-self:center;margin:0!important;min-height:34px!important;padding:6px 8px!important;font-size:11px!important;line-height:16px!important;border-radius:10px!important}
 body.pyeoda-music #publishing .publish-note{flex:none;margin:0;padding:6px 8px;font-size:10px;line-height:14px;max-height:42px;overflow:auto;color:#aaa6b5;background:#191920}
 @media(max-width:380px){body.pyeoda-music #publishing .publish-choice{grid-template-columns:24px minmax(0,1fr) 86px;gap:4px 6px}body.pyeoda-music #publishing .publish-choice-icon{width:24px;height:24px;font-size:18px}body.pyeoda-music #publishing .publish-book-summary{grid-template-columns:34px minmax(0,1fr);gap:4px 8px}body.pyeoda-music #publishing .publish-book-cover{grid-row:1/3;width:34px;height:50px}body.pyeoda-music #publishing .publish-status{grid-column:2;justify-self:start;max-width:none;min-height:20px;padding:2px 6px}}
+/* Studio dashboard keeps its navigation, summary and filters above a scrolling list. */
+body.pyeoda-music .app:has(#studio.active){height:100dvh!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+body.pyeoda-music .app:has(#studio.active)>.top{flex:none}
+body.pyeoda-music .app:has(#studio.active)>main{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+body.pyeoda-music .app:has(#studio.active) main>.studio-section-nav{flex:none;margin-block:6px!important;padding:4px!important}
+body.pyeoda-music #studio.active{flex:1;min-height:0;overflow:hidden}
+body.pyeoda-music #studio .studio{height:100%;min-height:0;box-sizing:border-box;padding:8px 12px!important}
+body.pyeoda-music #studio .studio>div{height:100%;min-height:0}
+body.pyeoda-music #studio .studio>div>.panel{height:100%;min-height:0;box-sizing:border-box;padding:10px!important;display:flex;flex-direction:column;gap:8px}
+body.pyeoda-music #studio .panel>h2{flex:none;font-size:18px!important;line-height:24px!important;margin:0!important}
+body.pyeoda-music #studio .panel>.books-creator-name{flex:none;align-self:flex-start;margin:0;padding:0!important;min-height:20px!important;line-height:20px;font-size:11px!important;background:transparent!important}
+body.pyeoda-music #studio .panel>.meta{flex:none;font-size:11px;line-height:16px;margin:0}
+body.pyeoda-music #studio .stats{flex:none;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;margin:0!important}
+body.pyeoda-music #studio .stat{min-width:0;padding:8px 6px!important;border-radius:10px}
+body.pyeoda-music #studio .stat span{font-size:10px!important;line-height:14px}
+body.pyeoda-music #studio .stat b{font-size:17px!important;line-height:22px;overflow-wrap:anywhere}
+body.pyeoda-music #studio .studio-book-filters{flex:none;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:0!important;padding:0}
+body.pyeoda-music #studio .studio-book-filters button{min-width:0;min-height:32px!important;padding:6px 4px!important;font-size:11px!important;line-height:16px!important;margin:0!important}
+body.pyeoda-music #studio #studioBookList{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;margin:0!important;align-content:start}
+body.pyeoda-music #studio .registered-book-row{padding:8px!important;gap:8px!important;min-width:0}
+body.pyeoda-music #studio .registered-book-info h3{font-size:14px!important;line-height:19px!important;margin:0 0 3px!important}
+body.pyeoda-music #studio .registered-book-info p{font-size:11px!important;line-height:16px!important;margin:0!important}
+body.pyeoda-music #studio .registered-book-actions{gap:5px!important}
+body.pyeoda-music #studio .registered-book-actions button{min-height:30px!important;padding:5px 8px!important;font-size:11px!important}
+body.pyeoda-music #studio .studio-server-settings{flex:none;min-height:22px;margin:0!important;max-height:35dvh;overflow:auto;font-size:11px}
+body.pyeoda-music #studio .studio-server-settings>summary{font-size:11px;line-height:20px;padding:0}
