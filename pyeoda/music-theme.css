@@ -568,3 +568,9 @@ body.pyeoda-music #workspace .workspace-grid button{min-height:96px!important}
 body.pyeoda-music #workspace [aria-label="간단 메모"]{margin:0!important;flex:1;min-height:104px;max-height:160px}
 body.pyeoda-music #workspace [aria-label="간단 메모"] textarea{max-height:78px!important}
 @media(max-height:720px){body.pyeoda-music #workspace .workspace-shell{gap:7px}body.pyeoda-music #workspace .workspace-grid button{min-height:76px!important;padding:10px!important}body.pyeoda-music .workspace-heading h2{font-size:22px!important}body.pyeoda-music #workspace [aria-label="간단 메모"]{flex:none;min-height:100px}}
+body.pyeoda-music #workspace .mobile-quick-memo{background:#192c36!important;border-color:#304852!important;padding:10px!important}
+body.pyeoda-music #workspace .mobile-quick-memo label{color:#e4f2ed!important;font-size:13px!important}
+body.pyeoda-music #workspace .mobile-quick-memo label span{color:#adc3c9!important;font-size:11px!important}
+body.pyeoda-music #workspace .mobile-quick-memo textarea{background:transparent!important;color:#eef7f3!important;width:100%!important;font-size:14px!important;line-height:1.5!important}
+body.pyeoda-music #workspace .mobile-quick-memo textarea::placeholder{color:#a7bcc4!important}
+body.pyeoda-music #workspace #openQuickMemo{min-height:30px!important;padding:5px 9px!important;border-radius:9px!important;font-size:12px!important}
