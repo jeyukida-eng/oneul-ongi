@@ -578,3 +578,12 @@ body.pyeoda-music #workspace #openQuickMemo{min-height:30px!important;padding:5p
 /* Shared Korean typeface for both PYODA apps, including dialogs and reading UI. */
 body.pyeoda-music .top .logo,body.pyeoda-music .top .logo small,body.pyeoda-music :is(dialog,dialog *, .toast,.music-bottom-nav,.music-bottom-nav *){font-family:var(--pyeoda-ui-font)!important}
 body.pyeoda-music #readerBody{font-family:var(--pyeoda-ui-font)!important}
+
+/* Quiet, single previous-screen control beside the brand. */
+body.pyeoda-music .space-brand{display:flex;align-items:center;gap:5px;min-width:0}
+body.pyeoda-music .space-back{display:grid;place-items:center;flex:0 0 32px;width:32px;height:36px;padding:0;border:0;background:transparent;color:#bcc0cc;border-radius:9px;cursor:pointer}
+body.pyeoda-music .space-back svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.pyeoda-music .space-back:hover:enabled{background:#ffffff0a;color:#fff}
+body.pyeoda-music .space-back:focus-visible{outline:2px solid #b6e5d4;outline-offset:1px}
+body.pyeoda-music .space-back:disabled{opacity:.22;cursor:default}
+@media(max-width:380px){body.pyeoda-music .space-brand{gap:0}body.pyeoda-music .space-brand .logo{font-size:22px!important}}
