@@ -427,7 +427,7 @@ body.pyeoda-music .top .logo{font-family:"Arial Black",Arial,sans-serif!importan
 body.pyeoda-music .top .logo>span{-webkit-text-stroke:.3px currentColor;font-weight:900!important}
 body.pyeoda-music .top .logo small{font-family:Arial,sans-serif!important;font-weight:400!important;-webkit-text-stroke:0!important}
 /* Creator home stays inside the viewport; only the work list scrolls. */
-body.pyeoda-music .app:has(#creator.active){height:100dvh!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+body.pyeoda-music .app:has(#creator.active){height:var(--books-viewport-height,100dvh)!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 body.pyeoda-music .app:has(#creator.active)>.top{flex:none}
 body.pyeoda-music .app:has(#creator.active)>main{flex:1;min-height:0;overflow:hidden}
 body.pyeoda-music #creator.active{height:100%;min-height:0;overflow:hidden}
@@ -452,7 +452,7 @@ body.pyeoda-music #creator #creatorNoteDate:empty{display:none}
 html:has(body.pyeoda-music),body.pyeoda-music,body.pyeoda-music *{scrollbar-width:none!important;-ms-overflow-style:none!important}
 html:has(body.pyeoda-music)::-webkit-scrollbar,body.pyeoda-music::-webkit-scrollbar,body.pyeoda-music *::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 /* Publishing center: compact book header and three choices in one viewport. */
-body.pyeoda-music .app:has(#publishing.active){height:100dvh!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+body.pyeoda-music .app:has(#publishing.active){height:var(--books-viewport-height,100dvh)!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 body.pyeoda-music .app:has(#publishing.active)>.top{flex:none}
 body.pyeoda-music .app:has(#publishing.active)>main{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 body.pyeoda-music .app:has(#publishing.active) main>.studio-section-nav{flex:none;margin-block:6px!important;padding:4px!important}
@@ -478,7 +478,7 @@ body.pyeoda-music #publishing .publish-choice-action{grid-column:3;grid-row:1/3;
 body.pyeoda-music #publishing .publish-note{flex:none;margin:0;padding:6px 8px;font-size:10px;line-height:14px;max-height:42px;overflow:auto;color:#aaa6b5;background:#191920}
 @media(max-width:380px){body.pyeoda-music #publishing .publish-choice{grid-template-columns:24px minmax(0,1fr) 86px;gap:4px 6px}body.pyeoda-music #publishing .publish-choice-icon{width:24px;height:24px;font-size:18px}body.pyeoda-music #publishing .publish-book-summary{grid-template-columns:34px minmax(0,1fr);gap:4px 8px}body.pyeoda-music #publishing .publish-book-cover{grid-row:1/3;width:34px;height:50px}body.pyeoda-music #publishing .publish-status{grid-column:2;justify-self:start;max-width:none;min-height:20px;padding:2px 6px}}
 /* Studio dashboard keeps its navigation, summary and filters above a scrolling list. */
-body.pyeoda-music .app:has(#studio.active){height:100dvh!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+body.pyeoda-music .app:has(#studio.active){height:var(--books-viewport-height,100dvh)!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
 body.pyeoda-music .app:has(#studio.active)>.top{flex:none}
 body.pyeoda-music .app:has(#studio.active)>main{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 body.pyeoda-music .app:has(#studio.active) main>.studio-section-nav{flex:none;margin-block:6px!important;padding:4px!important}
@@ -503,3 +503,42 @@ body.pyeoda-music #studio .registered-book-actions{gap:5px!important}
 body.pyeoda-music #studio .registered-book-actions button{min-height:30px!important;padding:5px 8px!important;font-size:11px!important}
 body.pyeoda-music #studio .studio-server-settings{flex:none;min-height:22px;margin:0!important;max-height:35dvh;overflow:auto;font-size:11px}
 body.pyeoda-music #studio .studio-server-settings>summary{font-size:11px;line-height:20px;padding:0}
+/* Shared viewport shell for every screen, including the visible keyboard area. */
+html:has(body.pyeoda-music),body.pyeoda-music{height:100%;overflow:hidden!important}
+body.pyeoda-music .app{height:var(--books-viewport-height,100dvh)!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;box-sizing:border-box}
+body.pyeoda-music .app>.top{flex:none}
+body.pyeoda-music .app>main{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+body.pyeoda-music main>.studio-section-nav{flex:none;margin-block:6px!important;padding:4px!important}
+body.pyeoda-music .screen.active{flex:1;min-height:0;min-width:0;box-sizing:border-box;overflow:hidden}
+body.pyeoda-music .screen.active>.section,body.pyeoda-music #register.active>.register-shell{height:100%;min-height:0;box-sizing:border-box;overflow:auto;overscroll-behavior:contain;padding:8px 12px!important}
+body.pyeoda-music :is(#discover,#library,#books,#creators).active>.section{display:flex;flex-direction:column;gap:6px;overflow:hidden}
+body.pyeoda-music :is(#discover,#library,#creators) .section>:not(.grid):not(.books-creator-directory):not(#musicLibraryGrid){flex:none}
+body.pyeoda-music :is(#discoverGrid,#musicLibraryGrid,#creatorDirectoryList){flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;align-content:start;margin:0!important}
+body.pyeoda-music :is(#discoverGrid,#musicLibraryGrid){grid-auto-rows:112px!important;gap:6px!important}
+body.pyeoda-music :is(#discover,#library,#creators) .section>h2,body.pyeoda-music .discover-head h2{margin:0!important;font-size:18px!important;line-height:24px!important}
+body.pyeoda-music :is(#discover,#library,#creators) .section>.meta,body.pyeoda-music .discover-head p{margin:0!important;font-size:11px;line-height:16px}
+body.pyeoda-music .music-search{margin:0!important;min-height:36px}
+body.pyeoda-music #musicSearchStatus:empty{display:none}
+body.pyeoda-music #books .registered-books-panel{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:10px!important;overflow:hidden}
+body.pyeoda-music #books .registered-books-panel>:not(#registeredBookList){flex:none;margin:0!important}
+body.pyeoda-music #registeredBookList{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;align-content:start}
+body.pyeoda-music #home#home.active{display:flex!important;flex-direction:column;gap:6px;padding:8px 12px!important;min-height:0}
+body.pyeoda-music #home#home>:not(.section){flex:none;margin:0!important}
+body.pyeoda-music #home#home>.section{flex:1;min-height:0;height:auto;display:flex;flex-direction:column;overflow:hidden;padding:0!important}
+body.pyeoda-music #home#home .section>:not(#bookGrid){flex:none}
+body.pyeoda-music #home#home #bookGrid{flex:1;height:auto!important;min-height:0!important;max-height:none!important;overflow:auto!important;align-content:start;overscroll-behavior:contain}
+body.pyeoda-music #reader.active>.reader-shell{height:100%;min-height:0;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;padding:8px 12px!important;overflow:hidden}
+body.pyeoda-music #reader .reader-shell>:not(#readerBody){flex:none;margin-block:0!important}
+body.pyeoda-music #reader .reader-book-head{gap:8px!important;padding:0!important}
+body.pyeoda-music #reader .reader-book-head h2{font-size:17px!important;line-height:22px!important;margin:0!important}
+body.pyeoda-music #reader .reader-book-head p{font-size:11px;line-height:16px;margin:3px 0!important}
+body.pyeoda-music #reader .reader-cover{width:36px!important;max-height:52px}
+body.pyeoda-music #reader .reader-episode h1{font-size:19px!important;line-height:25px!important}
+body.pyeoda-music #reader .reader-episode .ep-no{margin:0!important;font-size:11px}
+body.pyeoda-music #reader #readerBody{flex:1;min-height:0!important;height:auto!important;overflow:auto!important;overscroll-behavior:contain;padding:6px 2px!important;margin:0!important}
+body.pyeoda-music #reader .reader-nav{padding-top:6px!important;gap:6px}
+body.pyeoda-music #reader .reader-nav button{min-height:34px!important;font-size:12px;padding:4px 12px!important}
+body.pyeoda-music #editor#editor.active{position:relative!important;left:auto!important;top:auto!important;width:100%!important;max-width:100%!important;height:auto!important;flex:1;min-height:0;z-index:auto!important;overflow:hidden}
+body.pyeoda-music :is(#publish,#paper,#global,#revenue).active>.section{padding:8px 12px!important}
+body.pyeoda-music :is(#publish,#paper,#global,#revenue) .panel{padding:12px!important}
+body.pyeoda-music dialog{max-height:calc(var(--books-viewport-height,100dvh) - 24px)!important;overflow:auto!important}

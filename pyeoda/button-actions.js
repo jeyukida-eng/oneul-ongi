@@ -1,6 +1,9 @@
 /* Shared button actions: preserve feature handlers, prevent duplicate work, report failures. */
 (()=>{
  'use strict';
+ function syncViewport(){document.documentElement.style.setProperty('--books-viewport-height',(window.visualViewport?.height||window.innerHeight)+'px');}
+ window.addEventListener('resize',syncViewport,{passive:true});
+ window.visualViewport?.addEventListener('resize',syncViewport,{passive:true});syncViewport();
  const originalGo=go;
  go=function(id){
   const target=document.getElementById(id);
