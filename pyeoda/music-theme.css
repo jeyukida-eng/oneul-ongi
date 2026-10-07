@@ -93,10 +93,6 @@ body.pyeoda-music .music-pass-card h2{font-size:24px;margin:9px 0}
 body.pyeoda-music .music-pass-card strong{display:block;font-size:34px;letter-spacing:-1px;margin:10px 0}
 body.pyeoda-music .music-pass-card p{font-size:13px;line-height:1.7;color:#a8a8b7}
 body.pyeoda-music .music-test-badge{display:inline-block;padding:6px 10px;border-radius:8px;background:#2b233f;color:#bcacff;font-size:10px}
-body.pyeoda-music .music-plan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-body.pyeoda-music .music-plan-grid article{border:1px solid #292933;background:#15151c;border-radius:16px;padding:17px}
-body.pyeoda-music .music-plan-grid strong{display:block;font-size:22px;margin:10px 0}
-body.pyeoda-music .music-plan-grid small{color:#9393a2;font-size:11px;line-height:1.6}
 body.pyeoda-music :is(dialog,.toast,.author-auth-card,.reader-auth-card){background:#15151c!important;color:#f7f7f8!important;border:1px solid #343440!important;border-radius:20px!important}
 body.pyeoda-music dialog::backdrop{background:#050507c9!important;backdrop-filter:blur(5px)}
 body.pyeoda-music dialog{max-width:min(600px,calc(100vw - 28px))!important;max-height:calc(100dvh - 40px)!important;overflow:auto!important}
@@ -216,7 +212,6 @@ body.pyeoda-music main>.studio-section-nav button.active{background:#735cff!impo
 .pyeoda-music .books-support-preview{margin-top:16px;padding:18px}
 .pyeoda-music .books-support-preview label{display:flex;align-items:center;gap:12px}
 .pyeoda-music .books-support-preview input{width:min(180px,65%);padding:10px;border:1px solid #393443;border-radius:10px;background:#17151e;color:#fff}
-.pyeoda-music #plans .music-plan-grid{margin:18px 0}
 @media(max-width:600px){.pyeoda-music .books-revenue-row{font-size:12px;gap:8px}}
 
 body.pyeoda-music #home#home .hero .books-home-policy{display:block!important;margin-top:9px!important;color:#b5a7ed!important;font-size:11px!important;line-height:1.5!important}

@@ -1,5 +1,5 @@
-const CACHE='pyeoda-writing-revenue13';
-const CORE=['../pyeoda/music-theme.css?v=revenue13','../pyeoda/music-ui.js?v=revenue13','../pyeoda/mobile-editor.js?v=write5','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
+const CACHE='pyeoda-writing-noplans14';
+const CORE=['../pyeoda/music-theme.css?v=noplans14','../pyeoda/music-ui.js?v=noplans14','../pyeoda/mobile-editor.js?v=write5','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('pyeoda-writing-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
