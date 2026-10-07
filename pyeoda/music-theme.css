@@ -255,3 +255,27 @@ body.pyeoda-music #creator .books-creator-columns h3{margin:8px 0 6px!important;
 body.pyeoda-music #creator #creatorWorks{max-height:calc(100dvh - 220px)!important;overflow:auto}
 body.pyeoda-music #creator .books-creator-panel{margin-top:8px!important}
 @media(max-width:650px){body.pyeoda-music #creator>.section{padding-inline:12px!important}body.pyeoda-music #creator .books-creator-stats{gap:14px!important}}
+
+/* Compact home welcome banner: reserve the screen for works. */
+body.pyeoda-music:has(#home.active) .top{min-height:0!important;padding:7px 16px!important;gap:5px!important}
+body.pyeoda-music:has(#home.active) .top .logo{font-size:20px!important;line-height:1!important}
+body.pyeoda-music:has(#home.active) .top .logo small{display:none!important}
+body.pyeoda-music:has(#home.active) .top .books-header-avatar{width:32px!important;height:32px!important;min-width:32px!important}
+body.pyeoda-music:has(#home.active) .top .books-header-pill{height:32px!important;min-height:32px!important;font-size:12px!important;padding:0 12px!important;border-width:1px!important}
+body.pyeoda-music:has(#home.active) .top .books-header-actions{gap:8px!important}
+body.pyeoda-music:has(#home.active) .top .mobile-page-controls{margin-top:0!important}
+body.pyeoda-music #home#home{padding:8px 16px!important}
+body.pyeoda-music #home#home .hero{padding:10px 14px!important;margin-bottom:8px!important;border-radius:14px!important}
+body.pyeoda-music #home#home .hero>div:first-child{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:2px 16px!important}
+body.pyeoda-music #home#home .hero .eyebrow,body.pyeoda-music #home#home .hero .books-home-policy{display:none!important}
+body.pyeoda-music #home#home .hero h1{grid-column:1!important;font-size:18px!important;line-height:22px!important;margin:0!important}
+body.pyeoda-music #home#home .hero h1 br{display:none}
+body.pyeoda-music #home#home .hero .hero-copy{grid-column:1!important;font-size:11px!important;line-height:16px!important}
+body.pyeoda-music #home#home .hero .cta{grid-column:2!important;grid-row:1/3!important;margin:0!important;gap:6px!important}
+body.pyeoda-music #home#home .hero .cta button{min-height:30px!important;padding:5px 10px!important;font-size:11px!important}
+body.pyeoda-music #home#home .mobile-home-details{grid-column:1/-1!important;margin:2px 0 0!important}
+body.pyeoda-music #home#home .mobile-home-details summary{min-height:16px!important;font-size:10px!important;line-height:16px!important}
+body.pyeoda-music #home#home .books-home-creators{margin-bottom:8px!important}
+body.pyeoda-music #home#home #homeCreatorList{padding:4px 0!important}
+body.pyeoda-music #home#home .books-creator-chip{padding:7px 10px!important}
+@media(max-width:650px){body.pyeoda-music #home#home .hero>div:first-child{gap:5px!important;grid-template-columns:1fr!important}body.pyeoda-music #home#home .hero h1{font-size:16px!important;line-height:20px!important}body.pyeoda-music #home#home .hero .hero-copy{display:none!important}body.pyeoda-music #home#home .hero .cta{grid-column:1!important;grid-row:2!important}}
