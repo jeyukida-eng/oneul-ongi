@@ -233,3 +233,25 @@ body.pyeoda-music #home#home .hero .books-home-policy{display:block!important;ma
 .books-creator-dialog{width:min(500px,calc(100vw - 32px));max-height:85dvh;overflow:auto;border:1px solid #463854;border-radius:20px;padding:24px;background:#191820;color:#eee}.books-creator-dialog::backdrop{background:#000a}.books-creator-dialog label{display:block;margin:16px 0;font-size:13px}.books-creator-dialog input,.books-creator-dialog textarea{display:block;box-sizing:border-box;width:100%;margin-top:8px;padding:12px;background:#101015;border:1px solid #393241;border-radius:10px;color:#eee;font:inherit}
 @media(max-width:650px){.books-creator-hero{flex-wrap:wrap;gap:14px}.books-creator-hero>.books-creator-avatar{width:64px;height:64px;flex-basis:64px;font-size:28px}.books-creator-hero>.books-creator-actions{width:100%}.books-creator-columns{grid-template-columns:1fr;gap:0}.books-creator-stats{gap:16px;font-size:12px}.books-creator-chip{min-width:150px!important}#creatorWorks{max-height:360px}}
 
+
+/* Keep the public creator header compact so works stay above the fold. */
+body.pyeoda-music:has(#creator.active,#creators.active) .top{min-height:36px!important;height:36px!important;padding:4px 16px!important;gap:8px!important;flex-wrap:nowrap!important;border-bottom:1px solid #23232c!important}
+body.pyeoda-music:has(#creator.active,#creators.active) .top .logo{font-size:18px!important;line-height:1!important;letter-spacing:-.4px!important}
+body.pyeoda-music:has(#creator.active,#creators.active) .top .logo small,body.pyeoda-music:has(#creator.active,#creators.active) .top .mobile-page-controls{display:none!important}
+body.pyeoda-music:has(#creator.active,#creators.active) .top .books-header-actions{gap:8px!important}
+body.pyeoda-music:has(#creator.active,#creators.active) .top .books-header-avatar{width:28px!important;height:28px!important;min-width:28px!important}
+body.pyeoda-music:has(#creator.active,#creators.active) .top .books-header-pill{height:28px!important;min-height:28px!important;padding:0 10px!important;font-size:12px!important;border-width:1px!important}
+body.pyeoda-music #creator>.section{padding:6px 20px 12px!important}
+body.pyeoda-music #creator .books-creator-back{padding:0!important;font-size:10px!important;line-height:14px!important;min-height:14px!important;background:transparent!important}
+body.pyeoda-music #creator .books-creator-hero{flex-wrap:nowrap!important;gap:10px!important;margin:4px 0!important}
+body.pyeoda-music #creator .books-creator-hero>.books-creator-avatar{width:32px!important;height:32px!important;flex-basis:32px!important;font-size:16px!important}
+body.pyeoda-music #creator .books-creator-hero h2{font-size:16px!important;line-height:18px!important;margin:0 0 2px!important}
+body.pyeoda-music #creator .books-creator-hero p{font-size:11px!important;line-height:14px!important;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+body.pyeoda-music #creator .books-creator-hero>.books-creator-actions{width:auto!important;flex:none!important}
+body.pyeoda-music #creator .books-creator-actions button{padding:4px 10px!important;min-height:28px!important;font-size:11px!important}
+body.pyeoda-music #creator .books-creator-stats{padding:3px 0!important;gap:18px!important;font-size:10px!important;line-height:14px!important}
+body.pyeoda-music #creator #creatorStatus:empty{display:none}
+body.pyeoda-music #creator .books-creator-columns h3{margin:8px 0 6px!important;font-size:14px!important;line-height:18px!important}
+body.pyeoda-music #creator #creatorWorks{max-height:calc(100dvh - 220px)!important;overflow:auto}
+body.pyeoda-music #creator .books-creator-panel{margin-top:8px!important}
+@media(max-width:650px){body.pyeoda-music #creator>.section{padding-inline:12px!important}body.pyeoda-music #creator .books-creator-stats{gap:14px!important}}
