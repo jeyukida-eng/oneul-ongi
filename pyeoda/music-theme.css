@@ -587,3 +587,10 @@ body.pyeoda-music .space-back:hover:enabled{background:#ffffff0a;color:#fff}
 body.pyeoda-music .space-back:focus-visible{outline:2px solid #b6e5d4;outline-offset:1px}
 body.pyeoda-music .space-back:disabled{opacity:.22;cursor:default}
 @media(max-width:380px){body.pyeoda-music .space-brand{gap:0}body.pyeoda-music .space-brand .logo{font-size:22px!important}}
+
+/* Keep home copy crisp on the dark surface. */
+body.pyeoda-music #home .hero,
+body.pyeoda-music #home .hero *{
+ text-shadow:none!important;
+ -webkit-text-stroke:0!important;
+}
