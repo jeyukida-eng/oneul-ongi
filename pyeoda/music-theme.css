@@ -218,3 +218,5 @@ body.pyeoda-music main>.studio-section-nav button.active{background:#735cff!impo
 .pyeoda-music .books-support-preview input{width:min(180px,65%);padding:10px;border:1px solid #393443;border-radius:10px;background:#17151e;color:#fff}
 .pyeoda-music #plans .music-plan-grid{margin:18px 0}
 @media(max-width:600px){.pyeoda-music .books-revenue-row{font-size:12px;gap:8px}}
+
+body.pyeoda-music #home#home .hero .books-home-policy{display:block!important;margin-top:9px!important;color:#b5a7ed!important;font-size:11px!important;line-height:1.5!important}

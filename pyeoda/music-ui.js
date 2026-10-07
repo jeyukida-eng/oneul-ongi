@@ -3,7 +3,7 @@
  'use strict';document.body.classList.add('pyeoda-music');document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#0d0d12');const css=document.querySelector('link[data-pyeoda-music]');if(css)document.head.append(css);
  const logo=document.querySelector('.top .logo');if(logo){logo.innerHTML='<span>PYODA BOOKS</span><small>BOOKS FOR CREATORS</small>';logo.setAttribute('aria-label','PYODA BOOKS 홈');}
  const install=document.getElementById('pyeodaInstallEntry');if(install){install.textContent='↓ 앱 설치';install.setAttribute('aria-label','PC·모바일에 펴다 앱 설치');}
- const hero=document.querySelector('#home .hero');if(hero){hero.querySelector('.eyebrow').textContent='YOUR NEXT STORY';hero.querySelector('h1').innerHTML='마음에 남을 이야기,<br>여기서 펼쳐보세요.';const copy=hero.querySelector('.hero-copy')||hero.querySelector('p');copy.textContent='새로운 작품을 만나고, 나만의 이야기를 써보세요.';const d=hero.querySelector('.mobile-home-details');if(d){d.querySelector('summary').textContent='글쓰기·다국어 출판 안내';d.querySelector('p').textContent='원고를 쓰고 연재하며 한국어·영어·일본어·중국어로 출판할 수 있습니다. 무료로 시작하고 필요한 작가 도구를 선택하세요. 소장 작가 배분 85%·팬 후원 90%는 운영 전 검토 예시입니다.';}}
+ const hero=document.querySelector('#home .hero');if(hero){hero.querySelector('.eyebrow').textContent='YOUR NEXT STORY';hero.querySelector('h1').innerHTML='마음에 남을 이야기,<br>여기서 펼쳐보세요.';const copy=hero.querySelector('.hero-copy')||hero.querySelector('p');copy.textContent='무료 작품부터 소장까지, 마음에 남는 이야기를 만나보세요.';const policy=document.createElement('p');policy.className='books-home-policy';policy.textContent='무료 읽기 · 작가 도구는 선택형';hero.querySelector('.cta')?.after(policy);const d=hero.querySelector('.mobile-home-details');if(d){d.querySelector('summary').textContent='펴다 이용·수익 안내';d.querySelector('p').textContent='독자 월 이용권 없이 무료 작품·무료 회차를 읽습니다. 작가 요금제는 선택형이며 현재 무료로 글쓰기·연재·공개가 가능합니다. 소장 작가 85%·후원 작가 90%는 배분 예시입니다. 유료 요금제와 후원은 준비 중입니다.';}}
  const nav=document.querySelector('.music-bottom-nav');
  const studioMenu=document.querySelector('#studio .studio>.side');
  if(studioMenu){studioMenu.classList.add('studio-section-nav');studioMenu.setAttribute('role','navigation');studioMenu.setAttribute('aria-label','작가 스튜디오 메뉴');studioMenu.hidden=true;document.querySelector('main').prepend(studioMenu);
@@ -71,4 +71,10 @@
  new MutationObserver(syncHeader).observe(auth,{childList:true,subtree:true,characterData:true});
  let bound=null;function bind(){const client=PYEODA_SERVER.client;if(client&&client!==bound){bound=client;client.auth.onAuthStateChange(()=>setTimeout(syncHeader,0));}syncHeader();}
  new MutationObserver(bind).observe(auth,{childList:true,subtree:true,characterData:true});bind();
+})();
+
+/* Open the verified plans view from a shared link and refresh installed app assets. */
+(()=>{
+ if('serviceWorker' in navigator)navigator.serviceWorker.getRegistration().then(reg=>reg?.update()).catch(()=>{});
+ if(new URLSearchParams(location.search).get('view')==='plans')go('plans');
 })();
