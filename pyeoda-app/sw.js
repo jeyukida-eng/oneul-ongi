@@ -1,5 +1,5 @@
-const CACHE='pyeoda-writing-noplans14';
-const CORE=['../pyeoda/music-theme.css?v=noplans14','../pyeoda/music-ui.js?v=noplans14','../pyeoda/mobile-editor.js?v=write5','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
+const CACHE='pyeoda-writing-creators15';
+const CORE=['../pyeoda/creator-ui.js?v=creators15','../pyeoda/music-theme.css?v=creators15','../pyeoda/music-ui.js?v=creators15','../pyeoda/mobile-editor.js?v=write5','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('pyeoda-writing-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
@@ -10,6 +10,7 @@ self.addEventListener('fetch',event=>{
    if(res.ok){const copy=res.clone();caches.open(CACHE).then(c=>c.put(event.request,copy)).catch(()=>{});}return res;
  }).catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html'))));
 });
+
 
 
 
