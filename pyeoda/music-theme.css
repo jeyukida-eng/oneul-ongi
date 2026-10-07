@@ -1,5 +1,5 @@
 /* Shared PYODA visual system. Existing controls and feature handlers remain intact. */
-:root{color-scheme:dark;--ink:#f7f7f8;--muted:#9393a2;--paper:#0d0d12;--paper-2:#15151c;--card:#181820;--line:#292933;--accent:#a99cff;--accent-deep:#735cff;--olive:#735cff;--soft:#242135;--shadow:none;--pyeoda-ui-font:"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif}
+:root{color-scheme:dark;--ink:#f7f7f8;--muted:#9393a2;--paper:#0d0d12;--paper-2:#15151c;--card:#181820;--line:#292933;--accent:#a99cff;--accent-deep:#735cff;--olive:#735cff;--soft:#242135;--shadow:none;--pyeoda-ui-font:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}
 html:has(body.pyeoda-music){background:#050507;scroll-behavior:auto}
 body.pyeoda-music{background:#050507!important;color:#f7f7f8!important;font-family:var(--pyeoda-ui-font)!important;margin:0;overflow-x:hidden}
 body.pyeoda-music .app{background:#0d0d12!important;max-width:1220px!important;margin:0 auto!important;min-height:100dvh!important;padding:0 0 calc(74px + env(safe-area-inset-bottom))!important;border-inline:1px solid #191920}
@@ -574,3 +574,7 @@ body.pyeoda-music #workspace .mobile-quick-memo label span{color:#adc3c9!importa
 body.pyeoda-music #workspace .mobile-quick-memo textarea{background:transparent!important;color:#eef7f3!important;width:100%!important;font-size:14px!important;line-height:1.5!important}
 body.pyeoda-music #workspace .mobile-quick-memo textarea::placeholder{color:#a7bcc4!important}
 body.pyeoda-music #workspace #openQuickMemo{min-height:30px!important;padding:5px 9px!important;border-radius:9px!important;font-size:12px!important}
+
+/* Shared Korean typeface for both PYODA apps, including dialogs and reading UI. */
+body.pyeoda-music .top .logo,body.pyeoda-music .top .logo small,body.pyeoda-music :is(dialog,dialog *, .toast,.music-bottom-nav,.music-bottom-nav *){font-family:var(--pyeoda-ui-font)!important}
+body.pyeoda-music #readerBody{font-family:var(--pyeoda-ui-font)!important}
