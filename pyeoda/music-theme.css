@@ -448,3 +448,6 @@ body.pyeoda-music #creator .books-creator-panel{margin:0!important;padding:6px 1
 body.pyeoda-music #creator .books-creator-panel h3{font-size:12px!important;line-height:16px!important;margin:0 0 3px!important}
 body.pyeoda-music #creator .books-creator-panel p{font-size:11px!important;line-height:16px!important;margin:0;max-height:48px;overflow:auto}
 body.pyeoda-music #creator #creatorNoteDate:empty{display:none}
+/* Hide scrollbar chrome across the app without disabling scrolling. */
+html:has(body.pyeoda-music),body.pyeoda-music,body.pyeoda-music *{scrollbar-width:none!important;-ms-overflow-style:none!important}
+html:has(body.pyeoda-music)::-webkit-scrollbar,body.pyeoda-music::-webkit-scrollbar,body.pyeoda-music *::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
