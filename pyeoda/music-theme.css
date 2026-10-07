@@ -209,3 +209,12 @@ body.pyeoda-music main>.studio-section-nav button{display:flex!important;align-i
 body.pyeoda-music main>.studio-section-nav button.active{background:#735cff!important;border-color:#735cff!important;color:#fff!important}
 @media(max-width:760px){body.pyeoda-music main>.studio-section-nav{width:calc(100% - 32px)!important;margin:18px 16px 0!important}}
 @media(max-width:600px){body.pyeoda-music main>.studio-section-nav{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}body.pyeoda-music main>.studio-section-nav button{padding:10px 6px!important}}
+
+/* Revenue model shared with PYODA MUSIC; rates remain review examples. */
+.pyeoda-music .books-revenue-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #292933;font-size:13px;line-height:1.5}
+.pyeoda-music .books-revenue-row span{color:#aaa5ba}
+.pyeoda-music .books-support-preview{margin-top:16px;padding:18px}
+.pyeoda-music .books-support-preview label{display:flex;align-items:center;gap:12px}
+.pyeoda-music .books-support-preview input{width:min(180px,65%);padding:10px;border:1px solid #393443;border-radius:10px;background:#17151e;color:#fff}
+.pyeoda-music #plans .music-plan-grid{margin:18px 0}
+@media(max-width:600px){.pyeoda-music .books-revenue-row{font-size:12px;gap:8px}}
