@@ -610,3 +610,13 @@ body.pyeoda-music #discover#discover .discover-head>div:first-child{min-width:0}
 body.pyeoda-music #discover#discover .discover-head h2{font-size:13px!important;font-weight:400!important;line-height:20px!important;color:#a0a0ad!important;letter-spacing:0!important;white-space:nowrap!important;margin:0!important}
 body.pyeoda-music #discover#discover .discover-count{flex:none;font-size:11px!important;line-height:20px!important;padding:0!important;margin:0!important;white-space:nowrap}
 @media(max-width:350px){body.pyeoda-music #discover#discover .discover-head h2{font-size:12px!important}}
+
+/* Match MUSIC: space selector, brand/account row, then home content. */
+body.pyeoda-music .workspace-switch{margin:8px 12px 2px!important}
+body.pyeoda-music .top{display:flex!important;align-items:center!important;justify-content:space-between!important;flex-wrap:nowrap!important;padding:8px 12px 0!important;margin:0!important;border:0!important;gap:5px!important}
+body.pyeoda-music .space-brand{flex:1;gap:5px!important}
+body.pyeoda-music .top .logo{flex:1!important;font-size:24px!important;line-height:28px!important;text-align:left!important}
+body.pyeoda-music .top .books-header-actions{flex:none;gap:8px!important}
+body.pyeoda-music #my .mobile-page-controls{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+body.pyeoda-music #my #pyeodaMobileInstall{position:static!important;margin-top:10px;min-height:34px;box-shadow:none!important}
+@media(max-width:380px){body.pyeoda-music .top .logo{font-size:22px!important}body.pyeoda-music .space-brand{gap:0!important}}

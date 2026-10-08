@@ -18,7 +18,11 @@
  back.onclick=()=>{if(!trail.length||saveBeforeMobileNavigation()===false)return;const target=trail[trail.length-1];replayTarget=target;go(target);if(document.querySelector('.screen.active')?.id===target)trail.pop();else replayTarget=null;};
  const small=top.querySelector('.logo small');if(small)small.textContent='READ YOUR NEXT STORY';
  const switcher=document.createElement('div');switcher.className='workspace-switch';switcher.setAttribute('role','group');switcher.setAttribute('aria-label','공간 선택');switcher.innerHTML='<button type="button" data-space="reader" aria-pressed="true">독자</button><button type="button" data-space="creator" aria-pressed="false">크리에이터</button>';
- top.after(switcher);
+ top.before(switcher);
+ const accountSection=document.querySelector('#my .section');
+ const utilities=top.querySelector('.mobile-page-controls');
+ if(accountSection&&utilities){utilities.setAttribute('aria-label','앱 설정');accountSection.append(utilities);}
+ const install=document.getElementById('pyeodaMobileInstall');if(accountSection&&install)accountSection.append(install);
  function navigate(id){if(saveBeforeMobileNavigation()===false)return;if(id==='register')return openNewBookRegistration();go(id);}
  hub.querySelectorAll('[data-workspace-go]').forEach(b=>b.onclick=()=>navigate(b.dataset.workspaceGo));
  hub.querySelector('.workspace-profile').onclick=()=>document.querySelector('[data-open-my-creator]')?.click();
