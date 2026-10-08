@@ -603,3 +603,10 @@ body.pyeoda-music *::after{text-shadow:none!important}
 
 /* Redundant promotional copy stays out of compact task screens. */
 body.pyeoda-music #home#home .hero .hero-copy{display:none!important}
+
+/* Search guidance and result count share one compact line. */
+body.pyeoda-music #discover#discover .discover-head{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:0!important;padding:0!important;min-height:20px!important}
+body.pyeoda-music #discover#discover .discover-head>div:first-child{min-width:0}
+body.pyeoda-music #discover#discover .discover-head h2{font-size:13px!important;font-weight:400!important;line-height:20px!important;color:#a0a0ad!important;letter-spacing:0!important;white-space:nowrap!important;margin:0!important}
+body.pyeoda-music #discover#discover .discover-count{flex:none;font-size:11px!important;line-height:20px!important;padding:0!important;margin:0!important;white-space:nowrap}
+@media(max-width:350px){body.pyeoda-music #discover#discover .discover-head h2{font-size:12px!important}}
