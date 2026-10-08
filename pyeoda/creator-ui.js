@@ -30,6 +30,7 @@
   const button=document.createElement('button');button.type='button';button.className=compact?'books-creator-chip':'books-creator-tile';
   const avatar=document.createElement('span');avatar.className='books-creator-avatar';avatar.textContent=Array.from(row.name||'P')[0];
   const text=document.createElement('span'),name=document.createElement('b'),meta=document.createElement('small');name.textContent=row.name;meta.textContent='공개 작품 '+row.books.length+'편';text.append(name,meta);button.append(avatar,text);
+  if(compact){const home=document.createElement('span');home.className='books-creator-home-link';home.textContent='홈 보기 ›';button.append(home);}
   button.onclick=()=>openCreator(row.id);return button;
  }
  function renderDirectory(){
