@@ -594,3 +594,9 @@ body.pyeoda-music #home .hero *{
  text-shadow:none!important;
  -webkit-text-stroke:0!important;
 }
+
+/* No text shadows in Books screens, controls, dialogs or generated UI. */
+body.pyeoda-music,
+body.pyeoda-music *,
+body.pyeoda-music *::before,
+body.pyeoda-music *::after{text-shadow:none!important}

@@ -52,7 +52,7 @@ main{width:100%}
 .hero:after{content:'';position:absolute;inset:auto 0 0;height:110px;background:linear-gradient(transparent,rgba(248,243,232,.98));pointer-events:none}
 .hero>div:first-child{position:relative;z-index:2;max-width:760px;padding:28px 36px 34px;border-radius:28px;background:rgba(255,252,245,.62);backdrop-filter:blur(2px)}
 .eyebrow{color:var(--accent-deep);font-weight:700;font-size:13px;letter-spacing:.18em;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
-.hero h1{font-size:54px;line-height:1.26;letter-spacing:-3px;margin:12px 0 16px;font-weight:700;text-shadow:0 1px 0 rgba(255,255,255,.6);word-break:keep-all}
+.hero h1{font-size:54px;line-height:1.26;letter-spacing:-3px;margin:12px 0 16px;font-weight:700;text-shadow:none;word-break:keep-all}
 .hero p{font-size:18px;line-height:1.9;color:#5d564c;max-width:680px;margin:0 auto;word-break:keep-all;overflow-wrap:break-word}
 .cta{display:flex;gap:10px;margin-top:25px;justify-content:center;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
 .cta button,.primary{border:0;border-radius:999px;padding:13px 22px;font-weight:700;cursor:pointer}
@@ -75,7 +75,7 @@ main{width:100%}
 .cover{grid-column:1;grid-row:1/5;height:176px;border-radius:4px;background-image:linear-gradient(rgba(255,255,255,.04),rgba(255,255,255,.06)),none;background-size:520%;background-position:14% 70%;display:flex;align-items:flex-end;padding:10px;font-weight:700;font-size:14px;line-height:1.35;word-break:keep-all;overflow:hidden;position:relative;border:1px solid rgba(84,74,60,.12);box-shadow:0 4px 14px rgba(70,56,38,.08)}
 .book-card:nth-child(4n+2) .cover{background-position:42% 64%}.book-card:nth-child(4n+3) .cover{background-position:68% 42%}.book-card:nth-child(4n+4) .cover{background-position:88% 72%}
 .cover:before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(251,247,239,.88),rgba(251,247,239,.02) 58%)}
-.cover>span:not(.rank){position:relative;z-index:1;text-shadow:0 1px 0 #fff}
+.cover>span:not(.rank){position:relative;z-index:1;text-shadow:none}
 .cover:after{display:none}
 .meta{color:var(--muted);font-size:12.5px;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;letter-spacing:-.02em}
 .card h3{grid-column:2;margin:1px 0 3px;word-break:keep-all;font-size:17px;line-height:1.35;font-weight:700}
@@ -163,9 +163,9 @@ body{background:#fbf8f1;color:var(--ink);}
 .hero{min-height:438px;padding:52px max(28px,calc((100vw - 1460px)/2)) 42px;background-image:none;background-size:cover;background-position:center center;align-items:flex-start;justify-content:center;text-align:center;border-bottom:1px solid rgba(105,95,77,.13)}
 .hero:after{height:34px;background:linear-gradient(transparent,rgba(251,248,241,.94))}
 .hero>div:first-child{max-width:640px;padding:0;background:transparent;border-radius:0;backdrop-filter:none;box-shadow:none;}
-.eyebrow{font-size:12px;letter-spacing:.22em;color:#596247;margin-top:0;text-shadow:0 1px rgba(255,255,255,.9)}
-.hero h1{font-size:45px;line-height:1.24;letter-spacing:-2.8px;margin:12px 0 14px;text-shadow:0 1px 0 rgba(255,255,255,.95),0 2px 8px rgba(255,255,255,.55)}
-.hero p{font-size:16px;line-height:1.75;color:#514b43;max-width:610px;text-shadow:0 1px 0 rgba(255,255,255,.95)}
+.eyebrow{font-size:12px;letter-spacing:.22em;color:#596247;margin-top:0;text-shadow:none}
+.hero h1{font-size:45px;line-height:1.24;letter-spacing:-2.8px;margin:12px 0 14px;text-shadow:none}
+.hero p{font-size:16px;line-height:1.75;color:#514b43;max-width:610px;text-shadow:none}
 .cta{margin-top:20px}
 .cta button,.primary{padding:11px 21px;font-size:14px}
 .primary{background:#697158;box-shadow:none}
@@ -261,7 +261,7 @@ body{background:#fbf8f1;color:var(--ink);}
   font-weight:800;
   font-size:14px;
   letter-spacing:.12em;
-  text-shadow:0 1px 0 rgba(255,255,255,.9);
+  text-shadow:none;
 }
 .hero h1{
   color:#211e18;
@@ -270,7 +270,7 @@ body{background:#fbf8f1;color:var(--ink);}
   letter-spacing:-2.7px;
   margin:13px 0 18px;
   font-weight:800;
-  text-shadow:0 1px 0 rgba(255,255,255,.95),0 0 18px rgba(255,250,240,.55);
+  text-shadow:none;
 }
 .hero p{
   color:#3e392f;
@@ -279,7 +279,7 @@ body{background:#fbf8f1;color:var(--ink);}
   font-weight:600;
   max-width:545px;
   margin:0;
-  text-shadow:0 1px 0 rgba(255,255,255,.9),0 0 12px rgba(255,250,240,.45);
+  text-shadow:none;
 }
 .cta{justify-content:flex-start;margin-top:24px}
 .hero .secondary{background:rgba(255,252,245,.92)}
@@ -2627,7 +2627,7 @@ html,body{max-width:100%;overflow-x:clip}
 .author-auth-divider:before,.author-auth-divider:after{content:'';height:1px;background:var(--line);flex:1}
 .author-auth-card{max-height:calc(100dvh - 32px);overflow-y:auto}
 .author-auth-providers button:disabled{opacity:.6;cursor:wait}
-</style><link rel="stylesheet" data-pyeoda-music href="../pyeoda/music-theme.css?v=type40"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap"></head><body class="pyeoda-music"><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
+</style><link rel="stylesheet" data-pyeoda-music href="../pyeoda/music-theme.css?v=clean41"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap"></head><body class="pyeoda-music"><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
 <div class='author-auth-modal' id='authorAuthModal' hidden>
   <div class='author-auth-card' role='dialog' aria-modal='true' aria-labelledby='authorAuthTitle'>
     <div class='author-auth-head'>
@@ -2801,7 +2801,7 @@ html,body{max-width:100%;overflow-x:clip}
     <div class='panel registered-books-panel'>
       <div class='registered-books-head'>
         <div>
-          <div class='eyebrow'>작가 스튜디오</div>
+          
           <h2>등록 책</h2>
           <p>내가 실제 등록한 작품만 표시합니다. 공개·완결·삭제 상태를 책별로 바로 관리할 수 있습니다.</p>
         </div>
@@ -9933,7 +9933,7 @@ function bindMarkdownManuscriptImport(){
  updateManuscriptImportRestore();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindMarkdownManuscriptImport,{once:true});else bindMarkdownManuscriptImport();
-</script><script src='../pyeoda/adult-section.js?v=adult4'></script><script src='../pyeoda/hero-sky.js?v=sky14'></script><script src="./mobile-editor.js?v=type40"></script><script src="./web-studio.js?v=studio3"></script><script src="../pyeoda/book-downloads.js?v=download3"></script><script src="../pyeoda/pdf-import.js?v=pdf2"></script><script src="../pyeoda/ui-theme.js?v=theme3"></script><script src="../pyeoda/music-ui.js?v=type40"></script><script src="../pyeoda/creator-ui.js?v=type40"></script><script src="../pyeoda/button-actions.js?v=type40"></script><script src="../pyeoda/workspace-ui.js?v=type40"></script></body></html>
+</script><script src='../pyeoda/adult-section.js?v=adult4'></script><script src='../pyeoda/hero-sky.js?v=sky14'></script><script src="./mobile-editor.js?v=clean41"></script><script src="./web-studio.js?v=studio3"></script><script src="../pyeoda/book-downloads.js?v=download3"></script><script src="../pyeoda/pdf-import.js?v=pdf2"></script><script src="../pyeoda/ui-theme.js?v=theme3"></script><script src="../pyeoda/music-ui.js?v=clean41"></script><script src="../pyeoda/creator-ui.js?v=clean41"></script><script src="../pyeoda/button-actions.js?v=clean41"></script><script src="../pyeoda/workspace-ui.js?v=clean41"></script></body></html>
 
 
 
