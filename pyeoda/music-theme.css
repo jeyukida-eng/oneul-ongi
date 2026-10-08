@@ -602,4 +602,4 @@ body.pyeoda-music *::before,
 body.pyeoda-music *::after{text-shadow:none!important}
 
 /* Redundant promotional copy stays out of compact task screens. */
-body.pyeoda-music #home .hero-copy{display:none!important}
+body.pyeoda-music #home#home .hero .hero-copy{display:none!important}
