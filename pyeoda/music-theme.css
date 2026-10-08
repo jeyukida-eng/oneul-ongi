@@ -667,3 +667,6 @@ body.pyeoda-music #home#home #bookGrid .book-card{grid-template-rows:18px 14px 1
 /* Scroll Books lists without visible scrollbar chrome. */
 body.pyeoda-music :is(#bookGrid,#discoverGrid,#registeredBookList,#musicLibraryGrid){overflow-y:auto!important;overflow-x:hidden!important;scrollbar-width:none!important;-ms-overflow-style:none!important;touch-action:pan-y;-webkit-overflow-scrolling:touch}
 body.pyeoda-music :is(#bookGrid,#discoverGrid,#registeredBookList,#musicLibraryGrid)::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+
+body.pyeoda-music #home#home.active>.section{flex:1 1 0!important;height:0!important;min-height:0!important;overflow:hidden!important}
+body.pyeoda-music #home#home #bookGrid{flex:1 1 0!important;height:0!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
