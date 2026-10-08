@@ -7,7 +7,7 @@
  const details=hero?.querySelector('.mobile-home-details');if(details)document.querySelector('#my .section')?.append(details);
  const libraryBar=document.createElement('button');libraryBar.type='button';libraryBar.className='books-home-library';libraryBar.innerHTML='<span class="library-mark" aria-hidden="true">☰</span><span><b>나의 서재</b><small>읽던 작품을 한곳에</small></span><span class="library-arrow" aria-hidden="true">›</span>';libraryBar.onclick=()=>go('library');hero?.after(libraryBar);
  const creatorHeading=document.querySelector('#homeCreators h3');if(creatorHeading)creatorHeading.textContent='추천 크리에이터';
- const tabs=document.querySelector('#home .tabs');const newTab=tabs?.querySelector('[data-shelf="new"]');if(newTab)tabs.prepend(newTab);
+ const tabs=document.querySelector('#home .tabs');const newTab=tabs?.querySelector('[data-shelf="new"]');if(newTab){tabs.prepend(newTab);newTab.click();}
  const nav=document.querySelector('.music-bottom-nav');
  const studioMenu=document.querySelector('#studio .studio>.side');
  if(studioMenu){studioMenu.classList.add('studio-section-nav');studioMenu.setAttribute('role','navigation');studioMenu.setAttribute('aria-label','작가 스튜디오 메뉴');studioMenu.hidden=true;document.querySelector('main').prepend(studioMenu);

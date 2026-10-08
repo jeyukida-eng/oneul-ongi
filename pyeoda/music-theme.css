@@ -661,3 +661,5 @@ body.pyeoda-music .music-bottom-nav .plus svg{width:40px!important;height:40px!i
 body.pyeoda-music .music-bottom-nav .plus span{white-space:nowrap!important;word-break:keep-all!important;font-size:10px!important;line-height:14px!important}
 @media(max-width:380px){body.pyeoda-music .app:has(#home.active) .top .logo{font-size:22px!important;line-height:26px!important}body.pyeoda-music .app:has(#home.active) .top .logo small{font-size:8px!important}body.pyeoda-music #home#home .hero .hero-copy{font-size:11px!important}}
 @media(max-height:650px){body.pyeoda-music .app:has(#home.active)>.top{min-height:56px!important;padding-top:8px!important}body.pyeoda-music #home#home .hero{min-height:68px!important;padding:9px 12px!important}body.pyeoda-music #home#home .hero .hero-copy{display:none!important}body.pyeoda-music #home#home .books-home-creators{min-height:88px!important;padding-top:8px!important}}
+
+body.pyeoda-music #home#home #bookGrid .book-card{grid-template-rows:18px 14px 16px 24px!important;row-gap:0!important}
