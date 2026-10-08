@@ -2627,7 +2627,7 @@ html,body{max-width:100%;overflow-x:clip}
 .author-auth-divider:before,.author-auth-divider:after{content:'';height:1px;background:var(--line);flex:1}
 .author-auth-card{max-height:calc(100dvh - 32px);overflow-y:auto}
 .author-auth-providers button:disabled{opacity:.6;cursor:wait}
-</style><link rel="stylesheet" data-pyeoda-music href="../pyeoda/music-theme.css?v=copy42"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap"></head><body class="pyeoda-music"><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
+</style><link rel="stylesheet" data-pyeoda-music href="../pyeoda/music-theme.css?v=copy43"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&amp;display=swap"></head><body class="pyeoda-music"><div class='app'><header class='top'><div class='mobile-page-controls' role='group' aria-label='페이지 이동'><button type='button' id='testPaymentEntry'>테스트 결제</button></div><button type='button' class='logo logo-home' data-go='home' aria-label='PYEODA 홈으로 이동'>PYEODA <small>쓰고, 만드는<br>당신의 이야기</small></button><nav class='nav'><button data-go='home' class='active'>홈</button><button data-go='discover'>발견</button><button data-go='studio'>작가 스튜디오</button><button class='write' data-go='register' data-register-mode='new'>✍ 글쓰기</button></nav><button type='button' class='author-auth-btn' id='authorAuthBtn'>작가 로그인</button></header>
 <div class='author-auth-modal' id='authorAuthModal' hidden>
   <div class='author-auth-card' role='dialog' aria-modal='true' aria-labelledby='authorAuthTitle'>
     <div class='author-auth-head'>
@@ -3007,7 +3007,7 @@ html,body{max-width:100%;overflow-x:clip}
           <span class='epub-ready' id='epubReadyState'>✓ EPUB 자동 구성 완료</span>
         </div>
 
-        <div class='book-image-layout'><label>그림 배치<select data-book-image-layout aria-label='그림책 페이지 배치'><option value='auto'>자동 · 그림 비율로 판별</option><option value='single'>한 페이지 · 그림 한 장씩</option><option value='spread'>펼침면 · 두 페이지 폭</option></select></label><p data-book-image-layout-status></p><p>가로로 넓은 그림은 자동으로 펼침면에 배치합니다. 그림 전체를 유지하며, PDF와 EPUB에 같은 설정을 적용합니다.</p></div>
+        <div class='book-image-layout'><label>그림 배치<select data-book-image-layout aria-label='그림책 페이지 배치'><option value='auto'>자동 · 그림 비율로 판별</option><option value='single'>한 페이지 · 그림 한 장씩</option><option value='spread'>펼침면 · 두 페이지 폭</option></select></label><p data-book-image-layout-status></p><p>자동 배치는 그림 비율로 결정됩니다. PDF·EPUB에 동일하게 적용됩니다.</p></div>
 <div class='epub-preview-shell'>
           <div class='epub-preview-toolbar'>
             <select id='epubChapterSelect' aria-label='EPUB 미리보기 목차'></select>
@@ -3038,10 +3038,10 @@ html,body{max-width:100%;overflow-x:clip}
     <div class='panel'>
       <button class='secondary' data-go='publishing' style='margin-bottom:16px'>← 출판 센터</button>
       <h2>📖 종이책 만들기</h2>
-      <p>아마존 KDP의 종이책 제작 흐름을 참고해 필요한 항목만 선택하면, 여백·책등·전체 표지 크기는 자동으로 계산합니다.</p>
+      <p>인쇄 규격을 선택하세요. 여백과 책등 크기는 자동으로 계산합니다.</p>
       <div class='print-kdp-note'>복잡한 인쇄 수치는 직접 입력하지 않아도 됩니다. 현재 원고를 선택한 판형·폰트·행간·여백에 실제로 배치해 페이지를 계산합니다. 인쇄소/POD 연동 시에는 최종 PDF 규격을 한 번 더 검증합니다.</div>
 
-      <div class='book-image-layout'><label>그림 배치<select data-book-image-layout aria-label='그림책 페이지 배치'><option value='auto'>자동 · 그림 비율로 판별</option><option value='single'>한 페이지 · 그림 한 장씩</option><option value='spread'>펼침면 · 두 페이지 폭</option></select></label><p data-book-image-layout-status></p><p>가로로 넓은 그림은 자동으로 펼침면에 배치합니다. 그림 전체를 유지하며, PDF와 EPUB에 같은 설정을 적용합니다.</p></div>
+      <div class='book-image-layout'><label>그림 배치<select data-book-image-layout aria-label='그림책 페이지 배치'><option value='auto'>자동 · 그림 비율로 판별</option><option value='single'>한 페이지 · 그림 한 장씩</option><option value='spread'>펼침면 · 두 페이지 폭</option></select></label><p data-book-image-layout-status></p><p>자동 배치는 그림 비율로 결정됩니다. PDF·EPUB에 동일하게 적용됩니다.</p></div>
 <div class='print-option-grid'>
         <div class='reg-field'>
           <label for='paperBinding'>제본 형태</label>
@@ -3159,7 +3159,7 @@ html,body{max-width:100%;overflow-x:clip}
       <div class='translation-head'>
         <div>
           <h2>🌏 다국어 책 만들기</h2>
-          <p>한국어 원고를 영어 · 일본어 · 중국어판으로 현지화하고, EPUB과 PDF를 미리 본 뒤 실제 파일로 저장할 수 있습니다.</p>
+          
         </div>
         <span class='translation-badge'>번역 · 조판 · 파일 제작</span>
       </div>
@@ -3274,7 +3274,7 @@ html,body{max-width:100%;overflow-x:clip}
       <div class='revenue-head'>
         <div>
           <h2>판매 및 수익</h2>
-          <p class='meta'>선택한 작품의 판매가를 설정하고 실제 판매·정산 내역을 확인합니다.</p>
+          
         </div>
         <button type='button' class='secondary revenue-change-book' data-go='books'>등록 책에서 변경</button>
       </div>
@@ -9933,7 +9933,7 @@ function bindMarkdownManuscriptImport(){
  updateManuscriptImportRestore();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindMarkdownManuscriptImport,{once:true});else bindMarkdownManuscriptImport();
-</script><script src='../pyeoda/adult-section.js?v=adult4'></script><script src='../pyeoda/hero-sky.js?v=sky14'></script><script src="./mobile-editor.js?v=copy42"></script><script src="./web-studio.js?v=studio3"></script><script src="../pyeoda/book-downloads.js?v=download3"></script><script src="../pyeoda/pdf-import.js?v=pdf2"></script><script src="../pyeoda/ui-theme.js?v=theme3"></script><script src="../pyeoda/music-ui.js?v=copy42"></script><script src="../pyeoda/creator-ui.js?v=copy42"></script><script src="../pyeoda/button-actions.js?v=copy42"></script><script src="../pyeoda/workspace-ui.js?v=copy42"></script></body></html>
+</script><script src='../pyeoda/adult-section.js?v=adult4'></script><script src='../pyeoda/hero-sky.js?v=sky14'></script><script src="./mobile-editor.js?v=copy43"></script><script src="./web-studio.js?v=studio3"></script><script src="../pyeoda/book-downloads.js?v=download3"></script><script src="../pyeoda/pdf-import.js?v=pdf2"></script><script src="../pyeoda/ui-theme.js?v=theme3"></script><script src="../pyeoda/music-ui.js?v=copy43"></script><script src="../pyeoda/creator-ui.js?v=copy43"></script><script src="../pyeoda/button-actions.js?v=copy43"></script><script src="../pyeoda/workspace-ui.js?v=copy43"></script></body></html>
 
 
 
