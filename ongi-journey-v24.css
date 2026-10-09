@@ -117,3 +117,12 @@
   .ongi-back{width:30px;min-width:30px;height:30px}
   .ongi-back svg{width:17px;height:17px}
 }
+
+.sheet-back.quiet-back{
+  width:32px!important;min-width:32px!important;height:32px!important;flex:none!important;
+  display:grid!important;place-items:center!important;padding:0!important;
+  border:0!important;border-radius:10px!important;background:transparent!important;color:#7f776f!important;
+  box-shadow:none!important;font-size:0!important;
+}
+.sheet-back.quiet-back svg{width:18px;height:18px}
+.sheet-back.quiet-back:active{background:#f1ece8!important}
