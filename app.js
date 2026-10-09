@@ -217,8 +217,11 @@
       </div>`;
   }
   function sheetShell(title,body,back){
-    root.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><div class="sheet-head">${back?`<button class="sheet-back" type="button" data-action="sheet" data-sheet="${back}" aria-label="뒤로">‹</button>`:''}<h2 id="sheet-title">${esc(title)}</h2><button class="sheet-close" type="button" data-action="close" aria-label="닫기">×</button></div><div class="sheet-body">${body}</div></div>`;
-    document.body.style.overflow='hidden';root.querySelector('.sheet-close')?.focus();
+    const previous=back
+      ? `<button class="sheet-back quiet-back" type="button" data-action="sheet" data-sheet="${back}" aria-label="이전 화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>`
+      : `<button class="sheet-back quiet-back" type="button" data-action="close" aria-label="이전 화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>`;
+    root.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><div class="sheet-head">${previous}<h2 id="sheet-title">${esc(title)}</h2><button class="sheet-close" type="button" data-action="close" aria-label="닫기">×</button></div><div class="sheet-body">${body}</div></div>`;
+    document.body.style.overflow='hidden';root.querySelector('.quiet-back')?.focus();
   }
   function growthSheet(){
     const cat=growthCategories[state.interest],done=state.growth[todayKey()]||{},todayTasks=dailyTasks(state.interest);
