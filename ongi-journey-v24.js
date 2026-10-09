@@ -279,6 +279,7 @@
     el.innerHTML=[
       '<div class="ongi-shell" role="dialog" aria-modal="true" aria-label="오늘의 온기 100일 여정">',
         '<header class="ongi-head">',
+          '<button type="button" class="ongi-back" data-ongi="close" aria-label="이전 화면"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>',
           '<div class="ongi-head-title"><small>SMALL STEPS · 100 DAYS</small><strong>나의 100일 온기 여정</strong></div>',
           '<button type="button" class="ongi-close" data-ongi="close" aria-label="닫기">×</button>',
         '</header>',
