@@ -104,3 +104,16 @@
  .ongi-head{padding-left:max(13px,env(safe-area-inset-left,0px));padding-right:max(13px,env(safe-area-inset-right,0px))}
  .ongi-body{padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
 }
+/* v26 — consistent quiet previous controls */
+.ongi-head{justify-content:flex-start!important}
+.ongi-back{
+  width:34px;min-width:34px;height:34px;flex:none;display:grid;place-items:center;
+  border:0;border-radius:11px;background:transparent;color:#8d7569;padding:0;
+}
+.ongi-back svg{width:19px;height:19px}
+.ongi-back:active{background:#f3e9e3}
+.ongi-head-title{flex:1!important}
+@media(max-width:370px){
+  .ongi-back{width:30px;min-width:30px;height:30px}
+  .ongi-back svg{width:17px;height:17px}
+}
