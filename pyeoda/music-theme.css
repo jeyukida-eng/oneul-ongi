@@ -692,3 +692,5 @@ body.pyeoda-music .books-login-modal :is(.author-auth-message,.reader-auth-messa
 body.pyeoda-music .books-login-modal :is(.author-auth-message,.reader-auth-message){color:#cbc0e7!important;font-size:13px;overflow-wrap:anywhere}
 body.pyeoda-music .books-login-modal .reader-auth-copy{font-size:11px;line-height:1.6;color:#aaa9b5;margin-top:18px}
 @media(max-width:400px){body.pyeoda-music .books-login-modal{padding:14px!important}body.pyeoda-music .books-login-modal :is(.author-auth-card,.reader-auth-card){padding:38px 20px 24px!important;max-height:calc(100dvh - 28px)!important}body.pyeoda-music .books-login-modal .reader-auth-provider{min-height:54px!important;font-size:16px!important}}
+
+body.pyeoda-music .books-popular-rank{display:inline-block;color:#b8a7ff!important;font-size:11px!important;font-weight:800;margin-right:4px;vertical-align:baseline}

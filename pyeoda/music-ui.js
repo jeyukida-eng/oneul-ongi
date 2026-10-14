@@ -148,3 +148,38 @@
   catch(error){event.stopImmediatePropagation();input.value='';toast(error.message);}
  },true);
 })();
+
+/* Real catalog ordering, shared across BOOKS desktop and mobile. */
+(()=>{
+ 'use strict';
+ const originalFormat=window.serverRowToBook;
+ window.serverRowToBook=function(row){return {...originalFormat(row),createdAt:row.created_at||''};};
+ const date=b=>Date.parse(b.createdAt||'')||0;
+ const identity=b=>String(b.serverId||'');
+ const newest=(a,b)=>date(b)-date(a)||identity(a).localeCompare(identity(b));
+ const originalItems=window.publicShelfItems;
+ window.publicShelfItems=function(type){
+  if(!PYEODA_SERVER.connected||!['new','popular'].includes(type))return originalItems(type);
+  const all=[...currentPublicBooks()];
+  if(type==='new')return all.sort(newest).slice(0,8);
+  const score=b=>Math.max(0,Number(b.views)||0)+Math.max(0,Number(b.likes)||0)*5;
+  return all.sort((a,b)=>score(b)-score(a)||newest(a,b)).slice(0,8);
+ };
+ const originalCard=window.cardHTML;
+ window.cardHTML=function(book,index,type){
+  const html=originalCard(book,index,type);
+  return type==='popular'?html.replace(/(<h3[^>]*>)/,'$1<span class="books-popular-rank">'+(index+1)+'위</span> '):html;
+ };
+ const originalRender=window.renderShelf;
+ window.renderShelf=function(type='popular'){
+  const result=originalRender(type);
+  const desc=document.getElementById('shelfDesc');
+  if(desc&&PYEODA_SERVER.connected&&type==='new')desc.textContent='작품 등록일 기준 최신순';
+  if(desc&&PYEODA_SERVER.connected&&type==='popular')desc.textContent='전체 조회수 + 하트 × 5 기준 · 동률은 최신 등록순';
+  return result;
+ };
+ // The original app starts fetching before this shared file is evaluated.
+ // Refresh once so any already formatted rows also receive their creation date.
+ if(PYEODA_SERVER.connected)void refreshServerLibrary({silent:true});
+ else renderShelf(document.querySelector('.tab.active')?.dataset.shelf||'new');
+})();
