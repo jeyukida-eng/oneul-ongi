@@ -1,6 +1,30 @@
+/* Bind sign-in before optional layout/photo features initialize. */
+(()=>{
+ 'use strict';
+ let logoutBusy=false;
+ document.addEventListener('click',async event=>{
+  const target=event.target?.nodeType===3?event.target.parentElement:event.target;
+  const button=target?.closest?.('.books-header-pill,[data-music-login],#authorAuthBtn');
+  if(!button)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  const signed=typeof readerIsSignedIn==='function'&&readerIsSignedIn();
+  if(button.matches('.books-header-pill')&&signed){
+   if(logoutBusy)return;logoutBusy=true;button.disabled=true;
+   try{await logoutAuthor();}catch{toast('로그아웃하지 못했습니다. 다시 눌러 주세요.');}
+   finally{logoutBusy=false;if(button.isConnected)button.disabled=false;}return;
+  }
+  const modal=document.getElementById('authorAuthModal');
+  if(typeof openAuthorAuthModal==='function')openAuthorAuthModal('login');
+  else if(modal){modal.hidden=false;document.body.style.overflow='hidden';}
+ },true);
+ window.addEventListener('pageshow',()=>{
+  if(typeof authorOAuthBusy!=='undefined')authorOAuthBusy=false;
+  document.querySelectorAll('[data-author-provider],[data-reader-provider]').forEach(button=>button.disabled=false);
+ });
+})();
 /* Reuses the existing app feature handlers and server client. */
 (()=>{
- 'use strict';document.body.classList.add('pyeoda-music');document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#0d0d12');const css=document.querySelector('link[data-pyeoda-music]');if(css)document.head.append(css);
+ 'use strict';const ResizeObserver=window.ResizeObserver||class{observe(){}disconnect(){}};document.body.classList.add('pyeoda-music');document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#0d0d12');const css=document.querySelector('link[data-pyeoda-music]');if(css)document.head.append(css);
  const logo=document.querySelector('.top .logo');if(logo){logo.innerHTML='<span>PYODA BOOKS</span><small>BOOKS FOR CREATORS</small>';logo.setAttribute('aria-label','PYODA BOOKS 홈');}
  const install=document.getElementById('pyeodaInstallEntry');if(install){install.textContent='↓ 앱 설치';install.setAttribute('aria-label','PC·모바일에 펴다 앱 설치');}
  const hero=document.querySelector('#home .hero');if(hero){hero.querySelector('.eyebrow').textContent='오늘 뭐 읽을까요?';hero.querySelector('h1').innerHTML='마음에 남을 이야기, 여기서 펼쳐보세요.';const copy=hero.querySelector('.hero-copy')||hero.querySelector('p');copy.textContent='새로운 작품과 작가를 만나고, 나의 서재에 담아보세요.';copy.hidden=false;const policy=document.createElement('p');policy.className='books-home-policy';policy.textContent='무료 읽기 · 무료 글쓰기';hero.querySelector('.cta')?.after(policy);const d=hero.querySelector('.mobile-home-details');if(d){d.querySelector('summary').textContent='펴다 이용·수익 안내';d.querySelector('p').textContent='독자 월 이용권 없이 무료 작품·무료 회차를 읽습니다. 기본 글쓰기·연재·공개는 무료입니다. 소장 작가 85%·후원 작가 90%는 배분 예시입니다. 후원은 준비 중입니다.';}}

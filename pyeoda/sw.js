@@ -1,4 +1,4 @@
-const CACHE='pyeoda-r2-compatible-ranking59';
+const CACHE='pyeoda-r2-compatible-loginclick60';
 const CORE=['../pyeoda/startup.js?v=startup56','../pyeoda/creator-ui.js?v=scroll50','../pyeoda/music-theme.css?v=scroll50','../pyeoda/music-ui.js?v=scroll50','../pyeoda/manuscript-assets.js','../pyeoda/hero-sky.js?v=sky14','../pyeoda/adult-section.js?v=adult4','./','./index.html','./server-config.js','./manifest.webmanifest','./icon-180.png?v=books1','./icon-192.png?v=books1','./icon-512.png?v=books1'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
