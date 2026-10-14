@@ -47,7 +47,7 @@
     Object.keys(journal.guided).forEach(key => {if(validDate(key) && journal.guided[key]?.at)set.add(key)});
     const dates=Array.from(set).sort();
     const completed=Math.min(100,dates.length);
-    const current=Math.min(100,completed+(set.has(today())?0:1));
+    const current=completed;
     return {rows,growth,journal,dates,completed,current,
       phase:PHASES[Math.min(3,Math.floor((current-1)/25))]};
   }
