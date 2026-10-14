@@ -130,7 +130,15 @@
   // UTC ordinal computed from the user's LOCAL calendar date; stable throughout one day.
   const daySerial=(date=new Date())=>Math.floor(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())/86400000);
   const dailyQuoteEntry=(date=new Date())=>content.quotes[daySerial(date)%content.quotes.length];
-  const dailyQuote=()=>dailyQuoteEntry().text;
+  const moodQuoteSeed={tired:2,anxious:5,okay:7,happy:9,mixed:11};
+  function homeQuoteEntry(mood,date=new Date()){
+    if(!moods[mood])return dailyQuoteEntry(date);
+    const bank=moods[mood].messages||[];
+    if(!bank.length)return dailyQuoteEntry(date);
+    const item=bank[(daySerial(date)+(moodQuoteSeed[mood]||0))%bank.length];
+    return {text:item,theme:`오늘의 기분 · ${moods[mood].label}`};
+  }
+  const dailyQuote=()=>homeQuoteEntry(entry()?.mood).text;
   const dailyStory=(date=new Date())=>stories[daySerial(date)%stories.length];
   // Three daily missions per interest. Different prime cycles give many distinct
   // daily triples, and avoid showing three copies of one task on the same day.
@@ -230,7 +238,7 @@
   }
   function storiesSheet(){
     const today=dailyStory(),prior=Array.from({length:2},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(i+1));return {date:d,story:dailyStory(d)}});
-    const todayQuote=dailyQuoteEntry();
+    const todayQuote=homeQuoteEntry(entry()?.mood);
     const recent=prior.map(({date,story})=>`<button class="story-row compact" type="button" data-action="article" data-id="${esc(story.id)}"><span class="story-index">${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')}</span><span class="story-main"><strong>${esc(story.title)}</strong><small>${esc(story.category)}</small></span><span aria-hidden="true">↗</span></button>`).join('');
     sheetShell('마음에 머무는 이야기',`<div class="panel panel-tight story-hero"><div class="article-kicker">오늘의 문장</div><h3>“${esc(todayQuote.text)}”</h3><p class="theme-caption">영감을 받은 주제: ${esc(todayQuote.theme)}</p></div><div class="panel panel-tight daily-feature story-feature"><div class="article-kicker">오늘의 이야기 · ${esc(today.category)}</div><h3>${esc(today.title)}</h3><p>${esc(today.summary)}</p><div class="story-actions"><button class="solid-btn" type="button" data-action="article" data-id="${esc(today.id)}">오늘 이야기 읽기</button><button class="soft-btn" type="button" data-action="sheet" data-sheet="records">내 기록 보기</button></div></div><div class="panel panel-tight compact-list"><div class="section-mini-head"><h3>지난 이야기 2편</h3><small>가볍게 이어 읽기</small></div>${recent}</div><small class="copyright-note">짧고 가볍게 읽는 오늘의 위로 이야기예요.</small>`);
   }
