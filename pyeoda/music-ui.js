@@ -128,3 +128,23 @@
   if(reader&&!reader.hidden){event.preventDefault();closeReaderAuthModal();}
  });
 })();
+
+/* Validate original images before any preview, conversion, or upload handler. */
+(()=>{
+ 'use strict';
+ const LIMIT=10000000;
+ function check(file){
+  if(!file||!['image/png','image/jpeg','image/webp',''].includes(file.type||'')||!/.(png|jpe?g|webp)$/i.test(file.name||''))throw new Error('PNG · JPG · WEBP 이미지를 선택해 주세요.');
+  if(!Number.isFinite(file.size)||file.size<=0||file.size>LIMIT)throw new Error('이미지는 한 장당 최대 10MB(10,000,000바이트)입니다. 선택한 파일은 등록되지 않았습니다.');
+ }
+ const originalCover=window.optimizeCoverFile;
+ if(originalCover)window.optimizeCoverFile=function(file){try{if(file)check(file);}catch(error){return Promise.reject(error);}return originalCover(file);};
+ const originalImage=window.prepareManuscriptImage;
+ if(originalImage)window.prepareManuscriptImage=function(file){try{check(file);}catch(error){return Promise.reject(error);}return originalImage(file);};
+ document.addEventListener('change',event=>{
+  const input=event.target;
+  if(!['newCoverFile','coverFile','manuscriptImageFile'].includes(input?.id))return;
+  try{for(const file of input.files||[])check(file);}
+  catch(error){event.stopImmediatePropagation();input.value='';toast(error.message);}
+ },true);
+})();

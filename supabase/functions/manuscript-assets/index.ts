@@ -29,7 +29,7 @@ export async function handle(req:Request){
    if(!UUID.test(bookId)||!Number.isSafeInteger(episodeNo)||episodeNo<1)return json({ok:false,message:'작품과 회차를 확인해 주세요.'},400);
    const {data:book,error:bookError}=await admin.from('books').select('id,owner_id').eq('id',bookId).maybeSingle();if(bookError)throw bookError;
    if(!book||book.owner_id!==user.id)return json({ok:false,message:'본인 작품에만 그림을 저장할 수 있습니다.'},403);
-   const bytes=await boundedBytes(req,10*1024*1024),mime=imageMime(bytes);
+   const bytes=await boundedBytes(req,10000000),mime=imageMime(bytes);
    if(!mime||req.headers.get('content-type')?.split(';')[0]!==mime)return json({ok:false,message:'PNG, JPG, WEBP 그림만 저장할 수 있습니다.'},400);
    const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(x=>x.toString(16).padStart(2,'0')).join('');
    const {data:asset,error:reserveError}=await admin.rpc('reserve_manuscript_asset',{p_owner:user.id,p_book:bookId,p_episode:episodeNo,p_hash:hash,p_mime:mime,p_bytes:bytes.length,p_total_limit:quota('PYEODA_R2_TOTAL_LIMIT_BYTES'),p_owner_limit:quota('PYEODA_R2_OWNER_LIMIT_BYTES')});
