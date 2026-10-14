@@ -7,6 +7,30 @@
   const DATE = (d=new Date()) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const esc = v => String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const QUOTES = ['오늘도 나를 잘 돌봤어요', '작은 걸음도 충분히 소중해요', '나를 돌본 오늘을 기억해요'];
+  const GOODS_CARD_LINES = [
+    ['오늘도 나를','놓치지 않았어요'],
+    ['천천히 가도','괜찮아요'],
+    ['쉬어가는 날도','나를 만드는 중이에요'],
+    ['작은 걸음이','나를 바꿔요'],
+    ['오늘도 여기까지','잘 왔어요'],
+    ['잘하지 않아도','계속 가고 있어요'],
+    ['오늘의 나를','조금 칭찬해요'],
+    ['내 속도대로','가도 괜찮아요'],
+    ['마음을 돌보는 것도','성장입니다'],
+    ['열흘의 온기가','차곡차곡 쌓였어요']
+  ];
+  const GOODS_CARD_PALETTES = [
+    ['#FFF8EF','#C97758','#F2D7C5','#87977C'],
+    ['#FFF9F1','#B97758','#F0D8C9','#91A084'],
+    ['#F8F4EF','#9A715D','#E6D9CF','#83927A'],
+    ['#FFF7EC','#C57C59','#F5DBC8','#879B80'],
+    ['#FFFAF4','#B86D51','#F0DED1','#8A9B85'],
+    ['#FFF7F0','#A86C55','#EED7C9','#7E947A'],
+    ['#FFF9F3','#BD7658','#F0D8C6','#899C82'],
+    ['#FDF8F2','#A66F58','#E9DACF','#86947D'],
+    ['#FFF8F1','#B87556','#F1D8C8','#84967D'],
+    ['#FFF5EA','#A96149','#EECDBA','#71866C']
+  ];
   const moodIds = ['happy','okay','tired','anxious','mixed'];
   let shareFormat = 'feed';
   let sharePhrase = 0;
@@ -61,6 +85,9 @@
     const todayItems = itemsFor(state,DATE());
     const growth = Object.entries(state.growth?.[DATE()] || {}).filter(([id,done])=>done===true && taskTitleMap[id]).map(([id])=>taskTitleMap[id]);
     return {todayItems, growth, today:todayItems.length, days:dated.length, total};
+  }
+  function goodsDay(){
+    return Math.max(0,Math.min(100,stats().days));
   }
   const badges = ({days,total}) => [
     {name:'첫 번째 온기',needed:1,current:total,desc:'첫 성취를 남겼어요'},
@@ -183,6 +210,7 @@
   }
   function drawCard() {
     const s = stats();
+    const day = Math.max(0,Math.min(100,s.days));
     const story = shareFormat === 'story';
     const W = 1080, H = story ? 1920 : 1350;
     const canvas = document.createElement('canvas');
@@ -191,108 +219,142 @@
     const mid = W / 2;
     const korean = '"Apple SD Gothic Neo", "Noto Sans KR", "NanumSquare", sans-serif';
     const S = (weight, px) => `${weight} ${px}px ${korean}`;
-    const ink = '#463B36', terracotta = '#C9795D', warm = '#B86F50', quiet = '#7E716A', sage = '#8E9B83';
-    const paper = '#FFF9F2', cream = '#FFFDF8', peach = '#F4D8C7', blush = '#F8E9E0';
+    const safeRound = (x,y,w,h,r) => {
+      c.beginPath();
+      if(typeof c.roundRect==='function') c.roundRect(x,y,w,h,r);
+      else {c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
+    };
     const rrect = (x,y,w,h,r,fill,stroke) => {
-      c.beginPath(); c.roundRect(x,y,w,h,r);
+      safeRound(x,y,w,h,r);
       if(fill){c.fillStyle=fill;c.fill();}
       if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke();}
     };
     const center = (str, y, font, fill, maxW=930) => {
-      c.font=font; c.textAlign='center'; c.textBaseline='alphabetic'; c.fillStyle=fill;
-      c.fillText(str,mid,y,maxW);
+      c.font=font;c.textAlign='center';c.textBaseline='alphabetic';c.fillStyle=fill;c.fillText(str,mid,y,maxW);
     };
 
-    // Warm cream paper with very soft editorial blobs.
-    c.fillStyle=paper; c.fillRect(0,0,W,H);
-    c.save(); c.shadowColor='rgba(91,61,48,.10)'; c.shadowBlur=46; c.shadowOffsetY=12;
-    rrect(34,32,W-68,H-64,66,cream); c.restore();
-    c.save(); c.beginPath(); c.roundRect(34,32,W-68,H-64,66); c.clip();
-    c.fillStyle='#FCECE2';
-    [[-10,story?540:410,200,120],[1050,story?850:640,175,145],[-30,H-120,220,145]].forEach(([x,y,rx,ry])=>{
-      c.beginPath(); c.ellipse(x,y,rx,ry,0,0,2*Math.PI); c.fill();
-    });
-    c.fillStyle='#EEF1E8';
-    c.beginPath(); c.ellipse(1030,story?1510:1115,170,115,0,0,2*Math.PI); c.fill();
+    // DAY 001~010: collectible emotional-goods card. DAY is always drawn by the app, never baked into artwork.
+    if(day>=1 && day<=10){
+      const [paper,accent,peach,sage]=GOODS_CARD_PALETTES[day-1];
+      const ink='#493B35',quiet='#806F66';
+      c.fillStyle='#F3EADF';c.fillRect(0,0,W,H);
+      c.save();c.shadowColor='rgba(76,49,36,.12)';c.shadowBlur=38;c.shadowOffsetY=12;
+      rrect(30,28,W-60,H-56,64,paper);c.restore();
 
-    // Brand chip + date.
+      // small editorial decorations
+      c.save();safeRound(30,28,W-60,H-56,64);c.clip();
+      c.fillStyle=peach;c.globalAlpha=.42;
+      c.beginPath();c.ellipse(-15,story?510:395,180,120,0,0,Math.PI*2);c.fill();
+      c.beginPath();c.ellipse(1090,story?780:610,170,130,0,0,Math.PI*2);c.fill();
+      c.fillStyle='#EDF1E8';c.beginPath();c.ellipse(1040,H-120,165,105,0,0,Math.PI*2);c.fill();
+      c.globalAlpha=1;
+
+      // brand
+      center('오늘의 온기',story?125:88,S(800,34),accent,360);
+      center('FOR A WARMER YOU',story?160:122,S(600,16),quiet,300);
+
+      // dynamic DAY badge — no fixed D-day inside the card source.
+      rrect(W-292,story?88:68,210,66,33,'rgba(255,255,255,.58)',accent);
+      c.font=S(700,28);c.textAlign='center';c.fillStyle=accent;c.fillText(`DAY ${String(day).padStart(3,'0')}`,W-187,story?131:111);
+
+      const words=GOODS_CARD_LINES[day-1]||GOODS_CARD_LINES[0];
+      center(words[0],story?335:245,S(800,72),accent,870);
+      center(words[1],story?422:330,S(800,72),accent,900);
+
+      // artwork panel
+      const artX=68,artY=story?535:405,artW=944,artH=story?650:585;
+      c.save();safeRound(artX,artY,artW,artH,54);c.clip();
+      if(shareArtwork.complete&&shareArtwork.naturalWidth>0){
+        const iw=shareArtwork.naturalWidth, ih=shareArtwork.naturalHeight;
+        const scale=Math.max(artW/iw,artH/ih),dw=iw*scale,dh=ih*scale;
+        c.drawImage(shareArtwork,artX+(artW-dw)/2,artY+(artH-dh)/2,dw,dh);
+      }else{
+        c.fillStyle=peach;c.fillRect(artX,artY,artW,artH);
+        center('♡',artY+artH/2,S(800,110),accent);
+      }
+      c.restore();
+
+      const base=read().records?.[DATE()]||{};
+      const list=[];
+      if(moodIds.includes(base.mood))list.push('오늘의 마음 살펴보기');
+      if(base.smallDone)list.push('작은 실천 완료');
+      if(typeof base.note==='string'&&base.note.trim())list.push('한 줄 기록 남기기');
+      if(includeTasks&&s.growth.length)list.push(`성장 미션 ${s.growth.length}개 완료`);
+
+      const boxY=story?1245:1030;
+      c.save();c.shadowColor='rgba(70,48,39,.07)';c.shadowBlur=20;c.shadowOffsetY=6;
+      rrect(126,boxY,828,story?245:190,38,'rgba(255,255,255,.88)');c.restore();
+      const rows=(list.length?list:['오늘의 온기를 하나씩 모아가요']).slice(0,3);
+      rows.forEach((item,i)=>{
+        const yy=boxY+58+i*(story?61:48);
+        rrect(172,yy-31,84,40,20,'#FFF0E7');
+        c.font=S(800,25);c.fillStyle=accent;c.textAlign='center';c.fillText(list.length?'+1':'♡',214,yy-3);
+        c.font=S(600,story?30:27);c.fillStyle=quiet;c.textAlign='left';c.fillText(item,285,yy,600);
+      });
+
+      center(day===10?'열흘 동안 쌓인 작은 온기를 기억해요':'작은 걸음도 나를 만드는 중',story?1620:1265,S(600,29),quiet);
+      center('#오늘의온기   #100일의온기',story?1670:1310,S(700,23),accent);
+      center('ONEUL ONGI',story?1815:1332,S(800,20),sage);
+      c.restore();
+      return canvas;
+    }
+
+    // DAY 0 and DAY 11+: existing warm share card remains as a safe fallback.
+    const ink = '#463B36', terracotta = '#C9795D', warm = '#B86F50', quiet = '#7E716A', sage = '#8E9B83';
+    const paper = '#FFF9F2', cream = '#FFFDF8', peach = '#F4D8C7', blush = '#F8E9E0';
+    c.fillStyle=paper;c.fillRect(0,0,W,H);
+    c.save();c.shadowColor='rgba(91,61,48,.10)';c.shadowBlur=46;c.shadowOffsetY=12;
+    rrect(34,32,W-68,H-64,66,cream);c.restore();
+    c.save();safeRound(34,32,W-68,H-64,66);c.clip();
+    c.fillStyle='#FCECE2';
+    [[-10,story?540:410,200,120],[1050,story?850:640,175,145],[-30,H-120,220,145]].forEach(([x,y,rx,ry])=>{c.beginPath();c.ellipse(x,y,rx,ry,0,0,2*Math.PI);c.fill();});
+    c.fillStyle='#EEF1E8';c.beginPath();c.ellipse(1030,story?1510:1115,170,115,0,0,2*Math.PI);c.fill();
+
     const badgeY=story?108:72;
     rrect(mid-138,badgeY,276,70,35,'#F8E4D8');
     center('오늘의 온기',badgeY+48,S(800,34),terracotta,240);
     const d=new Date();
-    center(`${d.getMonth()+1}월 ${d.getDate()}일 (${'일월화수목금토'[d.getDay()]})`,
-      story?247:205,S(600,29),quiet);
+    center(`${d.getMonth()+1}월 ${d.getDate()}일 (${'일월화수목금토'[d.getDay()]})`,story?247:205,S(600,29),quiet);
 
-    // User-selectable warm headline.
-    const headlines=[
-      ['오늘도 나를','잘 돌봤어요'],
-      ['작은 걸음도','충분히 소중해요'],
-      ['나를 돌본 오늘을','기억해요']
-    ];
+    // On an active journey after day 10, show the dynamic progress day quietly.
+    if(day>10){
+      rrect(W-264,story?103:74,188,58,29,'#FFF6EF','#E6C4B4');
+      c.font=S(700,24);c.textAlign='center';c.fillStyle=terracotta;c.fillText(`DAY ${String(day).padStart(3,'0')}`,W-170,story?141:112);
+    }
+
+    const headlines=[['오늘도 나를','잘 돌봤어요'],['작은 걸음도','충분히 소중해요'],['나를 돌본 오늘을','기억해요']];
     const chosen=headlines[sharePhrase]||headlines[0];
-    center('오늘의 작은 성취',story?330:278,S(700,24),sage);
-    const headlineY=story?420:355, headingSize=story?82:76;
+    center(day===0?'첫 온기를 기다리고 있어요':'오늘의 작은 성취',story?330:278,S(700,24),sage);
+    const headlineY=story?420:355,headingSize=story?82:76;
     center(chosen[0],headlineY,S(800,headingSize),ink);
     center(chosen[1],headlineY+89,S(800,headingSize),ink);
 
-    // Main warmth count, designed to read clearly in an Instagram feed.
     const bubbleY=story?635:495;
-    c.fillStyle=peach; c.beginPath(); c.ellipse(mid,bubbleY+99,256,112,0,0,2*Math.PI); c.fill();
-    c.fillStyle='#F9E7DB'; c.beginPath(); c.ellipse(mid-245,bubbleY+72,26,26,0,0,2*Math.PI); c.fill();
-    c.fillStyle='#E8D7C9'; c.beginPath(); c.ellipse(mid+250,bubbleY+132,15,15,0,0,2*Math.PI); c.fill();
+    c.fillStyle=peach;c.beginPath();c.ellipse(mid,bubbleY+99,256,112,0,0,2*Math.PI);c.fill();
     center(String(s.today),bubbleY+128,S(800,s.today>99?118:148),warm,260);
     center('오늘 모은 온기',bubbleY+182,S(700,29),ink,340);
 
-    const base = read().records?.[DATE()]||{};
-    const label=[];
+    const base=read().records?.[DATE()]||{},label=[];
     if(moodIds.includes(base.mood))label.push('오늘의 기분 선택');
     if(base.smallDone)label.push('작은 실천 완료');
     if(typeof base.note==='string'&&base.note.trim())label.push('한 줄 기록 남기기');
     if(includeTasks&&s.growth.length)label.push(`성장 미션 ${s.growth.length}개 완료`);
-    const sublines=[]; c.font=S(600,story?35:31);
-    if(!label.length)sublines.push('지금부터 시작해도 충분해요');
-    for(const phrase of label){
-      const i=sublines.length-1, joined=i>=0?sublines[i]+' · '+phrase:phrase;
-      if(i>=0&&c.measureText(joined).width<=860)sublines[i]=joined;
-      else sublines.push(phrase);
-    }
-    const y=story?910:720;
-    sublines.slice(0,2).forEach((line,i)=>center(line,y+42*i,S(600,story?35:31),quiet));
+    const sublines=[];c.font=S(600,story?35:31);
+    if(!label.length)sublines.push(day===0?'첫 기록을 남기면 DAY 001이 시작돼요':'지금부터 시작해도 충분해요');
+    for(const phrase of label){const i=sublines.length-1,joined=i>=0?sublines[i]+' · '+phrase:phrase;if(i>=0&&c.measureText(joined).width<=860)sublines[i]=joined;else sublines.push(phrase);}
+    const y=story?910:720;sublines.slice(0,2).forEach((line,i)=>center(line,y+42*i,S(600,story?35:31),quiet));
 
-    // Keep the approved cozy illustration, but give it more breathing room.
-    const artY=story?1015:785, artH=story?250:192;
-    if(shareArtwork.complete&&shareArtwork.naturalWidth>0){
-      c.drawImage(shareArtwork,74,artY,932,artH);
-    }else{
-      c.fillStyle=blush; c.beginPath(); c.ellipse(mid,artY+138,318,88,0,0,2*Math.PI); c.fill();
-      center('♡',artY+151,S(800,96),terracotta);
-    }
+    const artY=story?1015:785,artH=story?250:192;
+    if(shareArtwork.complete&&shareArtwork.naturalWidth>0)c.drawImage(shareArtwork,74,artY,932,artH);
+    else{c.fillStyle=blush;c.beginPath();c.ellipse(mid,artY+138,318,88,0,0,2*Math.PI);c.fill();center('♡',artY+151,S(800,96),terracotta);}
 
-    // Small wins list card.
-    const list=previewData(s);
-    const listY=story?1350:985, rowH=story?65:53;
-    const listH=list.length?Math.max(184,49+list.length*rowH):154;
-    c.save(); c.shadowColor='rgba(83,56,43,.07)'; c.shadowBlur=20; c.shadowOffsetY=5;
-    rrect(160,listY,760,listH,42,'#FFFFFF'); c.restore();
+    const list=previewData(s),listY=story?1350:985,rowH=story?65:53,listH=list.length?Math.max(184,49+list.length*rowH):154;
+    c.save();c.shadowColor='rgba(83,56,43,.07)';c.shadowBlur=20;c.shadowOffsetY=5;rrect(160,listY,760,listH,42,'#FFFFFF');c.restore();
     if(list.length){
-      c.textAlign='left'; c.textBaseline='alphabetic';
-      list.forEach((item,i)=>{
-        const yy=listY+53+i*rowH;
-        rrect(207,yy-33,89,44,22,'#FFF0E7');
-        c.fillStyle=terracotta; c.textAlign='center'; c.font=S(800,28); c.fillText('+1',252,yy-2);
-        c.fillStyle='#6F655F'; c.textAlign='left'; c.font=S(600,story?31:30);
-        const words=String(item).split(/\s+/),out=[];
-        for(const word of words){const candidate=[...out,word].join(' ');if(c.measureText(candidate+'…').width>525)break;out.push(word);}
-        let display=out.length?out.join(' ')+(out.length<words.length?'…':''):String(item);
-        if(c.measureText(display).width>525)display=Array.from(String(item)).reduce((a,ch)=>c.measureText(a+ch+'…').width<=525?a+ch:a,'')+'…';
-        c.fillText(display,324,yy);
-        if(i<list.length-1){c.strokeStyle='#F3E9E1';c.lineWidth=1;c.beginPath();c.moveTo(322,yy+17);c.lineTo(858,yy+17);c.stroke();}
-      });
-    }else{
-      center('아직 오늘의 기록이 없어요',listY+91,S(600,32),quiet,650);
-    }
+      c.textAlign='left';c.textBaseline='alphabetic';
+      list.forEach((item,i)=>{const yy=listY+53+i*rowH;rrect(207,yy-33,89,44,22,'#FFF0E7');c.fillStyle=terracotta;c.textAlign='center';c.font=S(800,28);c.fillText('+1',252,yy-2);c.fillStyle='#6F655F';c.textAlign='left';c.font=S(600,story?31:30);c.fillText(String(item).slice(0,28),324,yy,525);});
+    }else center('아직 오늘의 기록이 없어요',listY+91,S(600,32),quiet,650);
 
-    // Instagram-like clean footer.
     const mottoY=story?1770:1240;
     center('작은 하루가 쌓여 나를 만듭니다',mottoY,S(600,29),quiet);
     center('#오늘의온기   #작은성취',mottoY+50,S(700,24),terracotta);
