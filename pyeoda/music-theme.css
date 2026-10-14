@@ -670,3 +670,25 @@ body.pyeoda-music :is(#bookGrid,#discoverGrid,#registeredBookList,#musicLibraryG
 
 body.pyeoda-music #home#home.active>.section{flex:1 1 0!important;height:0!important;min-height:0!important;overflow:hidden!important}
 body.pyeoda-music #home#home #bookGrid{flex:1 1 0!important;height:0!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+
+/* Reference sign-in layout; scoped to BOOKS authentication only. */
+body.pyeoda-music .books-login-modal{box-sizing:border-box;align-items:center!important;justify-content:center!important;padding:20px!important;background:rgba(0,0,0,.68)!important;backdrop-filter:blur(8px)}
+body.pyeoda-music .books-login-modal :is(.author-auth-card,.reader-auth-card){box-sizing:border-box;position:relative;width:min(520px,100%)!important;max-height:calc(100dvh - 40px)!important;padding:42px 28px 32px!important;border:1px solid #373741!important;border-radius:24px!important;background:#15151c!important;box-shadow:none!important;overflow-y:auto;scrollbar-width:none}
+body.pyeoda-music .books-login-modal :is(.author-auth-card,.reader-auth-card)::-webkit-scrollbar{display:none}
+body.pyeoda-music .books-login-modal :is(.author-auth-head,.reader-auth-head){display:block;margin:10px 0 26px!important}
+body.pyeoda-music .books-login-modal :is(.author-auth-head,.reader-auth-head) h2{margin:0 0 16px!important;padding-right:12px;font-family:inherit;font-size:clamp(21px,4.6vw,28px)!important;font-weight:800!important;line-height:1.35!important;color:#fff!important;letter-spacing:-.5px}
+body.pyeoda-music .books-login-modal :is(.author-auth-head,.reader-auth-head) p{margin:0!important;font-size:14px!important;line-height:1.7!important;color:#b4b4be!important;word-break:keep-all}
+body.pyeoda-music .books-login-modal :is(.author-auth-close,.reader-auth-close){position:absolute;top:12px;right:12px;width:36px;height:36px;background:transparent!important;border:0!important;color:#c6c6cf!important;border-radius:8px!important;font-size:30px!important;line-height:1;cursor:pointer}
+body.pyeoda-music .books-login-modal .reader-auth-providers{display:grid!important;grid-template-columns:1fr!important;gap:14px!important;margin:0!important}
+body.pyeoda-music .books-login-modal .reader-auth-provider{box-sizing:border-box;width:100%!important;min-height:58px!important;border:0!important;border-radius:14px!important;font-size:17px!important;font-weight:800!important;line-height:1.4!important;padding:14px!important;transform:none!important;box-shadow:none!important;background-image:none!important}
+body.pyeoda-music .books-login-modal .reader-auth-provider.google{background:#fff!important;color:#19191f!important}
+body.pyeoda-music .books-login-modal .reader-auth-provider.kakao{background:#fee500!important;color:#191919!important}
+body.pyeoda-music .books-login-modal .reader-auth-provider.naver{background:#03c75a!important;color:#fff!important}
+body.pyeoda-music .books-login-modal button:focus-visible,body.pyeoda-music .books-email-login summary:focus-visible{outline:2px solid #b7a5ff;outline-offset:3px}
+body.pyeoda-music .books-email-login{margin:16px 0 0;color:#b4b4be}
+body.pyeoda-music .books-email-login summary{width:fit-content;cursor:pointer;font-size:12px}
+body.pyeoda-music .books-email-login[open] summary{margin-bottom:16px}
+body.pyeoda-music .books-login-modal :is(.author-auth-message,.reader-auth-message):empty{display:none!important}
+body.pyeoda-music .books-login-modal :is(.author-auth-message,.reader-auth-message){color:#cbc0e7!important;font-size:13px;overflow-wrap:anywhere}
+body.pyeoda-music .books-login-modal .reader-auth-copy{font-size:11px;line-height:1.6;color:#aaa9b5;margin-top:18px}
+@media(max-width:400px){body.pyeoda-music .books-login-modal{padding:14px!important}body.pyeoda-music .books-login-modal :is(.author-auth-card,.reader-auth-card){padding:38px 20px 24px!important;max-height:calc(100dvh - 28px)!important}body.pyeoda-music .books-login-modal .reader-auth-provider{min-height:54px!important;font-size:16px!important}}

@@ -82,3 +82,49 @@
 })();
 
 
+
+/* Compact BOOKS sign-in card shared by desktop and installed mobile app. */
+(()=>{
+ 'use strict';
+ const labels={google:'Google로 계속하기',kakao:'카카오로 계속하기',naver:'네이버로 계속하기'};
+ for(const id of ['authorAuthModal','readerAuthModal']){
+  const modal=document.getElementById(id);if(!modal)continue;
+  modal.classList.add('books-login-modal');
+  const providers=modal.querySelector('.reader-auth-providers');
+  if(providers)for(const provider of ['google','kakao','naver']){
+   const button=providers.querySelector('[data-author-provider="'+provider+'"],[data-reader-provider="'+provider+'"]');
+   if(button){button.textContent=labels[provider];providers.append(button);}
+  }
+ }
+ const guest=document.getElementById('authorAuthGuest');
+ if(guest&&!guest.querySelector('.books-email-login')){
+  const details=document.createElement('details');details.className='books-email-login';
+  const summary=document.createElement('summary');summary.textContent='이메일로 계속하기';details.append(summary);
+  const selectors=['.author-auth-tabs','.author-auth-field','#authorAuthSubmit','#authorAccountHelp','#authorSignupDirect','#authorAuthResend'];
+  for(const selector of selectors)guest.querySelectorAll(selector).forEach(node=>details.append(node));
+  guest.querySelector('.author-auth-divider')?.remove();
+  guest.querySelector('.author-social-note')?.remove();
+  guest.querySelector('.author-auth-auto')?.remove();
+  guest.insertBefore(details,document.getElementById('authorAuthMessage'));
+ }
+ function labelAuthor(){
+  const title=document.getElementById('authorAuthTitle');if(title)title.textContent='PYODA BOOKS 로그인';
+  const subtitle=document.querySelector('#authorAuthModal .author-auth-head p');if(subtitle)subtitle.textContent='로그인 후 책과 보관함을 이용할 수 있습니다.';
+ }
+ const originalMode=window.setAuthorAuthMode;
+ if(originalMode)window.setAuthorAuthMode=function(...args){const result=originalMode(...args);labelAuthor();return result;};
+ const originalOpen=window.openAuthorAuthModal;
+ if(originalOpen)window.openAuthorAuthModal=function(...args){const result=originalOpen(...args);labelAuthor();setTimeout(()=>{
+  const modal=document.getElementById('authorAuthModal');if(modal?.hidden)return;
+  const details=modal.querySelector('.books-email-login');
+  if(!details?.open)modal.querySelector('[data-author-provider="google"]')?.focus();
+ },60);return result;};
+ const readerTitle=document.getElementById('readerAuthTitle');if(readerTitle)readerTitle.textContent='PYODA BOOKS 로그인';
+ labelAuthor();
+ document.addEventListener('keydown',event=>{
+  if(event.key!=='Escape')return;
+  const author=document.getElementById('authorAuthModal'),reader=document.getElementById('readerAuthModal');
+  if(author&&!author.hidden){event.preventDefault();closeAuthorAuthModal();}
+  if(reader&&!reader.hidden){event.preventDefault();closeReaderAuthModal();}
+ });
+})();
