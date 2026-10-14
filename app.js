@@ -185,7 +185,7 @@
       <div class="app-home-v9 free-home-v18">
         <header class="free-header">
           <div class="free-brand"><strong>오늘의 온기</strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
-          <button type="button" class="free-plus-cta premium-hero-entry" data-premium-action="open" aria-label="프리미엄 PLUS 맞춤 성장 체험하기"><span class="free-plus-star" aria-hidden="true">✦</span><span><strong>프리미엄 PLUS</strong><small>맞춤 성장 알아보기</small></span><span aria-hidden="true">›</span></button>
+          <button type="button" class="free-plus-cta premium-hero-entry" data-premium-action="open" aria-label="나의 맞춤 성장 열기"><span class="free-plus-star" aria-hidden="true">✦</span><span><strong>나의 성장</strong><small>맞춤 미션 · 리포트</small></span><span aria-hidden="true">›</span></button>
         </header>
         <section class="free-welcome" aria-label="오늘의 가벼운 기록">
           <div class="free-section-head"><span class="free-eyebrow">TODAY</span><button class="free-today-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
@@ -212,7 +212,7 @@
           <button type="button" class="free-dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c3-1 5-1 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-2 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
           <button type="button" class="free-dock-item" data-reward-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5"/></svg><span>온기</span></button>
           <button type="button" class="free-dock-item" data-action="sheet" data-sheet="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h9l3 3v13H6zM9 12h6M9 16h6"/></svg><span>기록</span></button>
-          <button type="button" class="free-dock-item free-dock-plus" data-premium-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3 6 6.5 1-4.8 4.7 1.2 6.8-5.9-3-5.9 3 1.2-6.8L2.5 9 9 8Z"/></svg><span>프리미엄</span></button>
+          <button type="button" class="free-dock-item free-dock-plus" data-premium-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3 6 6.5 1-4.8 4.7 1.2 6.8-5.9-3-5.9 3 1.2-6.8L2.5 9 9 8Z"/></svg><span>성장</span></button>
         </nav>
       </div>`;
   }
