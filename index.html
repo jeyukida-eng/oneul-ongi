@@ -16,16 +16,16 @@
   <link rel="stylesheet" href="./styles.css?v=34">
   <link rel="stylesheet" href="./achievements-v7.css?v=34">
   <link rel="stylesheet" href="./premium-personal-v15.css?v=34">
-  <link rel="stylesheet" href="./free-lite-v18.css?v=34">
   <link rel="stylesheet" href="./share-card-v19.css?v=34">
   <link rel="stylesheet" href="./ongi-journey-v24.css?v=34">
   <link rel="stylesheet" href="./ongi-unified-v27.css?v=34">
-  <link rel="stylesheet" href="./layout-system-v33.css?v=34">
+  <link rel="stylesheet" href="./layout-system-v33.css?v=35">
+  <link rel="stylesheet" href="./home-v35.css?v=35">
   <script src="./content-v6.js?v=34" defer></script>
-  <script src="./app.js?v=34" defer></script>
-  <script src="./premium-personal-v15.js?v=34" defer></script>
+  <script src="./app.js?v=35" defer></script>
+  <script src="./premium-personal-v15.js?v=35" defer></script>
   <script src="./achievements-v7.js?v=34" defer></script>
-  <script src="./ongi-journey-v24.js?v=34" defer></script>
+  <script src="./ongi-journey-v24.js?v=35" defer></script>
   <title>오늘의 온기 — 매일 새로운 온기</title>
 </head>
 <body>
@@ -42,9 +42,9 @@
 if('serviceWorker' in navigator){
   let changed=false;
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(changed||sessionStorage.getItem('ongi-v34-reloaded'))return;
+    if(changed||sessionStorage.getItem('ongi-v35-reloaded'))return;
     changed=true;
-    sessionStorage.setItem('ongi-v34-reloaded','1');
+    sessionStorage.setItem('ongi-v35-reloaded','1');
     location.reload();
   });
   window.addEventListener('load',()=>navigator.serviceWorker.ready.then(reg=>reg.update()).catch(()=>{}),{once:true});
