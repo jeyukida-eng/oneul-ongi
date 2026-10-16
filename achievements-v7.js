@@ -31,6 +31,32 @@
     ['#FFF8F1','#B87556','#F1D8C8','#84967D'],
     ['#FFF5EA','#A96149','#EECDBA','#71866C']
   ];
+  const GOODS_CARD_URLS = [
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/c52c6d5a-2c98-4230-928e-ddf4dd2f950e.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/df95f74f-6fe1-46cb-bdfa-e485e0fe6a9b.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/db7060c0-bbe4-4850-86d0-87852f694564.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/155cbcab-d0f2-4cef-aa19-14954a036eb8.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/157f7a9e-0287-4e47-92f0-88f98539d4c0.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/39ac1dda-c0b2-4d74-a3b3-a06921d68215.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/4e5fa9ed-0146-4fcf-a8d9-67a7297c9d4d.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/f01bcd84-eea9-4439-b3b9-6260e3f75fb5.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/8a90c194-d812-4b0f-b5ad-48d62bd9d94b.png",
+    "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/ec1b2d11-ed62-49a3-98ef-8110ecb6edfb.png"
+];
+  const goodsArtwork = new Map();
+  async function loadGoodsArtwork(day){
+    if(day<1||day>GOODS_CARD_URLS.length)return null;
+    if(goodsArtwork.has(day))return goodsArtwork.get(day);
+    const promise=new Promise(resolve=>{
+      const img=new Image();
+      img.crossOrigin='anonymous';
+      img.onload=()=>{promise.__resolved=img;resolve(img);};
+      img.onerror=()=>{promise.__resolved=null;resolve(null);};
+      img.src=GOODS_CARD_URLS[day-1];
+    });
+    goodsArtwork.set(day,promise);
+    return promise;
+  }
   const moodIds = ['happy','okay','tired','anxious','mixed'];
   let shareFormat = 'feed';
   let sharePhrase = 0;
@@ -168,6 +194,8 @@
     const generation=++previewSerial;
     try {
       await illustrationReady;
+      const previewDay=goodsDay();
+      if(previewDay>=1&&previewDay<=10)await loadGoodsArtwork(previewDay);
       if(document.fonts?.ready)await document.fonts.ready;
       if(generation!==previewSerial||!box.isConnected)return;
       const blob=await toPNG(drawCard());
@@ -264,10 +292,13 @@
       // artwork panel
       const artX=68,artY=story?535:405,artW=944,artH=story?650:585;
       c.save();safeRound(artX,artY,artW,artH,54);c.clip();
-      if(shareArtwork.complete&&shareArtwork.naturalWidth>0){
-        const iw=shareArtwork.naturalWidth, ih=shareArtwork.naturalHeight;
+      const dayArtworkPromise=goodsArtwork.get(day);
+      const dayArtwork=dayArtworkPromise?.__resolved||null;
+      const artwork=(dayArtwork&&dayArtwork.complete&&dayArtwork.naturalWidth>0)?dayArtwork:shareArtwork;
+      if(artwork.complete&&artwork.naturalWidth>0){
+        const iw=artwork.naturalWidth, ih=artwork.naturalHeight;
         const scale=Math.max(artW/iw,artH/ih),dw=iw*scale,dh=ih*scale;
-        c.drawImage(shareArtwork,artX+(artW-dw)/2,artY+(artH-dh)/2,dw,dh);
+        c.drawImage(artwork,artX+(artW-dw)/2,artY+(artH-dh)/2,dw,dh);
       }else{
         c.fillStyle=peach;c.fillRect(artX,artY,artW,artH);
         center('♡',artY+artH/2,S(800,110),accent);
@@ -380,6 +411,8 @@
     const btn=host.querySelector(native?'[data-reward-action="share"]':'[data-reward-action="download"]');if(btn)btn.disabled=true;
     try {
       await illustrationReady;
+      const exportDay=goodsDay();
+      if(exportDay>=1&&exportDay<=10)await loadGoodsArtwork(exportDay);
       if(document.fonts?.ready) await document.fonts.ready;
       const blob=await toPNG(drawCard());
       if(native && navigator.share && typeof File==='function') {
