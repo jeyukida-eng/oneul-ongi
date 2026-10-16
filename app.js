@@ -193,17 +193,16 @@
       <div class="app-home-v9 free-home-v18">
         <header class="free-header">
           <div class="free-brand"><strong>오늘의 온기</strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
-          <button type="button" class="free-plus-cta premium-hero-entry" data-premium-action="open" aria-label="나의 맞춤 성장 열기"><span class="free-plus-star" aria-hidden="true">✦</span><span><strong>나의 성장</strong><small>맞춤 미션 · 리포트</small></span><span aria-hidden="true">›</span></button>
         </header>
         <section class="free-welcome" aria-label="오늘의 가벼운 기록">
           <div class="free-section-head"><span class="free-eyebrow">TODAY</span><button class="free-today-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
           <h1 id="free-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1>
-          <button type="button" class="free-quote" data-action="sheet" data-sheet="stories" aria-label="오늘의 문장 더 읽기">“${esc(todayQuoteText)}”</button>
+          <div class="free-quote" aria-label="오늘의 문장">“${esc(todayQuoteText)}”</div>
           <div class="free-mood-title"><span>오늘의 기분</span><small>${m?'기록했어요 ✓':'하나만 골라주세요'}</small></div>
           <div class="free-mood-row" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="free-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${esc(v.label)}</button>`).join('')}</div>
         </section>
         <section class="free-action-card" aria-label="오늘의 작은 실천">
-          <div class="free-card-top"><span class="free-eyebrow">01 · 작은 실천</span><button class="free-quiet-link" type="button" data-action="sheet" data-sheet="growth">다른 미션 ›</button></div>
+          <div class="free-card-top"><span class="free-eyebrow">01 · 작은 실천</span><span class="free-card-helper">오늘 하나만 해도 충분해요</span></div>
           <h2>${esc(routine?routine.title:'기분을 고르면 미션을 추천해 드려요')}</h2>
           <p>${esc(routine?routine.detail:'1~5분이면 할 수 있는 작은 실천을 추천해 드릴게요.')}</p>
           <div class="free-action-footer">${r?.smallDone?`<span class="free-complete">✓ 오늘의 실천 완료</span>`:`<span class="free-minute">${esc(routine?routine.minute:'1~5분')}</span><div class="free-action-buttons"><button class="free-text-button" type="button" data-action="swap" ${!routine?'disabled':''}>바꾸기</button><button class="free-main-button" type="button" data-action="done" ${!routine?'disabled':''}>완료 ✓</button></div>`}</div>
@@ -213,8 +212,7 @@
           <div class="free-note-control"><textarea id="note" class="free-note-input" rows="2" maxlength="240" placeholder="오늘 마음에 남은 일을 한 줄로 적어보세요.">${esc(draft)}</textarea><button class="free-main-button free-save-button" type="button" data-action="save-note">저장</button></div>
           ${flagged?`<div class="free-safety">지금 안전이 걱정된다면 <a href="tel:109">109</a> · <a href="tel:119">119</a></div>`:''}
         </section>
-        <button class="free-story-row" type="button" data-action="article" data-id="${esc(todayStory.id)}" aria-label="오늘의 이야기 ${esc(todayStory.title)} 읽기"><span class="free-story-symbol" aria-hidden="true">▤</span><span class="free-story-copy"><small>오늘의 이야기</small><strong>${esc(todayStory.title)}</strong></span><span aria-hidden="true" class="free-story-arrow">읽기 ↗</span></button>
-        <div class="free-progress"><span>오늘 나를 위해 한 일</span><strong>${completed} / 3</strong><span class="free-progress-track" role="progressbar" aria-label="무료 세 가지 일과" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${completed}"><i style="width:${Math.round(100*completed/3)}%"></i></span></div>
+        <div class="free-progress"><span>오늘 나를 위해 한 일</span><strong>${completed}/3</strong><span class="free-progress-track" role="progressbar" aria-label="무료 세 가지 일과" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${completed}"><i style="width:${Math.round(100*completed/3)}%"></i></span></div>
         <nav class="free-dock dock-nav" aria-label="주요 메뉴">
           <button type="button" class="free-dock-item current" data-action="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-7 9 7M5 10v10h14V10"/></svg><span>홈</span></button>
           <button type="button" class="free-dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c3-1 5-1 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-2 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
