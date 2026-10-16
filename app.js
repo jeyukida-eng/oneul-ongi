@@ -317,7 +317,10 @@
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&root.innerHTML)closeSheet()});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)return;const r=entry();if(validMoods.includes(r?.mood)){chosen=r.mood;draft=r.note||''}renderHome()});
   window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event});
-  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+    window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(reg=>reg.update()).catch(()=>{}));
+    window.addEventListener('pageshow',()=>navigator.serviceWorker.getRegistration().then(reg=>reg?.update()).catch(()=>{}));
+  }
   renderHome();
   window.__ongiPremiumRefresh=()=>{state=readState();const r=entry();chosen=validMoods.includes(r?.mood)?r.mood:null;draft=r?.note||'';renderHome();};
   window.__ongiV6Checks={todayKey,daySerial,dailyQuoteEntry,dailyStory,dailyTasks,validMoods,stories:stories.length,quotes:content.quotes.length,growthTasks:Object.values(growthCategories).reduce((a,c)=>a+c.tasks.length,0),emotionMessages:Object.fromEntries(Object.entries(moods).map(([k,v])=>[k,v.messages.length])),emotionRoutines:Object.fromEntries(Object.entries(moods).map(([k,v])=>[k,v.routines.length]))};
