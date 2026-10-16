@@ -389,3 +389,49 @@
   .a-value-grid{grid-template-columns:1fr!important;grid-auto-rows:auto!important}
   .a-value-card{min-height:0!important}
 }
+
+
+/* 100-day journey now has one canonical entry inside Growth, not on Home. */
+.a-journey-entry{
+  width:100%;
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 13px;
+  border:1px solid #E9DDD4;
+  border-radius:16px;
+  background:#FFF8F2;
+  color:#9A5E47;
+  text-align:left;
+}
+.a-journey-entry>span:first-child{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.a-journey-entry b{
+  font-size:12px;
+  line-height:1.3;
+  color:#6E4F42;
+  word-break:keep-all;
+}
+.a-journey-entry small{
+  font-size:9.5px;
+  line-height:1.35;
+  color:#9B8173;
+  white-space:normal;
+  word-break:keep-all;
+}
+.a-journey-entry>span:last-child{
+  flex:none;
+  display:flex;
+  align-items:center;
+  gap:3px;
+  font-size:10px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.a-journey-entry svg{width:13px;height:13px}
