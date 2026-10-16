@@ -323,9 +323,12 @@
         c.font=S(600,story?30:27);c.fillStyle=quiet;c.textAlign='left';c.fillText(item,285,yy,600);
       });
 
-      center(day===10?'열흘 동안 쌓인 작은 온기를 기억해요':'작은 걸음도 나를 만드는 중',story?1620:1265,S(600,29),quiet);
-      center('#오늘의온기   #100일의온기',story?1670:1310,S(700,23),accent);
-      center('ONEUL ONGI',story?1815:1332,S(800,20),sage);
+      const goodsFooterMottoY=story?1620:1242;
+      const goodsFooterHashY=story?1670:1278;
+      const goodsFooterBrandY=story?1815:1306;
+      center(day===10?'열흘 동안 쌓인 작은 온기를 기억해요':'작은 걸음도 나를 만드는 중',goodsFooterMottoY,S(600,29),quiet);
+      center('#오늘의온기   #100일의온기',goodsFooterHashY,S(700,23),accent);
+      center('ONEUL ONGI',goodsFooterBrandY,S(800,20),sage);
       c.restore();
       return canvas;
     }
@@ -386,10 +389,12 @@
       list.forEach((item,i)=>{const yy=listY+53+i*rowH;rrect(207,yy-33,89,44,22,'#FFF0E7');c.fillStyle=terracotta;c.textAlign='center';c.font=S(800,28);c.fillText('+1',252,yy-2);c.fillStyle='#6F655F';c.textAlign='left';c.font=S(600,story?31:30);c.fillText(String(item).slice(0,28),324,yy,525);});
     }else center('아직 오늘의 기록이 없어요',listY+91,S(600,32),quiet,650);
 
-    const mottoY=story?1770:1240;
+    const mottoY=story?1770:1228;
+    const hashY=story?1820:1264;
+    const brandY=story?1860:1300;
     center('작은 하루가 쌓여 나를 만듭니다',mottoY,S(600,29),quiet);
-    center('#오늘의온기   #작은성취',mottoY+50,S(700,24),terracotta);
-    center('ONEUL ONGI',story?1860:1315,S(800,24),sage);
+    center('#오늘의온기   #작은성취',hashY,S(700,24),terracotta);
+    center('ONEUL ONGI',brandY,S(800,24),sage);
     c.restore();
     return canvas;
   }
