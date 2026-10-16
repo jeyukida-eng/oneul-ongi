@@ -24,7 +24,7 @@
   <script src="./content-v6.js?v=34" defer></script>
   <script src="./app.js?v=35" defer></script>
   <script src="./premium-personal-v15.js?v=35" defer></script>
-  <script src="./achievements-v7.js?v=36" defer></script>
+  <script src="./achievements-v7.js?v=37" defer></script>
   <script src="./ongi-journey-v24.js?v=35" defer></script>
   <title>오늘의 온기 — 매일 새로운 온기</title>
 </head>
@@ -42,9 +42,9 @@
 if('serviceWorker' in navigator){
   let changed=false;
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(changed||sessionStorage.getItem('ongi-v36-reloaded'))return;
+    if(changed||sessionStorage.getItem('ongi-v37-reloaded'))return;
     changed=true;
-    sessionStorage.setItem('ongi-v36-reloaded','1');
+    sessionStorage.setItem('ongi-v37-reloaded','1');
     location.reload();
   });
   window.addEventListener('load',()=>navigator.serviceWorker.ready.then(reg=>reg.update()).catch(()=>{}),{once:true});
