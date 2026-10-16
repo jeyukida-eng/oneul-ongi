@@ -80,24 +80,23 @@
     return root;
   }
   function insertHomeLinks() {
-    const page=document.querySelector('#main-content .free-home-v18');
+    const page=document.querySelector('#main-content .oh-home');
     if(!page)return;
-    const header=page.querySelector('.free-header');
-    if(header && !header.querySelector('.free-back-btn')) {
+    const header=page.querySelector('.oh-header');
+    if(header && !header.querySelector('.oh-back')) {
       const back=document.createElement('button');
-      back.type='button';back.className='free-back-btn';
+      back.type='button';back.className='oh-back';
       back.dataset.ongiNav='back';back.setAttribute('aria-label','이전 화면');
       back.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
-      const brand=header.querySelector('.free-brand');
+      const brand=header.querySelector('.oh-brand');
       if(brand)header.insertBefore(back,brand);else header.prepend(back);
     }
-    if(header && !header.querySelector('.free-install-btn')) {
+    if(header && !header.querySelector('.oh-install')) {
       const button=document.createElement('button');
-      button.type='button';button.className='free-install-btn';
+      button.type='button';button.className='oh-install';
       button.dataset.action='install';button.setAttribute('aria-label','오늘의 온기 앱 설치하기');
       button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 16v4h14v-4"/></svg><span>설치</span>';
-      const premium=header.querySelector('.free-plus-cta');
-      if(premium)header.insertBefore(button,premium);else header.appendChild(button);
+      header.appendChild(button);
     }
     // 100일 여정은 홈에 중복 노출하지 않습니다.
     // 성장 기능의 단일 진입점은 하단 '성장' 메뉴입니다.
