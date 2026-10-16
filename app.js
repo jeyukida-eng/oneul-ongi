@@ -190,35 +190,35 @@
     const completed=(m?1:0)+(r?.smallDone?1:0)+(r?.note?.trim()?1:0);
     const flagged=worryPattern.test(r?.note||'');
     main.innerHTML=`
-      <div class="app-home-v9 free-home-v18">
-        <header class="free-header">
-          <div class="free-brand"><strong>오늘의 온기</strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
+      <div class="oh-home">
+        <header class="oh-header">
+          <div class="oh-brand"><strong>오늘의 온기</strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
         </header>
-        <section class="free-welcome" aria-label="오늘의 가벼운 기록">
-          <div class="free-section-head"><span class="free-eyebrow">TODAY</span><button class="free-today-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
-          <h1 id="free-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1>
-          <div class="free-quote" aria-label="오늘의 문장">“${esc(todayQuoteText)}”</div>
-          <div class="free-mood-title"><span>오늘의 기분</span><small>${m?'기록했어요 ✓':'하나만 골라주세요'}</small></div>
-          <div class="free-mood-row" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="free-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${esc(v.label)}</button>`).join('')}</div>
+        <section class="oh-today-card" aria-label="오늘의 가벼운 기록">
+          <div class="oh-row-head"><span class="oh-eyebrow">TODAY</span><button class="oh-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
+          <h1 id="oh-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1>
+          <div class="oh-quote" aria-label="오늘의 문장">“${esc(todayQuoteText)}”</div>
+          <div class="oh-mood-meta"><span>오늘의 기분</span><small>${m?'기록했어요 ✓':'하나만 골라주세요'}</small></div>
+          <div class="oh-moods" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="oh-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${esc(v.label)}</button>`).join('')}</div>
         </section>
-        <section class="free-action-card" aria-label="오늘의 작은 실천">
-          <div class="free-card-top"><span class="free-eyebrow">01 · 작은 실천</span><span class="free-card-helper">오늘 하나만 해도 충분해요</span></div>
+        <section class="oh-action-card" aria-label="오늘의 작은 실천">
+          <div class="oh-row-head"><span class="oh-eyebrow">01 · 작은 실천</span><span class="oh-helper">오늘 하나만 해도 충분해요</span></div>
           <h2>${esc(routine?routine.title:'기분을 고르면 미션을 추천해 드려요')}</h2>
           <p>${esc(routine?routine.detail:'1~5분이면 할 수 있는 작은 실천을 추천해 드릴게요.')}</p>
-          <div class="free-action-footer">${r?.smallDone?`<span class="free-complete">✓ 오늘의 실천 완료</span>`:`<span class="free-minute">${esc(routine?routine.minute:'1~5분')}</span><div class="free-action-buttons"><button class="free-text-button" type="button" data-action="swap" ${!routine?'disabled':''}>바꾸기</button><button class="free-main-button" type="button" data-action="done" ${!routine?'disabled':''}>완료 ✓</button></div>`}</div>
+          <div class="oh-action-footer">${r?.smallDone?`<span class="oh-complete">✓ 오늘의 실천 완료</span>`:`<span class="oh-minute">${esc(routine?routine.minute:'1~5분')}</span><div class="oh-action-buttons"><button class="oh-link-button" type="button" data-action="swap" ${!routine?'disabled':''}>바꾸기</button><button class="oh-primary" type="button" data-action="done" ${!routine?'disabled':''}>완료 ✓</button></div>`}</div>
         </section>
-        <section class="free-note-card" aria-label="오늘 한 줄 기록">
-          <div class="free-card-top"><span class="free-eyebrow">02 · 한 줄 기록</span><span class="free-note-count" aria-label="오늘 기록 ${r?.note?.trim()?'완료':'미완료'}">${r?.note?.trim()?'완료 ✓':'가볍게 한 줄'}</span></div>
-          <div class="free-note-control"><textarea id="note" class="free-note-input" rows="2" maxlength="240" placeholder="오늘 마음에 남은 일을 한 줄로 적어보세요.">${esc(draft)}</textarea><button class="free-main-button free-save-button" type="button" data-action="save-note">저장</button></div>
-          ${flagged?`<div class="free-safety">지금 안전이 걱정된다면 <a href="tel:109">109</a> · <a href="tel:119">119</a></div>`:''}
+        <section class="oh-note-card" aria-label="오늘 한 줄 기록">
+          <div class="oh-row-head"><span class="oh-eyebrow">02 · 한 줄 기록</span><span class="oh-note-state" aria-label="오늘 기록 ${r?.note?.trim()?'완료':'미완료'}">${r?.note?.trim()?'완료 ✓':'가볍게 한 줄'}</span></div>
+          <div class="oh-note-control"><textarea id="note" class="oh-note-input" rows="2" maxlength="240" placeholder="오늘 마음에 남은 일을 한 줄로 적어보세요.">${esc(draft)}</textarea><button class="oh-primary oh-save" type="button" data-action="save-note">저장</button></div>
+          ${flagged?`<div class="oh-safety">지금 안전이 걱정된다면 <a href="tel:109">109</a> · <a href="tel:119">119</a></div>`:''}
         </section>
-        <div class="free-progress"><span>오늘 나를 위해 한 일</span><strong>${completed}/3</strong><span class="free-progress-track" role="progressbar" aria-label="무료 세 가지 일과" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${completed}"><i style="width:${Math.round(100*completed/3)}%"></i></span></div>
-        <nav class="free-dock dock-nav" aria-label="주요 메뉴">
-          <button type="button" class="free-dock-item current" data-action="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-7 9 7M5 10v10h14V10"/></svg><span>홈</span></button>
-          <button type="button" class="free-dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c3-1 5-1 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-2 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
-          <button type="button" class="free-dock-item" data-reward-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5"/></svg><span>온기</span></button>
-          <button type="button" class="free-dock-item" data-action="sheet" data-sheet="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h9l3 3v13H6zM9 12h6M9 16h6"/></svg><span>기록</span></button>
-          <button type="button" class="free-dock-item free-dock-plus" data-premium-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3 6 6.5 1-4.8 4.7 1.2 6.8-5.9-3-5.9 3 1.2-6.8L2.5 9 9 8Z"/></svg><span>성장</span></button>
+        <div class="oh-progress"><span>오늘 나를 위해 한 일</span><strong>${completed}/3</strong><span class="oh-progress-track" role="progressbar" aria-label="무료 세 가지 일과" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${completed}"><i style="width:${Math.round(100*completed/3)}%"></i></span></div>
+        <nav class="oh-dock" aria-label="주요 메뉴">
+          <button type="button" class="oh-dock-item current" data-action="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-7 9 7M5 10v10h14V10"/></svg><span>홈</span></button>
+          <button type="button" class="oh-dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c3-1 5-1 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-2 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
+          <button type="button" class="oh-dock-item" data-reward-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 6h10v4a5 5 0 0 1-10 0Z"/><path d="M9 20h6M12 15v5"/></svg><span>온기</span></button>
+          <button type="button" class="oh-dock-item" data-action="sheet" data-sheet="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h9l3 3v13H6zM9 12h6M9 16h6"/></svg><span>기록</span></button>
+          <button type="button" class="oh-dock-item growth" data-premium-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3 6 6.5 1-4.8 4.7 1.2 6.8-5.9-3-5.9 3 1.2-6.8L2.5 9 9 8Z"/></svg><span>성장</span></button>
         </nav>
       </div>`;
   }
