@@ -21,12 +21,12 @@
   <link rel="stylesheet" href="./mobile-align-v23.css?v=23">
   <link rel="stylesheet" href="./ongi-journey-v24.css?v=26">
   <link rel="stylesheet" href="./ongi-unified-v27.css?v=27">
-  <link rel="stylesheet" href="./mobile-clean-v31.css?v=31">
+  <link rel="stylesheet" href="./mobile-clean-v31.css?v=32">
   <script src="./content-v6.js?v=14" defer></script>
-  <script src="./app.js?v=31" defer></script>
-  <script src="./premium-personal-v15.js?v=28" defer></script>
+  <script src="./app.js?v=32" defer></script>
+  <script src="./premium-personal-v15.js?v=32" defer></script>
   <script src="./achievements-v7.js?v=30" defer></script>
-  <script src="./ongi-journey-v24.js?v=31" defer></script>
+  <script src="./ongi-journey-v24.js?v=32" defer></script>
   <title>오늘의 온기 — 매일 새로운 온기</title>
 </head>
 <body>
@@ -43,9 +43,9 @@
 if('serviceWorker' in navigator){
   let changed=false;
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(changed||sessionStorage.getItem('ongi-v31-reloaded'))return;
+    if(changed||sessionStorage.getItem('ongi-v32-reloaded'))return;
     changed=true;
-    sessionStorage.setItem('ongi-v31-reloaded','1');
+    sessionStorage.setItem('ongi-v32-reloaded','1');
     location.reload();
   });
   window.addEventListener('load',()=>navigator.serviceWorker.ready.then(reg=>reg.update()).catch(()=>{}),{once:true});
