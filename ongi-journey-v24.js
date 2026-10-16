@@ -99,15 +99,8 @@
       const premium=header.querySelector('.free-plus-cta');
       if(premium)header.insertBefore(button,premium);else header.appendChild(button);
     }
-    const progress=page.querySelector('.free-progress');
-    if(progress && !progress.querySelector('.ongi-open-journey')){
-      const button=document.createElement('button');
-      button.type='button';button.className='ongi-open-journey';
-      button.dataset.ongi='open';button.textContent='100일 여정 ›';
-      button.setAttribute('aria-label','100일 온기 여정 열기');
-      const track=progress.querySelector('.free-progress-track');
-      if(track)progress.insertBefore(button,track);else progress.appendChild(button);
-    }
+    // 100일 여정은 홈에 중복 노출하지 않습니다.
+    // 성장 기능의 단일 진입점은 하단 '성장' 메뉴입니다.
   }
   function timerText() {
     return String(Math.floor(secondsLeft/60)).padStart(2,'0')+':'+String(secondsLeft%60).padStart(2,'0');
