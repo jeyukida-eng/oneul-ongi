@@ -216,7 +216,7 @@
         </header>
         <section class="oh-today-card" aria-label="오늘의 가벼운 기록">
           <div class="oh-row-head"><span class="oh-eyebrow">TODAY</span><button class="oh-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
-          <div class="oh-hero-line"><div class="oh-hero-copy"><span class="oh-hero-kicker">오늘의 마음 체크인</span><h1 id="oh-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1></div><div class="oh-mascot">${ongiMascot()}</div></div>
+          <div class="oh-hero-line"><div class="oh-hero-copy"><span class="oh-hero-kicker">오늘의 마음 체크인</span><h1 id="oh-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1><p class="oh-hero-desc">기분을 고르고, 작은 실천 하나와 한 줄 기록을 남겨보세요.</p></div></div>
           <div class="oh-quote" aria-label="오늘의 문장">“${esc(todayQuoteText)}”</div>
           <div class="oh-mood-meta"><span>오늘의 기분</span><small>${m?'기록했어요 ✓':'하나만 골라주세요'}</small></div>
           <div class="oh-moods" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="oh-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${moodFace(k)}<span class="oh-mood-label">${esc(v.label)}</span></button>`).join('')}</div>
