@@ -1,13 +1,13 @@
 /* 오늘의 온기 v33 — single final mobile layout system
    Loaded last. Replaces layered temporary mobile fixes. */
 :root{
-  --ongi-page:#FBF7F2;
-  --ongi-card:#FFFDF9;
-  --ongi-line:#E9DDD4;
-  --ongi-ink:#433631;
-  --ongi-muted:#8E7D73;
-  --ongi-accent:#C9795B;
-  --ongi-accent-soft:#F8E7DC;
+  --ongi-page:#FFF9EE;
+  --ongi-card:#FFFDF7;
+  --ongi-line:#E8DECB;
+  --ongi-ink:#553B2E;
+  --ongi-muted:#8A786B;
+  --ongi-accent:#5FA447;
+  --ongi-accent-soft:#EAF4D8;
   --ongi-gutter:14px;
   --ongi-card-pad:16px;
   --ongi-radius:22px;
@@ -152,7 +152,7 @@ body{background:var(--ongi-page)!important}
   border:0!important;
   border-radius:16px!important;
   display:block!important;
-  color:#775F54!important;
+  color:#755F50!important;
   font-size:13px!important;
   font-weight:620!important;
   line-height:1.55!important;
@@ -205,7 +205,7 @@ body{background:var(--ongi-page)!important}
   flex:0 1 auto!important;
   min-width:0!important;
   max-width:54%!important;
-  color:#9C8275!important;
+  color:#8F7D6E!important;
   font-size:11px!important;
   line-height:1.3!important;
   text-align:right!important;
