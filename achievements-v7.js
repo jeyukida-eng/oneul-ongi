@@ -31,6 +31,9 @@
     ['#FFF8F1','#B87556','#F1D8C8','#84967D'],
     ['#FFF5EA','#A96149','#EECDBA','#71866C']
   ];
+  // DAY 001~010 artwork is bundled in the repo (share-cards/), so it works offline and
+  // does not depend on an external host. The original CDN copies stay as a fallback only.
+  const GOODS_CARD_LOCAL = Array.from({length:10},(_,i)=>`./share-cards/day-${String(i+1).padStart(3,'0')}.webp?v=40`);
   const GOODS_CARD_URLS = [
     "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/c52c6d5a-2c98-4230-928e-ddf4dd2f950e.png",
     "https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/df95f74f-6fe1-46cb-bdfa-e485e0fe6a9b.png",
@@ -51,8 +54,12 @@
       const img=new Image();
       img.crossOrigin='anonymous';
       img.onload=()=>{promise.__resolved=img;resolve(img);};
-      img.onerror=()=>{promise.__resolved=null;resolve(null);};
-      img.src=GOODS_CARD_URLS[day-1];
+      let triedRemote=false;
+      img.onerror=()=>{
+        if(!triedRemote){triedRemote=true;img.src=GOODS_CARD_URLS[day-1];return;}
+        promise.__resolved=null;resolve(null);
+      };
+      img.src=new URL(GOODS_CARD_LOCAL[day-1],document.baseURI).href;
     });
     goodsArtwork.set(day,promise);
     return promise;
@@ -305,7 +312,10 @@
       if(artwork.complete&&artwork.naturalWidth>0){
         const iw=artwork.naturalWidth, ih=artwork.naturalHeight;
         const scale=Math.max(artW/iw,artH/ih),dw=iw*scale,dh=ih*scale;
-        c.drawImage(artwork,artX+(artW-dw)/2,artY+(artH-dh)/2,dw,dh);
+        // The artwork's subject sits in the lower part of a 4:5 image (empty wall above),
+        // so crop around a point 62% down instead of the centre.
+        const focusY=.62,top=Math.min(0,Math.max(artH-dh,artH/2-dh*focusY));
+        c.drawImage(artwork,artX+(artW-dw)/2,artY+top,dw,dh);
       }else{
         c.fillStyle=peach;c.fillRect(artX,artY,artW,artH);
         center('♡',artY+artH/2,S(800,110),accent);
