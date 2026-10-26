@@ -185,6 +185,26 @@
   function recordArt(){
     return `<svg viewBox="0 0 92 92" aria-hidden="true"><rect width="92" height="92" rx="24" fill="#fff2f0"/><rect x="20" y="19" width="50" height="54" rx="10" fill="#fff" stroke="#2f3344" stroke-width="2.5"/><path d="M29 34h26M29 44h21M29 54h24" stroke="#ddb2ab" stroke-width="4" stroke-linecap="round"/><path d="M61 61l11-11 8 8-11 11-10 2z" fill="#8f6bff" opacity=".7"/><path d="M58 64l11-11 8 8" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linejoin="round"/><path d="M59 65l-1 6 6-1" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
   }
+  function ongiMascot(){
+    return `<svg class="oh-mascot-svg" viewBox="0 0 126 116" aria-hidden="true">
+      <defs><linearGradient id="ongiBody" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffdf5"/><stop offset="1" stop-color="#f6ead8"/></linearGradient></defs>
+      <path d="M62 22c-2-13 5-20 15-20-1 10-6 17-15 20Z" fill="#72A642"/>
+      <path d="M62 22C53 11 43 9 36 14c6 9 14 12 26 8Z" fill="#8DBB54"/>
+      <path d="M62 22v15" stroke="#5F8B38" stroke-width="4" stroke-linecap="round"/>
+      <path d="M27 47c4-17 19-27 36-27s33 10 37 27c12 8 18 21 15 36-3 18-17 29-34 29H45c-17 0-31-11-34-29-3-15 4-29 16-36Z" fill="url(#ongiBody)" stroke="#E5C9A8" stroke-width="3"/>
+      <circle cx="44" cy="63" r="3.3" fill="#604A3E"/><circle cx="81" cy="63" r="3.3" fill="#604A3E"/>
+      <path d="M55 70c5 5 11 5 16 0" fill="none" stroke="#604A3E" stroke-width="3" stroke-linecap="round"/>
+      <ellipse cx="33" cy="73" rx="9" ry="5" fill="#F6B9AF" opacity=".7"/><ellipse cx="92" cy="73" rx="9" ry="5" fill="#F6B9AF" opacity=".7"/>
+      <path d="M63 103c-17-11-28-20-28-32 0-9 7-15 16-15 6 0 10 3 12 8 3-5 7-8 13-8 9 0 16 6 16 15 0 12-11 21-29 32Z" fill="#F57F78"/>
+      <path d="M36 88c-8 0-13 5-13 12M90 88c8 0 13 5 13 12" fill="none" stroke="#E5C9A8" stroke-width="8" stroke-linecap="round"/>
+    </svg>`;
+  }
+  function moodFace(key){
+    const palette={tired:['#F8DDAA','#6F5E52'],anxious:['#F7C9D2','#7A5360'],okay:['#DDEBCF','#5F7257'],happy:['#FFE29A','#6A5A35'],mixed:['#D7E7F7','#566979']};
+    const [bg,ink]=palette[key]||palette.okay;
+    const mouth=key==='happy'?'<path d="M13 16c2 3 6 3 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>':key==='tired'?'<path d="M13 17h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>':key==='anxious'?'<path d="M13 19c2-3 6-3 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>':key==='mixed'?'<path d="M13 18c2-2 3 2 5 0s3-2 5 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>':'<path d="M13 17c2 1 6 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>';
+    return `<span class="oh-mood-face" style="--face-bg:${bg};--face-ink:${ink}" aria-hidden="true"><svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="16" fill="currentColor" opacity=".08"/><circle cx="12" cy="14" r="1.5" fill="currentColor"/><circle cx="22" cy="14" r="1.5" fill="currentColor"/>${mouth}</svg></span>`;
+  }
   function renderHome(){
     const r=entry(),m=r&&moods[r.mood],routine=routineFor(r),todayStory=dailyStory(),todayQuoteText=dailyQuote(),todayOngi=ongiCount();
     const completed=(m?1:0)+(r?.smallDone?1:0)+(r?.note?.trim()?1:0);
@@ -192,23 +212,23 @@
     main.innerHTML=`
       <div class="oh-home">
         <header class="oh-header">
-          <div class="oh-brand"><strong>오늘의 온기</strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
+          <div class="oh-brand"><strong><span class="oh-logo-sprout" aria-hidden="true">🌱</span>오늘의 온기<span class="oh-logo-heart" aria-hidden="true">♥</span></strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
         </header>
         <section class="oh-today-card" aria-label="오늘의 가벼운 기록">
           <div class="oh-row-head"><span class="oh-eyebrow">TODAY</span><button class="oh-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
-          <h1 id="oh-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1>
+          <div class="oh-hero-line"><div class="oh-hero-copy"><span class="oh-hero-kicker">오늘의 마음 체크인</span><h1 id="oh-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1></div><div class="oh-mascot">${ongiMascot()}</div></div>
           <div class="oh-quote" aria-label="오늘의 문장">“${esc(todayQuoteText)}”</div>
           <div class="oh-mood-meta"><span>오늘의 기분</span><small>${m?'기록했어요 ✓':'하나만 골라주세요'}</small></div>
-          <div class="oh-moods" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="oh-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${esc(v.label)}</button>`).join('')}</div>
+          <div class="oh-moods" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="oh-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${moodFace(k)}<span class="oh-mood-label">${esc(v.label)}</span></button>`).join('')}</div>
         </section>
         <section class="oh-action-card" aria-label="오늘의 작은 실천">
-          <div class="oh-row-head"><span class="oh-eyebrow">01 · 작은 실천</span><span class="oh-helper">오늘 하나만 해도 충분해요</span></div>
+          <div class="oh-row-head"><span class="oh-eyebrow"><span class="oh-section-icon seed" aria-hidden="true">🌱</span>01 · 작은 실천</span><span class="oh-helper">오늘 하나만 해도 충분해요</span></div>
           <h2>${esc(routine?routine.title:'기분을 고르면 미션을 추천해 드려요')}</h2>
           <p>${esc(routine?routine.detail:'1~5분이면 할 수 있는 작은 실천을 추천해 드릴게요.')}</p>
           <div class="oh-action-footer">${r?.smallDone?`<span class="oh-complete">✓ 오늘의 실천 완료</span>`:`<span class="oh-minute">${esc(routine?routine.minute:'1~5분')}</span><div class="oh-action-buttons"><button class="oh-link-button" type="button" data-action="swap" ${!routine?'disabled':''}>바꾸기</button><button class="oh-primary" type="button" data-action="done" ${!routine?'disabled':''}>완료 ✓</button></div>`}</div>
         </section>
         <section class="oh-note-card" aria-label="오늘 한 줄 기록">
-          <div class="oh-row-head"><span class="oh-eyebrow">02 · 한 줄 기록</span><span class="oh-note-state" aria-label="오늘 기록 ${r?.note?.trim()?'완료':'미완료'}">${r?.note?.trim()?'완료 ✓':'가볍게 한 줄'}</span></div>
+          <div class="oh-row-head"><span class="oh-eyebrow"><span class="oh-section-icon note" aria-hidden="true">✎</span>02 · 한 줄 기록</span><span class="oh-note-state" aria-label="오늘 기록 ${r?.note?.trim()?'완료':'미완료'}">${r?.note?.trim()?'완료 ✓':'가볍게 한 줄'}</span></div>
           <div class="oh-note-control"><textarea id="note" class="oh-note-input" rows="2" maxlength="240" placeholder="오늘 마음에 남은 일을 한 줄로 적어보세요.">${esc(draft)}</textarea><button class="oh-primary oh-save" type="button" data-action="save-note">저장</button></div>
           ${flagged?`<div class="oh-safety">지금 안전이 걱정된다면 <a href="tel:109">109</a> · <a href="tel:119">119</a></div>`:''}
         </section>
