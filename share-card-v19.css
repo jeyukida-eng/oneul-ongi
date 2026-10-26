@@ -1,7 +1,7 @@
 /* v19 — Approved cozy illustration card, fully visible at every phone height */
 .achievement-panel.share.active .share-preview{
-  background:linear-gradient(155deg,#fff8f1,#f2eafb)!important;
-  border:1px solid #ecdfef!important;border-radius:22px!important;
+  background:linear-gradient(155deg,#fff8f1,#F0F9EC)!important;
+  border:1px solid #E4EFDF!important;border-radius:22px!important;
   box-shadow:inset 0 1px 8px #fff8f5!important;
   flex:1 1 0!important;min-height:0!important;overflow:hidden!important;
   display:flex!important;align-items:center!important;justify-content:center!important;
@@ -23,6 +23,7 @@
   flex:0 0 auto!important;min-height:32px!important;padding-bottom:2px;
 }
 .achievement-panel.share.active .reward-phrases::-webkit-scrollbar{display:none}
+.achievement-panel.share.active .reward-phrases:empty{display:none!important}
 .achievement-panel.share.active .reward-phrases .reward-chip{
   white-space:nowrap!important;flex:0 0 auto!important;padding:7px 10px!important;font-size:10px!important;
 }
@@ -53,11 +54,11 @@
   background:#fffaf6!important;border-color:#eadfd8!important;color:#765f55!important
 }
 .achievement-panel.share.active .reward-chip.selected{
-  background:#fff0e7!important;border-color:#dfaa91!important;color:#a65f46!important
+  background:#EAF4D8!important;border-color:#7DAD62!important;color:#467D35!important;font-weight:800!important
 }
 .achievement-panel.share.active .reward-primary{
-  background:linear-gradient(180deg,#d48b6d,#bd6f52)!important;
-  box-shadow:0 10px 24px rgba(189,111,82,.18)!important
+  background:#5FA447!important;color:#fff!important;
+  box-shadow:none!important
 }
 .achievement-panel.share.active .reward-secondary{
   background:#fffaf6!important;border-color:#e7d8ce!important;color:#755f54!important

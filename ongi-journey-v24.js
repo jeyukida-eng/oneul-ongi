@@ -83,14 +83,7 @@
     const page=document.querySelector('#main-content .oh-home');
     if(!page)return;
     const header=page.querySelector('.oh-header');
-    if(header && !header.querySelector('.oh-back')) {
-      const back=document.createElement('button');
-      back.type='button';back.className='oh-back';
-      back.dataset.ongiNav='back';back.setAttribute('aria-label','이전 화면');
-      back.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
-      const brand=header.querySelector('.oh-brand');
-      if(brand)header.insertBefore(back,brand);else header.prepend(back);
-    }
+    // Home is the top-level screen, so it has no back button.
     if(header && !header.querySelector('.oh-install')) {
       const button=document.createElement('button');
       button.type='button';button.className='oh-install';

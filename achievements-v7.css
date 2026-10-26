@@ -130,47 +130,47 @@
 
 /* v10 achievement redesign */
 .achievement-root{background:rgba(28,32,44,.42)!important}
-.achievement-sheet{background:linear-gradient(180deg,#fbfbfe 0%,#f4f5fb 100%)!important;color:#2a3140!important;box-shadow:0 -16px 46px rgba(33,39,56,.24)!important}
-.achievement-head{padding:16px 18px 14px!important;border-bottom:1px solid #ebeef5!important;background:rgba(255,255,255,.78)}
-.achievement-eyebrow{color:#9387bf!important;letter-spacing:.08em;font-weight:800!important}
+.achievement-sheet{background:linear-gradient(180deg,#FEFDFB 0%,#FBF9F4 100%)!important;color:#2a3140!important;box-shadow:0 -16px 46px rgba(33,39,56,.24)!important}
+.achievement-head{padding:16px 18px 14px!important;border-bottom:1px solid #F5F2EB!important;background:rgba(255,255,255,.78)}
+.achievement-eyebrow{color:#9ABF87!important;letter-spacing:.08em;font-weight:800!important}
 .achievement-head h2{color:#252b37!important;font-size:22px!important}
-.achievement-close{width:40px!important;height:40px!important;border-radius:16px!important;background:#f2f4fa!important;color:#6d7586!important}
+.achievement-close{width:40px!important;height:40px!important;border-radius:16px!important;background:#FAF7F2!important;color:#6d7586!important}
 .achievement-body{padding:14px 16px calc(18px + env(safe-area-inset-bottom))!important;gap:10px!important;overflow:auto!important}
 .achievement-tabs{gap:8px!important}
-.achievement-tab{background:#fff!important;border:1px solid #e8ebf4!important;border-radius:18px!important;color:#727a8b!important;padding:13px 8px!important;font-size:13px!important}
-.achievement-tab.selected{background:#f1ecff!important;border-color:#c7b8ff!important;color:#714cf0!important}
+.achievement-tab{background:#fff!important;border:1px solid #F4F0E8!important;border-radius:18px!important;color:#727a8b!important;padding:13px 8px!important;font-size:13px!important}
+.achievement-tab.selected{background:#F4FBF0!important;border-color:#D5EFC8!important;color:#90C775!important}
 .achievement-intro{font-size:13px!important;color:#7a8293!important}
-.achievement-stats>div{background:#fff!important;border:1px solid #ebeef5!important;border-radius:20px!important;padding:14px 4px!important;box-shadow:0 8px 20px rgba(41,46,63,.04)}
+.achievement-stats>div{background:#fff!important;border:1px solid #F5F2EB!important;border-radius:20px!important;padding:14px 4px!important;box-shadow:0 8px 20px rgba(41,46,63,.04)}
 .achievement-stats strong{font-size:30px!important;color:#2d3441!important}
 .achievement-stats span{font-size:12px!important;color:#8c93a2!important}
-.achievement-flow{background:linear-gradient(180deg,#faf6ff 0%,#f3eeff 100%)!important;border:1px solid #e1d6ff!important;border-radius:18px!important;color:#6e48ef!important;font-size:12px!important;padding:12px 14px!important}
-.today-chip-grid{gap:8px!important}.today-chip,.today-empty{background:#fff!important;border:1px solid #ebeef5!important;border-radius:18px!important;padding:12px 12px!important;font-size:12px!important;color:#546072!important}
-.today-chip span{background:#f2ecff!important;color:#7f57ff!important;min-width:30px;height:30px;border-radius:12px!important}
-.reward-week{background:#fff!important;border:1px solid #ebeef5!important;border-radius:22px!important;padding:12px!important}
+.achievement-flow{background:linear-gradient(180deg,#FAFDF8 0%,#F5FBF2 100%)!important;border:1px solid #E7F6DF!important;border-radius:18px!important;color:#8EC572!important;font-size:12px!important;padding:12px 14px!important}
+.today-chip-grid{gap:8px!important}.today-chip,.today-empty{background:#fff!important;border:1px solid #F5F2EB!important;border-radius:18px!important;padding:12px 12px!important;font-size:12px!important;color:#546072!important}
+.today-chip span{background:#F4FBF0!important;color:#9FCE88!important;min-width:30px;height:30px;border-radius:12px!important}
+.reward-week{background:#fff!important;border:1px solid #F5F2EB!important;border-radius:22px!important;padding:12px!important}
 .reward-week-title{font-size:14px!important;color:#353c49!important}.reward-week-title span{display:block!important;color:#9aa0ad!important;font-size:10px!important}
-.reward-weekday{color:#8f96a4!important}.reward-weekday span{background:#f4f6fb!important;color:#c2c7d2!important}.reward-weekday span.active{background:#f1ecff!important;color:#7f57ff!important}
+.reward-weekday{color:#8f96a4!important}.reward-weekday span{background:#FBF9F4!important;color:#D2CDC2!important}.reward-weekday span.active{background:#F4FBF0!important;color:#9FCE88!important}
 .achievement-subtitle{font-size:14px!important;color:#2c3341!important;margin-top:2px!important}
 .achievement-badges{gap:8px!important}
-.achievement-badge{background:#fff!important;border:1px solid #ebeef5!important;border-radius:20px!important;padding:12px 6px!important}
-.achievement-badge .badge-symbol{font-size:20px!important;color:#8c67ff!important}.achievement-badge.pending .badge-symbol{color:#c1c6d1!important}
+.achievement-badge{background:#fff!important;border:1px solid #F5F2EB!important;border-radius:20px!important;padding:12px 6px!important}
+.achievement-badge .badge-symbol{font-size:20px!important;color:#A8D393!important}.achievement-badge.pending .badge-symbol{color:#D1CCC1!important}
 .achievement-badge strong{color:#353c49!important;font-size:11px!important}.achievement-badge small{color:#8f96a4!important;font-size:10px!important}
-.reward-primary.full,.reward-primary{background:linear-gradient(180deg,#9b7cff,#7f57ff)!important;border:0!important;color:#fff!important;border-radius:18px!important;padding:14px 12px!important;box-shadow:0 10px 24px rgba(127,87,255,.18)}
-.reward-secondary{background:#f4f6fb!important;border:1px solid #e8ebf4!important;color:#5f6778!important;border-radius:18px!important}
+.reward-primary.full,.reward-primary{background:linear-gradient(180deg,#B4D9A2,#9FCE88)!important;border:0!important;color:#fff!important;border-radius:18px!important;padding:14px 12px!important;box-shadow:0 10px 24px rgba(159,206,136,.18)}
+.reward-secondary{background:#FBF9F4!important;border:1px solid #F4F0E8!important;color:#5f6778!important;border-radius:18px!important}
 .reward-formats,.reward-phrases{gap:8px!important}
-.reward-chip{background:#fff!important;border:1px solid #e8ebf4!important;color:#697183!important;border-radius:16px!important;padding:10px 12px!important}
-.reward-chip.selected{background:#f1ecff!important;border-color:#c7b8ff!important;color:#714cf0!important}
-.reward-include{color:#798192!important;padding:2px 0 0!important}.reward-include input{accent-color:#7f57ff!important}
-.share-preview{background:linear-gradient(180deg,#f2f4fb 0%,#edf0f8 100%)!important;border:1px solid #e7ebf4!important;border-radius:24px!important;padding:14px!important}
-.share-card{width:min(100%,255px);background:linear-gradient(180deg,#fff 0%,#f8f9fd 100%)!important;border-radius:28px!important;padding:14px!important;box-shadow:0 12px 30px rgba(41,46,63,.08)!important;display:flex;flex-direction:column;gap:10px;color:#2a3140}
+.reward-chip{background:#fff!important;border:1px solid #F4F0E8!important;color:#697183!important;border-radius:16px!important;padding:10px 12px!important}
+.reward-chip.selected{background:#F4FBF0!important;border-color:#D5EFC8!important;color:#90C775!important}
+.reward-include{color:#798192!important;padding:2px 0 0!important}.reward-include input{accent-color:#9FCE88!important}
+.share-preview{background:linear-gradient(180deg,#FBF8F2 0%,#F8F4ED 100%)!important;border:1px solid #F4F0E7!important;border-radius:24px!important;padding:14px!important}
+.share-card{width:min(100%,255px);background:linear-gradient(180deg,#fff 0%,#FDFBF8 100%)!important;border-radius:28px!important;padding:14px!important;box-shadow:0 12px 30px rgba(41,46,63,.08)!important;display:flex;flex-direction:column;gap:10px;color:#2a3140}
 .share-card-feed{aspect-ratio:4/5!important}.share-card-story{aspect-ratio:9/16!important}
 .share-card-top{display:flex;align-items:center;justify-content:space-between;gap:6px}.share-card-brand{font-size:11px;font-weight:800;color:#2a3140}.share-card-date{font-size:10px;color:#98a0af}
-.share-card-badge{align-self:flex-start;background:#f1ecff;color:#7d5bee;font-weight:800;font-size:9px;padding:7px 10px;border-radius:999px;letter-spacing:.04em}
-.share-card-hero{background:#f6f2ff;border-radius:22px;min-height:110px;padding:16px 14px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;position:relative}
-.share-card-dot{width:22px;height:22px;border-radius:50%;background:#d6c8ff;box-shadow:26px 16px 0 -6px #8d67ff,-28px -6px 0 -8px #e5deff}
+.share-card-badge{align-self:flex-start;background:#F4FBF0;color:#98CB7E;font-weight:800;font-size:9px;padding:7px 10px;border-radius:999px;letter-spacing:.04em}
+.share-card-hero{background:#F7FCF5;border-radius:22px;min-height:110px;padding:16px 14px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;position:relative}
+.share-card-dot{width:22px;height:22px;border-radius:50%;background:#DEF3D4;box-shadow:26px 16px 0 -6px #A8D393,-28px -6px 0 -8px #EBF8E5}
 .share-card-copy{text-align:center;font-size:16px;font-weight:800;line-height:1.45;letter-spacing:-.04em;color:#2b3140}
-.share-card-count{text-align:center;padding:4px 0 2px}.share-card-count strong{display:block;font-size:48px;line-height:1;color:#7d5bee}.share-card-count span{display:block;margin-top:4px;font-size:12px;color:#7f8798;font-weight:700}
-.share-card-list{background:#f7f8fc;border-radius:18px;padding:10px 12px;display:grid;gap:7px}.share-card-list div{display:flex;gap:8px;align-items:center;font-size:11px;color:#525b6b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.share-card-list span{color:#7d5bee;font-weight:900}
-.share-card-foot{margin-top:auto;padding-top:8px;border-top:1px solid #edf0f6;display:flex;justify-content:space-between;gap:6px;font-size:9px;color:#98a0af;text-transform:uppercase;letter-spacing:.08em}
+.share-card-count{text-align:center;padding:4px 0 2px}.share-card-count strong{display:block;font-size:48px;line-height:1;color:#98CB7E}.share-card-count span{display:block;margin-top:4px;font-size:12px;color:#7f8798;font-weight:700}
+.share-card-list{background:#FCFAF7;border-radius:18px;padding:10px 12px;display:grid;gap:7px}.share-card-list div{display:flex;gap:8px;align-items:center;font-size:11px;color:#525b6b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.share-card-list span{color:#98CB7E;font-weight:900}
+.share-card-foot{margin-top:auto;padding-top:8px;border-top:1px solid #F6F3ED;display:flex;justify-content:space-between;gap:6px;font-size:9px;color:#98a0af;text-transform:uppercase;letter-spacing:.08em}
 .reward-helper{font-size:11px!important;color:#8a92a2!important}
 .achievement-feedback{background:#2f3644!important;color:#fff!important;border-radius:14px!important}
 @media(max-height:760px){.achievement-head h2{font-size:20px!important}.achievement-body{padding:12px 14px calc(14px + env(safe-area-inset-bottom))!important}.share-card{width:min(100%,230px)}.share-card-copy{font-size:15px}.share-card-count strong{font-size:42px}}

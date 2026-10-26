@@ -3,7 +3,7 @@
 (() => {
   'use strict';
   const moods = {
-    tired: { label:'지쳐요', emoji:'😮‍💨', title:'쉬어가도 괜찮은 날', messages:[
+    tired: { label:'조금 지쳐요', emoji:'😮‍💨', title:'쉬어가도 괜찮은 날', messages:[
       '지금은 무언가를 더 해내기보다, 여기까지 온 나를 잠깐 돌봐줘도 좋아요. 오늘은 아주 작은 일 하나면 충분해요.',
       '마음에도 체력이 필요해요. 오늘의 속도가 느리더라도 지금 쉬어가는 시간은 헛되지 않아요.',
       '온종일 잘 해내지 않아도 괜찮아요. 지금 내게 필요한 만큼의 여유를 조금만 남겨둬요.'
@@ -30,7 +30,7 @@
       {emoji:'💌',title:'안부 한 마디',detail:'생각나는 사람에게 짧은 안부를 보내도 좋아요.',minute:'3분'},
       {emoji:'🫖',title:'따뜻한 차 한 잔',detail:'좋아하는 음료를 마시며 잠깐 앉아 있어봐요.',minute:'5분'}
     ]},
-    happy: { label:'기뻐요', emoji:'🥰', title:'좋은 마음을 조금 더 오래', messages:[
+    happy: { label:'행복해요', emoji:'🥰', title:'좋은 마음을 조금 더 오래', messages:[
       '반가운 기분을 그냥 지나치지 말고 오늘 무엇이 좋았는지 한 줄 남겨봐요. 기쁜 기억이 오늘의 작은 선물이 될 거예요.',
       '좋은 일이 있었군요. 이 마음을 천천히 누려봐요. 나중에 다시 꺼내 볼 수 있게 작은 기록을 남겨도 좋겠어요.',
       '기분 좋은 에너지가 느껴지는 날이네요. 너무 큰 계획 말고, 즐거운 마음으로 할 수 있는 일 하나를 시작해봐요.'
@@ -100,6 +100,7 @@
   // Preserve the previous v4/v5 storage key so updates don't lose journal history.
 
   const STORE_KEY='oneul-ongi-mvp-v1';
+  const HOME_MOODS=['happy','okay','tired','mixed','anxious'];
   const validMoods=Object.keys(moods);
   const $=id=>document.getElementById(id);
   const main=$('main-content'),root=$('sheet-root'),toast=$('toast');
@@ -169,21 +170,32 @@
     const row=state.records[key]||{};
     return (validMoods.includes(row.mood)?1:0) + (row.smallDone?1:0) + ((row.note||'').trim()?1:0) + completeGrowthCount(key);
   }
+  // One DAY rule for home, growth, share cards and the 100-day journey:
+  // DAY 000 until the first real check-in; each distinct day with a mood, small action,
+  // note, growth mission or journey action adds one day (max 100).
+  function journeyDay(){
+    const dates=new Set();
+    for(const [k,r] of Object.entries(state.records||{}))if(validDate(k)&&r&&(validMoods.includes(r.mood)||r.smallDone||(r.note||'').trim()))dates.add(k);
+    for(const [k,g] of Object.entries(state.growth||{}))if(validDate(k)&&g&&Object.values(g).some(v=>v===true))dates.add(k);
+    try{const j=JSON.parse(localStorage.getItem('oneul-ongi-journey-v24')||'{}');for(const [k,v] of Object.entries(j?.guided||{}))if(validDate(k)&&v?.at)dates.add(k)}catch(_e){}
+    return Math.min(100,dates.size);
+  }
+  window.ONGI_DAY=()=>{state=readState();return journeyDay()};
   function countDays(){
     const keys=new Set([...Object.keys(state.records),...Object.keys(state.growth)]);
     return Array.from(keys).filter(k=>validDate(k) && (ongiCount(k)>0)).length;
   }
   function heroArt(){
-    return `<svg viewBox="0 0 220 150" aria-hidden="true"><rect x="0" y="0" width="220" height="150" rx="28" fill="#efe9ff"/><circle cx="163" cy="38" r="18" fill="#c8b4ff"/><path d="M142 112c0-20 14-36 31-36s31 16 31 36" fill="#5c5f88"/><path d="M148 111V89c0-16 12-28 28-28s28 12 28 28v22" fill="#665f96"/><circle cx="176" cy="55" r="20" fill="#f8d6c5" stroke="#2f3344" stroke-width="2.8"/><path d="M162 54c6-11 28-13 36 2" fill="none" stroke="#2f3344" stroke-width="2.8" stroke-linecap="round"/><circle cx="170" cy="56" r="2.5" fill="#2f3344"/><circle cx="184" cy="56" r="2.5" fill="#2f3344"/><path d="M171 67c3 3 10 3 13 0" fill="none" stroke="#2f3344" stroke-width="2.8" stroke-linecap="round"/><rect x="18" y="78" width="94" height="47" rx="18" fill="#fff"/><path d="M31 94h47" stroke="#a3a8c7" stroke-width="6" stroke-linecap="round"/><path d="M31 108h36" stroke="#d1d4e8" stroke-width="6" stroke-linecap="round"/><circle cx="93" cy="101" r="11" fill="#8f6bff"/><path d="M93 95v12M87 101h12" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/><path d="M117 31c9 1 16 8 17 16" fill="none" stroke="#8f6bff" stroke-width="4" stroke-linecap="round"/><path d="M108 24c4 0 7 2 8 6" fill="none" stroke="#8f6bff" stroke-width="4" stroke-linecap="round"/></svg>`;
+    return `<svg viewBox="0 0 220 150" aria-hidden="true"><rect x="0" y="0" width="220" height="150" rx="28" fill="#F2FAEE"/><circle cx="163" cy="38" r="18" fill="#D3EEC5"/><path d="M142 112c0-20 14-36 31-36s31 16 31 36" fill="#5c5f88"/><path d="M148 111V89c0-16 12-28 28-28s28 12 28 28v22" fill="#71965F"/><circle cx="176" cy="55" r="20" fill="#f8d6c5" stroke="#2f3344" stroke-width="2.8"/><path d="M162 54c6-11 28-13 36 2" fill="none" stroke="#2f3344" stroke-width="2.8" stroke-linecap="round"/><circle cx="170" cy="56" r="2.5" fill="#2f3344"/><circle cx="184" cy="56" r="2.5" fill="#2f3344"/><path d="M171 67c3 3 10 3 13 0" fill="none" stroke="#2f3344" stroke-width="2.8" stroke-linecap="round"/><rect x="18" y="78" width="94" height="47" rx="18" fill="#fff"/><path d="M31 94h47" stroke="#a3a8c7" stroke-width="6" stroke-linecap="round"/><path d="M31 108h36" stroke="#d1d4e8" stroke-width="6" stroke-linecap="round"/><circle cx="93" cy="101" r="11" fill="#ABD496"/><path d="M93 95v12M87 101h12" stroke="#fff" stroke-width="2.8" stroke-linecap="round"/><path d="M117 31c9 1 16 8 17 16" fill="none" stroke="#ABD496" stroke-width="4" stroke-linecap="round"/><path d="M108 24c4 0 7 2 8 6" fill="none" stroke="#ABD496" stroke-width="4" stroke-linecap="round"/></svg>`;
   }
   function routineArt(){
-    return `<svg viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="24" fill="#f0f0ff"/><circle cx="33" cy="30" r="10" fill="#f9d5c4" stroke="#2f3344" stroke-width="2.5"/><path d="M25 25c4-8 18-8 22 1" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linecap="round"/><path d="M33 40v18" stroke="#2f3344" stroke-width="3" stroke-linecap="round"/><path d="M33 48l-10 7M33 48l11 8" stroke="#2f3344" stroke-width="3" stroke-linecap="round"/><path d="M33 58l-8 15M33 58l10 15" stroke="#2f3344" stroke-width="3" stroke-linecap="round"/><rect x="52" y="24" width="20" height="26" rx="5" fill="#fff" stroke="#2f3344" stroke-width="2.5"/><path d="M57 31h10M57 38h7" stroke="#b1b5d3" stroke-width="3" stroke-linecap="round"/><circle cx="62" cy="65" r="12" fill="#8f6bff" opacity=".15"/><path d="M55 65l5 5 10-12" fill="none" stroke="#8f6bff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    return `<svg viewBox="0 0 96 96" aria-hidden="true"><rect width="96" height="96" rx="24" fill="#f0f0ff"/><circle cx="33" cy="30" r="10" fill="#f9d5c4" stroke="#2f3344" stroke-width="2.5"/><path d="M25 25c4-8 18-8 22 1" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linecap="round"/><path d="M33 40v18" stroke="#2f3344" stroke-width="3" stroke-linecap="round"/><path d="M33 48l-10 7M33 48l11 8" stroke="#2f3344" stroke-width="3" stroke-linecap="round"/><path d="M33 58l-8 15M33 58l10 15" stroke="#2f3344" stroke-width="3" stroke-linecap="round"/><rect x="52" y="24" width="20" height="26" rx="5" fill="#fff" stroke="#2f3344" stroke-width="2.5"/><path d="M57 31h10M57 38h7" stroke="#b1b5d3" stroke-width="3" stroke-linecap="round"/><circle cx="62" cy="65" r="12" fill="#ABD496" opacity=".15"/><path d="M55 65l5 5 10-12" fill="none" stroke="#ABD496" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   }
   function storyArt(){
-    return `<svg viewBox="0 0 120 88" aria-hidden="true"><rect width="120" height="88" rx="22" fill="#eef3ff"/><rect x="22" y="19" width="76" height="50" rx="12" fill="#fff" stroke="#2f3344" stroke-width="2.4"/><path d="M60 19v50" stroke="#2f3344" stroke-width="2.4"/><path d="M36 34h14M36 43h18M69 34h15M69 43h10" stroke="#c0c9ec" stroke-width="4" stroke-linecap="round"/><circle cx="25" cy="72" r="5" fill="#8f6bff"/><circle cx="95" cy="15" r="4" fill="#8f6bff" opacity=".6"/></svg>`;
+    return `<svg viewBox="0 0 120 88" aria-hidden="true"><rect width="120" height="88" rx="22" fill="#eef3ff"/><rect x="22" y="19" width="76" height="50" rx="12" fill="#fff" stroke="#2f3344" stroke-width="2.4"/><path d="M60 19v50" stroke="#2f3344" stroke-width="2.4"/><path d="M36 34h14M36 43h18M69 34h15M69 43h10" stroke="#c0c9ec" stroke-width="4" stroke-linecap="round"/><circle cx="25" cy="72" r="5" fill="#ABD496"/><circle cx="95" cy="15" r="4" fill="#ABD496" opacity=".6"/></svg>`;
   }
   function recordArt(){
-    return `<svg viewBox="0 0 92 92" aria-hidden="true"><rect width="92" height="92" rx="24" fill="#fff2f0"/><rect x="20" y="19" width="50" height="54" rx="10" fill="#fff" stroke="#2f3344" stroke-width="2.5"/><path d="M29 34h26M29 44h21M29 54h24" stroke="#ddb2ab" stroke-width="4" stroke-linecap="round"/><path d="M61 61l11-11 8 8-11 11-10 2z" fill="#8f6bff" opacity=".7"/><path d="M58 64l11-11 8 8" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linejoin="round"/><path d="M59 65l-1 6 6-1" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
+    return `<svg viewBox="0 0 92 92" aria-hidden="true"><rect width="92" height="92" rx="24" fill="#fff2f0"/><rect x="20" y="19" width="50" height="54" rx="10" fill="#fff" stroke="#2f3344" stroke-width="2.5"/><path d="M29 34h26M29 44h21M29 54h24" stroke="#ddb2ab" stroke-width="4" stroke-linecap="round"/><path d="M61 61l11-11 8 8-11 11-10 2z" fill="#ABD496" opacity=".7"/><path d="M58 64l11-11 8 8" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linejoin="round"/><path d="M59 65l-1 6 6-1" fill="none" stroke="#2f3344" stroke-width="2.5" stroke-linejoin="round"/></svg>`;
   }
   function ongiMascot(){
     return `<svg class="oh-mascot-svg" viewBox="0 0 126 116" aria-hidden="true">
@@ -207,32 +219,37 @@
   }
   function renderHome(){
     const r=entry(),m=r&&moods[r.mood],routine=routineFor(r),todayStory=dailyStory(),todayQuoteText=dailyQuote(),todayOngi=ongiCount();
-    const completed=(m?1:0)+(r?.smallDone?1:0)+(r?.note?.trim()?1:0);
+    const completed=(m?1:0)+(r?.smallDone?1:0)+(r?.note?.trim()?1:0),journey=journeyDay();
     const flagged=worryPattern.test(r?.note||'');
     main.innerHTML=`
       <div class="oh-home">
         <header class="oh-header">
           <div class="oh-brand"><strong><span class="oh-logo-sprout" aria-hidden="true">🌱</span>오늘의 온기<span class="oh-logo-heart" aria-hidden="true">♥</span></strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
+          <button class="oh-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi}</button>
         </header>
-        <section class="oh-today-card" aria-label="오늘의 가벼운 기록">
-          <div class="oh-row-head"><span class="oh-eyebrow">TODAY</span><button class="oh-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi} <span aria-hidden="true">↗</span></button></div>
-          <div class="oh-hero-line"><div class="oh-hero-copy"><span class="oh-hero-kicker">오늘의 마음 체크인</span><h1 id="oh-today-title">${m?esc(m.title):'오늘, 마음은 어떤가요?'}</h1><p class="oh-hero-desc">기분을 고르고, 작은 실천 하나와 한 줄 기록을 남겨보세요.</p></div></div>
-          <div class="oh-quote" aria-label="오늘의 문장">“${esc(todayQuoteText)}”</div>
-          <div class="oh-mood-meta"><span>오늘의 기분</span><small>${m?'기록했어요 ✓':'하나만 골라주세요'}</small></div>
-          <div class="oh-moods" role="group" aria-label="오늘의 기분 선택">${Object.entries(moods).map(([k,v])=>`<button class="oh-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${moodFace(k)}<span class="oh-mood-label">${esc(v.label)}</span></button>`).join('')}</div>
+        <section class="oh-today-card" aria-labelledby="oh-today-title">
+          <h1 id="oh-today-title">오늘의 기분은 어떤가요?</h1>
+          <div class="oh-moods" role="group" aria-label="오늘의 기분 선택">${HOME_MOODS.map(k=>`<button class="oh-mood" type="button" data-action="mood" data-mood="${k}" aria-pressed="${chosen===k}">${moodFace(k)}<span class="oh-mood-label">${esc(moods[k].label)}</span></button>`).join('')}</div>
+          <p class="oh-quote" aria-label="오늘의 문장">${m?`<b>${esc(m.title)}</b> `:''}${esc(todayQuoteText)}</p>
         </section>
-        <section class="oh-action-card" aria-label="오늘의 작은 실천">
-          <div class="oh-row-head"><span class="oh-eyebrow"><span class="oh-section-icon seed" aria-hidden="true">🌱</span>01 · 작은 실천</span><span class="oh-helper">오늘 하나만 해도 충분해요</span></div>
-          <h2>${esc(routine?routine.title:'기분을 고르면 미션을 추천해 드려요')}</h2>
-          <p>${esc(routine?routine.detail:'1~5분이면 할 수 있는 작은 실천을 추천해 드릴게요.')}</p>
+        <section class="oh-feature oh-action-card" aria-labelledby="oh-action-title">
+          <div class="oh-feature-head"><span class="oh-feature-icon seed" aria-hidden="true">🌱</span><div><h2 id="oh-action-title">오늘의 작은 실천</h2><p>지금, 나를 위한 작은 행동을 선택해요.</p></div></div>
+          <div class="oh-action-body">
+            <strong>${esc(routine?routine.title:'기분을 고르면 작은 실천을 추천해 드려요')}</strong>
+            <span>${esc(routine?routine.detail:'1~5분이면 할 수 있는 일이에요.')}</span>
+          </div>
           <div class="oh-action-footer">${r?.smallDone?`<span class="oh-complete">✓ 오늘의 실천 완료</span>`:`<span class="oh-minute">${esc(routine?routine.minute:'1~5분')}</span><div class="oh-action-buttons"><button class="oh-link-button" type="button" data-action="swap" ${!routine?'disabled':''}>바꾸기</button><button class="oh-primary" type="button" data-action="done" ${!routine?'disabled':''}>완료 ✓</button></div>`}</div>
         </section>
-        <section class="oh-note-card" aria-label="오늘 한 줄 기록">
-          <div class="oh-row-head"><span class="oh-eyebrow"><span class="oh-section-icon note" aria-hidden="true">✎</span>02 · 한 줄 기록</span><span class="oh-note-state" aria-label="오늘 기록 ${r?.note?.trim()?'완료':'미완료'}">${r?.note?.trim()?'완료 ✓':'가볍게 한 줄'}</span></div>
-          <div class="oh-note-control"><textarea id="note" class="oh-note-input" rows="2" maxlength="240" placeholder="오늘 마음에 남은 일을 한 줄로 적어보세요.">${esc(draft)}</textarea><button class="oh-primary oh-save" type="button" data-action="save-note">저장</button></div>
+        <section class="oh-feature oh-note-card" aria-labelledby="oh-note-title">
+          <div class="oh-feature-head"><span class="oh-feature-icon note" aria-hidden="true">✎</span><div><h2 id="oh-note-title">한 줄 기록</h2><p>오늘의 나를 짧게 기록해요.</p></div><span class="oh-note-state">${r?.note?.trim()?'완료 ✓':''}</span></div>
+          <div class="oh-note-control"><textarea id="note" class="oh-note-input" rows="2" maxlength="240" aria-label="한 줄 기록" placeholder="오늘 마음에 남은 일을 한 줄로 적어보세요.">${esc(draft)}</textarea><button class="oh-primary oh-save" type="button" data-action="save-note">저장</button></div>
           ${flagged?`<div class="oh-safety">지금 안전이 걱정된다면 <a href="tel:109">109</a> · <a href="tel:119">119</a></div>`:''}
         </section>
-        <div class="oh-progress"><span>오늘 나를 위해 한 일</span><strong>${completed}/3</strong><span class="oh-progress-track" role="progressbar" aria-label="무료 세 가지 일과" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${completed}"><i style="width:${Math.round(100*completed/3)}%"></i></span></div>
+        <div class="oh-progress"><span>오늘 나를 위해 한 일</span><strong>${completed}/3</strong><span class="oh-progress-track" role="progressbar" aria-label="오늘의 세 가지 일과" aria-valuemin="0" aria-valuemax="3" aria-valuenow="${completed}"><i style="width:${Math.round(100*completed/3)}%"></i></span></div>
+        <button class="oh-feature oh-growth-card" type="button" data-premium-action="open" aria-label="100일 성장 보기, 현재 DAY ${journey}">
+          <span class="oh-feature-head"><span class="oh-feature-icon growth" aria-hidden="true">📊</span><span><span class="oh-feature-title">100일 성장 보기</span><span class="oh-feature-desc">지금까지 쌓인 나의 온기를 확인해요.</span></span><span class="oh-go" aria-hidden="true">›</span></span>
+          <span class="oh-growth-meter"><b>DAY ${String(journey).padStart(3,'0')}</b><span class="oh-progress-track" aria-hidden="true"><i style="width:${journey}%"></i></span><small>${journey}/100</small></span>
+        </button>
         <nav class="oh-dock" aria-label="주요 메뉴">
           <button type="button" class="oh-dock-item current" data-action="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-7 9 7M5 10v10h14V10"/></svg><span>홈</span></button>
           <button type="button" class="oh-dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c3-1 5-1 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-2 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
