@@ -97,7 +97,7 @@ body{color:var(--ink)}
 .help-box{background:#f3f1e7;border:1px solid #e9e5d8;padding:13px;border-radius:10px;font-size:12px;line-height:1.7;color:#697468;margin:10px 0}
 .help-box a{color:#456d4a;font-weight:800}
 .sheet-body .divider{height:1px;background:#e5e9e1;margin:14px 0}
-.danger{color:#8c6153!important}.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);width:max-content;max-width:min(90%,420px);z-index:140;padding:12px 15px;background:#344c37;border-radius:12px;color:#fff;font-size:12px;box-shadow:0 8px 23px #24332855}
+.danger{color:#8c6153!important}.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:max-content;max-width:min(90%,420px);z-index:140;padding:12px 15px;background:#344c37;border-radius:12px;color:#fff;font-size:12px;box-shadow:0 8px 23px #24332855}
 .safety-inline{background:#fff5ec;color:#835f4e;border:1px solid #ead7c8;border-radius:10px;font-size:11px;line-height:1.6;padding:11px;margin-top:8px}
 .safety-inline a{color:inherit;font-weight:800}
 @media(min-width:520px){.app-shell{margin:10px auto;height:calc(100dvh - 20px);border-radius:20px;overflow:hidden}.sheet{margin-bottom:10px;border-radius:18px;height:min(78dvh,760px)}}

@@ -14,22 +14,20 @@
 }
 .home-scroll:has(.oh-home){
   padding:0!important;
-  overflow-y:auto!important;
-  overflow-x:hidden!important;
+  overflow:hidden!important;
   background:var(--oh-bg)!important;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
 }
-.home-scroll:has(.oh-home)::-webkit-scrollbar{display:none}
+/* Layout: [scrolling content] above [bottom menu]. The menu is outside the scroll area,
+   so cards never slide underneath it. */
 .oh-home,.oh-home *{box-sizing:border-box}
 .oh-home{
   width:100%;
-  min-height:100%;
+  height:100%;
+  min-height:0;
   margin:0;
-  padding:10px var(--oh-gutter) calc(14px + env(safe-area-inset-bottom,0px));
+  padding:0;
   display:flex;
   flex-direction:column;
-  gap:10px;
   color:var(--oh-ink);
   background:var(--oh-bg);
   font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
@@ -38,6 +36,21 @@
   word-break:keep-all;
   overflow-wrap:break-word;
 }
+.oh-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior-y:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding:10px var(--oh-gutter) 14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.oh-scroll::-webkit-scrollbar{display:none}
+.oh-scroll>*{flex:none}
 .oh-home button,.oh-home textarea{font:inherit;-webkit-tap-highlight-color:transparent}
 .oh-home h1,.oh-home h2,.oh-home p{margin:0}
 
@@ -285,14 +298,14 @@
 
 /* Bottom menu */
 .oh-dock{
-  position:sticky;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:2;
-  width:100%;min-height:66px;
-  margin-top:auto;
+  flex:none;
+  width:auto;min-height:66px;
+  margin:0 var(--oh-gutter) calc(8px + env(safe-area-inset-bottom,0px));
   display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;align-items:center;
   padding:6px 4px;
   border:1px solid var(--oh-line);border-radius:22px;
-  background:rgba(255,253,248,.97);
-  box-shadow:0 6px 18px rgba(93,70,48,.08);
+  background:#FFFDF8;
+  box-shadow:0 -4px 14px rgba(93,70,48,.05);
 }
 .oh-dock-item{
   min-width:0;min-height:52px;
@@ -308,7 +321,7 @@
 /* Small phones (360px) */
 @media(max-width:380px){
   :root{--oh-gutter:12px}
-  .oh-home{gap:9px}
+  .oh-scroll{gap:9px}
   .oh-brand strong{font-size:23px}
   .oh-today-card,.oh-feature{padding:14px;border-radius:20px}
   #oh-today-title{font-size:21px}

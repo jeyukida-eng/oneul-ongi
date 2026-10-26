@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- oneul-ongi v40: 2026-10-26 -->
+<!-- oneul-ongi v41: 2026-10-26 -->
 <html lang="ko">
 <head>
   <meta charset="utf-8">
@@ -13,19 +13,19 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-180.png">
-  <link rel="stylesheet" href="./styles.css?v=40">
-  <link rel="stylesheet" href="./achievements-v7.css?v=40">
-  <link rel="stylesheet" href="./premium-personal-v15.css?v=40">
-  <link rel="stylesheet" href="./share-card-v19.css?v=40">
-  <link rel="stylesheet" href="./ongi-journey-v24.css?v=40">
-  <link rel="stylesheet" href="./ongi-unified-v27.css?v=40">
-  <link rel="stylesheet" href="./layout-system-v33.css?v=40">
-  <link rel="stylesheet" href="./home-v35.css?v=40">
-  <script src="./content-v6.js?v=40" defer></script>
-  <script src="./app.js?v=40" defer></script>
-  <script src="./premium-personal-v15.js?v=40" defer></script>
-  <script src="./achievements-v7.js?v=40" defer></script>
-  <script src="./ongi-journey-v24.js?v=40" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=41">
+  <link rel="stylesheet" href="./achievements-v7.css?v=41">
+  <link rel="stylesheet" href="./premium-personal-v15.css?v=41">
+  <link rel="stylesheet" href="./share-card-v19.css?v=41">
+  <link rel="stylesheet" href="./ongi-journey-v24.css?v=41">
+  <link rel="stylesheet" href="./ongi-unified-v27.css?v=41">
+  <link rel="stylesheet" href="./layout-system-v33.css?v=41">
+  <link rel="stylesheet" href="./home-v35.css?v=41">
+  <script src="./content-v6.js?v=41" defer></script>
+  <script src="./app.js?v=41" defer></script>
+  <script src="./premium-personal-v15.js?v=41" defer></script>
+  <script src="./achievements-v7.js?v=41" defer></script>
+  <script src="./ongi-journey-v24.js?v=41" defer></script>
   <title>오늘의 온기 — 매일 새로운 온기</title>
 </head>
 <body>
@@ -42,9 +42,9 @@
 if('serviceWorker' in navigator){
   let changed=false;
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    if(changed||sessionStorage.getItem('ongi-v40-reloaded'))return;
+    if(changed||sessionStorage.getItem('ongi-v41-reloaded'))return;
     changed=true;
-    sessionStorage.setItem('ongi-v40-reloaded','1');
+    sessionStorage.setItem('ongi-v41-reloaded','1');
     location.reload();
   });
   window.addEventListener('load',()=>navigator.serviceWorker.ready.then(reg=>reg.update()).catch(()=>{}),{once:true});

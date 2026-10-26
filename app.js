@@ -221,8 +221,11 @@
     const r=entry(),m=r&&moods[r.mood],routine=routineFor(r),todayStory=dailyStory(),todayQuoteText=dailyQuote(),todayOngi=ongiCount();
     const completed=(m?1:0)+(r?.smallDone?1:0)+(r?.note?.trim()?1:0),journey=journeyDay();
     const flagged=worryPattern.test(r?.note||'');
+    // The scroll area is re-created on each render; keep the user's place.
+    const scrollTop=main.querySelector('.oh-scroll')?.scrollTop||0;
     main.innerHTML=`
       <div class="oh-home">
+        <div class="oh-scroll">
         <header class="oh-header">
           <div class="oh-brand"><strong><span class="oh-logo-sprout" aria-hidden="true">🌱</span>오늘의 온기<span class="oh-logo-heart" aria-hidden="true">♥</span></strong><span>${esc(new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(new Date()))}</span></div>
           <button class="oh-credit" type="button" data-reward-action="open" aria-label="오늘 모은 온기 ${todayOngi}개 성취 카드 열기">온기 ${todayOngi}</button>
@@ -250,6 +253,7 @@
           <span class="oh-feature-head"><span class="oh-feature-icon growth" aria-hidden="true">📊</span><span><span class="oh-feature-title">100일 성장 보기</span><span class="oh-feature-desc">지금까지 쌓인 나의 온기를 확인해요.</span></span><span class="oh-go" aria-hidden="true">›</span></span>
           <span class="oh-growth-meter"><b>DAY ${String(journey).padStart(3,'0')}</b><span class="oh-progress-track" aria-hidden="true"><i style="width:${journey}%"></i></span><small>${journey}/100</small></span>
         </button>
+        </div>
         <nav class="oh-dock" aria-label="주요 메뉴">
           <button type="button" class="oh-dock-item current" data-action="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-7 9 7M5 10v10h14V10"/></svg><span>홈</span></button>
           <button type="button" class="oh-dock-item" data-action="sheet" data-sheet="stories"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c3-1 5-1 8 1v14c-3-2-5-2-8-1V5Zm8 1c3-2 5-2 8-1v14c-3-1-5-1-8 1"/></svg><span>이야기</span></button>
@@ -258,6 +262,7 @@
           <button type="button" class="oh-dock-item growth" data-premium-action="open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 3 6 6.5 1-4.8 4.7 1.2 6.8-5.9-3-5.9 3 1.2-6.8L2.5 9 9 8Z"/></svg><span>성장</span></button>
         </nav>
       </div>`;
+    const scroller=main.querySelector('.oh-scroll');if(scroller&&scrollTop)scroller.scrollTop=scrollTop;
   }
   function sheetShell(title,body,back){
     const previous=back

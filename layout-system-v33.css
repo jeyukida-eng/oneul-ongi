@@ -25,6 +25,11 @@ body{background:var(--ongi-page)!important}
   margin-right:auto!important;
 }
 .app-shell{height:100dvh!important;min-height:100dvh!important;overflow:hidden!important}
+/* Wide screens show the app as a centred phone frame with a 10px margin; the frame must
+   shrink by that margin or the bottom menu is pushed below the window. */
+@media(min-width:520px){
+  .app-shell{height:calc(100dvh - 20px)!important;min-height:0!important;margin-top:10px!important;margin-bottom:10px!important}
+}
 .home-scroll,.sheet-body,.a-main,.achievement-body,.ongi-body{
   min-width:0!important;
   overflow-x:hidden!important;
