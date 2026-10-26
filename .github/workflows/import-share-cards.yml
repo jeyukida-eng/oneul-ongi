@@ -1,0 +1,52 @@
+name: Import DAY 001-010 share-card illustrations
+# One-time import: copies the externally hosted card artwork into the repo
+# (share-cards/day-001.webp ... day-010.webp) so the app no longer depends on the CDN.
+on:
+  push:
+    paths:
+      - '.github/workflows/import-share-cards.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and convert artwork
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          import io, urllib.request
+          from pathlib import Path
+          from PIL import Image
+          base='https://d2ol7oe51mr4n9.cloudfront.net/user_3F3pxzm98lOIROq9VgAp0eSPNUF/'
+          ids=['c52c6d5a-2c98-4230-928e-ddf4dd2f950e','df95f74f-6fe1-46cb-bdfa-e485e0fe6a9b',
+               'db7060c0-bbe4-4850-86d0-87852f694564','155cbcab-d0f2-4cef-aa19-14954a036eb8',
+               '157f7a9e-0287-4e47-92f0-88f98539d4c0','39ac1dda-c0b2-4d74-a3b3-a06921d68215',
+               '4e5fa9ed-0146-4fcf-a8d9-67a7297c9d4d','f01bcd84-eea9-4439-b3b9-6260e3f75fb5',
+               '8a90c194-d812-4b0f-b5ad-48d62bd9d94b','ec1b2d11-ed62-49a3-98ef-8110ecb6edfb']
+          out=Path('share-cards');out.mkdir(exist_ok=True)
+          lines=[]
+          for day,i in enumerate(ids,1):
+              data=urllib.request.urlopen(base+i+'.png',timeout=60).read()
+              im=Image.open(io.BytesIO(data));im.load()
+              src=im.size
+              im=im.convert('RGB')
+              im.thumbnail((1600,1600),Image.LANCZOS)
+              target=out/f'day-{day:03d}.webp'
+              im.save(target,'WEBP',quality=88,method=6)
+              lines.append(f'day-{day:03d}.webp  source {src[0]}x{src[1]} -> {im.size[0]}x{im.size[1]}  {target.stat().st_size} bytes  {i}.png')
+              print(lines[-1])
+          (out/'SOURCES.txt').write_text('\n'.join(lines)+'\n')
+          PY
+      - name: Commit artwork
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add share-cards/
+          if ! git diff --cached --quiet; then
+            git commit -m "Add DAY 001-010 share-card illustrations to the repo"
+            git push origin HEAD:main
+          fi
