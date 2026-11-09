@@ -1,0 +1,4 @@
+const CACHE='pyoda-rebuild-20261109-1';
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',e=>e.waitUntil((async()=>{for(const k of await caches.keys())if(k.startsWith('pyoda-rebuild-')&&k!==CACHE)await caches.delete(k);await self.clients.claim()})()));
+self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin||!u.pathname.startsWith(self.registration.scope.replace(u.origin,'')))return;e.respondWith(fetch(e.request).then(r=>{if(r.ok&&['document','script','style','image','manifest'].includes(e.request.destination)){const copy=r.clone();e.waitUntil(caches.open(CACHE).then(c=>c.put(e.request,copy)))}return r}).catch(async()=>await caches.match(e.request)||new Response('인터넷 연결을 확인해주세요.',{status:503,headers:{'Content-Type':'text/plain;charset=utf-8'}})))});
