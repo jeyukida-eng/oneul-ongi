@@ -121,15 +121,14 @@ function myView(){view.innerHTML=`<section class="myPane"><div class="eyebrow">Y
 
 let pendingMusicRegistration=false;
 async function ensureMusicSession(){
- if(!session)throw Error('먼저 로그인해주세요.');
+ if(!session){pendingMusicRegistration=true;document.querySelector('#musicUpload')?.close();$('#login').showModal();throw Error('로그인을 완료하면 입력한 내용으로 등록을 계속할 수 있습니다.');}
  if(!musicSession)await exchange();
  const {data,error}=await music.auth.getUser();if(error||!data?.user||data.user.is_anonymous)throw Error('음악 계정 연결을 완료하지 못했습니다. 다시 로그인해주세요.');
  musicSession=(await music.auth.getSession()).data.session;return musicSession;
 }
 async function openMusicRegistration(){
- if(!session){pendingMusicRegistration=true;$('#login').showModal();return}
  if(!window.PyodaMusicUpload){toast('등록 화면을 불러오지 못했습니다. 새로고침해주세요.');return}
- window.PyodaMusicUpload.open({music,url:MUSIC_URL,artist:session.user.user_metadata?.name||session.user.user_metadata?.full_name||'',ensureSession:ensureMusicSession,onSaved:async()=>{
+ window.PyodaMusicUpload.open({music,url:MUSIC_URL,artist:session?.user.user_metadata?.name||session?.user.user_metadata?.full_name||'',ensureSession:ensureMusicSession,onSaved:async()=>{
   const {data,error}=await music.from('tracks').select('id,creator_id,title,artist,genre,audio_storage,audio_path,cover_path,published_at').eq('status','published').order('published_at',{ascending:false});
   if(error){toast('곡은 저장됐습니다. 목록은 새로고침하면 표시됩니다.');return}tracks=data||[];go('music');toast('새 곡을 등록했습니다. 목록에서 곡을 눌러 들어보세요.');
  }});
